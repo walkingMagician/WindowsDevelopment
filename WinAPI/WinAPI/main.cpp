@@ -1,4 +1,4 @@
-#include <Windows.h>
+п»ї#include <Windows.h>
 #include "resource.h"
 
 //#define MESSAGE_BOX
@@ -13,7 +13,7 @@ INT WINAPI WinMain(HINSTANCE hInstance, HINSTANCE hPrevInst, LPSTR lpCmdLine, IN
 	MessageBox
 	(
 		NULL,
-		"Hello winAPI!\nэто окно соощения",
+		"Hello winAPI!\nСЌС‚Рѕ РѕРєРЅРѕ СЃРѕРѕС‰РµРЅРёСЏ",
 		"Info",
 		MB_YESNOCANCEL | MB_ICONQUESTION |
 		MB_HELP | MB_DEFBUTTON1 |
@@ -41,7 +41,7 @@ BOOL CALLBACK DlgProc(HWND hwnd, UINT uMsg, WPARAM wParam, LPARAM lParam)
 	case WM_COMMAND:
 		switch (LOWORD(wParam))
 		{
-		case IDOK: MessageBox(hwnd, "была нажата кнопка OK", "Info", MB_OK | MB_ICONINFORMATION); break;
+		case IDOK: MessageBox(hwnd, "Р±С‹Р»Р° РЅР°Р¶Р°С‚Р° РєРЅРѕРїРєР° OK", "Info", MB_OK | MB_ICONINFORMATION); break;
 		case IDCANCEL: EndDialog(hwnd, 0); break;
 		}
 		break;
