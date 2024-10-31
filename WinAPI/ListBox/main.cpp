@@ -4,11 +4,20 @@
 #include "resource.h"
 #pragma comment(lib,"user32")
 
+
+HWND hListBox;
+
 BOOL CALLBACK DlgProc(HWND hwnd, UINT uMsg, WPARAM wParam, LPARAM lParam);
+
+void AddListBoxWord(const char* str)
+{
+	SendMessage(hListBox, LB_ADDSTRING, 0, (LPARAM)str);
+}
+
 
 INT WINAPI WinMain(HINSTANCE hInstance, HINSTANCE hPrevInst, LPSTR lpCmdLine, INT nCmdShow)
 {
-	
+
 	DialogBox(hInstance, MAKEINTRESOURCE(IDD_DIALOG1), NULL, DlgProc, 0);
 
 	return 0;
@@ -16,6 +25,7 @@ INT WINAPI WinMain(HINSTANCE hInstance, HINSTANCE hPrevInst, LPSTR lpCmdLine, IN
 
 BOOL CALLBACK DlgProc(HWND hwnd, UINT uMsg, WPARAM wParam, LPARAM lParam)
 {
+	
 	switch (uMsg)
 	{
 	case WM_INITDIALOG:
@@ -27,12 +37,21 @@ BOOL CALLBACK DlgProc(HWND hwnd, UINT uMsg, WPARAM wParam, LPARAM lParam)
 	{
 		if (LOWORD(wParam) == IDCOPY) { // броверяем, была ли нажата кнопка "Copy"
 			TCHAR buffer[256]; // буфер для текста
-			HWND hEdit1 = GetDlgItem(hwnd, IDC_EDIT1);
-			HWND hEdit2 = GetDlgItem(hwnd, IDC_EDIT2); // получаем дескриптор Edit Control
+			HWND hEdit1 = GetDlgItem(hwnd, IDC_EDIT1); // получаем дескриптор Edit Control 1
+			HWND hEdit2 = GetDlgItem(hwnd, IDC_EDIT2); // получаем дескриптор Edit Control 2
 			// получаем текст из Edit Control
 			SendMessage(hEdit1, WM_GETTEXT, sizeof(buffer) / sizeof(TCHAR), (LPARAM)buffer);
 			// устанавливаем текст во второй Edit Control
 			SendMessage(hEdit2, WM_SETTEXT, 0, (LPARAM)buffer);
+		}
+
+		if (LOWORD(wParam) == IDC_BUTTON3)
+		{
+			const char buffer[256]{};
+			HWND hEdit3List = GetDlgItem(hwnd, IDC_EDIT3);
+			SendMessage(hEdit3List, WM_GETTEXT, sizeof(buffer) / sizeof(TCHAR), (LPARAM)buffer);
+
+			AddListBoxWord(buffer);
 		}
 
 		switch (LOWORD(wParam))
@@ -57,3 +76,4 @@ BOOL CALLBACK DlgProc(HWND hwnd, UINT uMsg, WPARAM wParam, LPARAM lParam)
 	}
 	return FALSE;
 }
+
