@@ -5,8 +5,6 @@
 #define IDD_DIALOG1                     101
 #define IDI_ICON1                       103
 #define IDC_EDIT1                       1001
-#define IDC_EDIT2                       1002
-#define IDC_BUTTON1                     1003
 
 // Next default values for new objects
 // 

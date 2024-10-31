@@ -44,15 +44,6 @@ BOOL CALLBACK DlgProc(HWND hwnd, UINT uMsg, WPARAM wParam, LPARAM lParam)
 		switch (LOWORD(wParam))
 		{
 		case IDOK: MessageBox(hwnd, "была нажата кнопка OK", "Info", MB_OK | MB_ICONINFORMATION); break;
-		case IDABORT:
-		{
-			HWND hComand = GetDlgItem(hwnd, IDABORT);
-			CONST INT SIZE = 256;
-			CHAR sz_buffer[SIZE]{};
-			CHAR sz_message[SIZE]{};
-			
-			break;
-		}
 		case IDCANCEL: EndDialog(hwnd, 0); break;
 		}
 		break;
