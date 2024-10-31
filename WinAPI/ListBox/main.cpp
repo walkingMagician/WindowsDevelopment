@@ -5,13 +5,13 @@
 #pragma comment(lib,"user32")
 
 
-HWND hListBox;
+
 
 BOOL CALLBACK DlgProc(HWND hwnd, UINT uMsg, WPARAM wParam, LPARAM lParam);
 
 void AddListBoxWord(const char* str)
 {
-	SendMessage(hListBox, LB_ADDSTRING, 0, (LPARAM)str);
+	SendMessage(IDC_LIST4, LB_ADDSTRING, 0, (LPARAM)str);
 }
 
 
@@ -71,8 +71,7 @@ BOOL CALLBACK DlgProc(HWND hwnd, UINT uMsg, WPARAM wParam, LPARAM lParam)
 	}
 
 	case WM_CLOSE:
-		EndDialog(hwnd, 0);
-		break;
+		EndDialog(hwnd, 0); break;
 	}
 	return FALSE;
 }
