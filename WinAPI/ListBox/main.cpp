@@ -9,9 +9,8 @@
 
 BOOL CALLBACK DlgProc(HWND hwnd, UINT uMsg, WPARAM wParam, LPARAM lParam);
 
-void AddListBoxWord(const char* str)
-{
-	SendMessage(IDC_LIST4, LB_ADDSTRING, 0, (LPARAM)str);
+void AddStringToListBox(HWND hwndListBox, LPCSTR text) {
+	SendMessage(hwndListBox, LB_ADDSTRING, 0, (LPARAM)text);
 }
 
 
@@ -35,23 +34,30 @@ BOOL CALLBACK DlgProc(HWND hwnd, UINT uMsg, WPARAM wParam, LPARAM lParam)
 
 	case WM_COMMAND:
 	{
-		if (LOWORD(wParam) == IDCOPY) { // броверяем, была ли нажата кнопка "Copy"
+		if (LOWORD(wParam) == IDCOPY) // броверяем, была ли нажата кнопка "Copy"
+		{ 
 			TCHAR buffer[256]; // буфер для текста
 			HWND hEdit1 = GetDlgItem(hwnd, IDC_EDIT1); // получаем дескриптор Edit Control 1
 			HWND hEdit2 = GetDlgItem(hwnd, IDC_EDIT2); // получаем дескриптор Edit Control 2
-			// получаем текст из Edit Control
-			SendMessage(hEdit1, WM_GETTEXT, sizeof(buffer) / sizeof(TCHAR), (LPARAM)buffer);
-			// устанавливаем текст во второй Edit Control
-			SendMessage(hEdit2, WM_SETTEXT, 0, (LPARAM)buffer);
+			SendMessage(hEdit1, WM_GETTEXT, sizeof(buffer) / sizeof(TCHAR), (LPARAM)buffer); // получаем текст из Edit Control
+			SendMessage(hEdit2, WM_SETTEXT, 0, (LPARAM)buffer); // устанавливаем текст во второй Edit Control
 		}
 
-		if (LOWORD(wParam) == IDC_BUTTON3)
+		if (LOWORD(wParam) == IDC_BUTTON3) // кнопка "ADD"
 		{
+			HWND hListBox4 = GetDlgItem(hwnd, IDC_LIST4); // дескриптор list box
+			HWND hEdit3List = GetDlgItem(hwnd, IDC_EDIT3); // дескриптор кнопкни "ADD"
 			const char buffer[256]{};
-			HWND hEdit3List = GetDlgItem(hwnd, IDC_EDIT3);
 			SendMessage(hEdit3List, WM_GETTEXT, sizeof(buffer) / sizeof(TCHAR), (LPARAM)buffer);
 
-			AddListBoxWord(buffer);
+			AddStringToListBox(hListBox4, buffer);
+			SetWindowText(hEdit3List, ""); // команда устанавливающая в "hEdit3List" (Edit Control)  пустую строку 
+		}
+
+		if (LOWORD(wParam) == IDC_BUTTON4) // button "DELETE"
+		{
+			HWND hListBox4 = GetDlgItem(hwnd, IDC_LIST4); // дескриптор list box
+			SendMessage(hListBox4, LB_DELETESTRING, 0, 0); // удаление элимента из ListBox 
 		}
 
 		switch (LOWORD(wParam))
