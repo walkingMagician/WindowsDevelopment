@@ -70,6 +70,8 @@ BOOL CALLBACK DlgProc(HWND hwnd, UINT uMsg, WPARAM wParam, LPARAM lParam)
 			SendMessage(hListBox4, LB_DELETESTRING, 0, 0); // удаление элимента из ListBox 
 			break;
 		}
+
+
 		}
 	}
 	break;
