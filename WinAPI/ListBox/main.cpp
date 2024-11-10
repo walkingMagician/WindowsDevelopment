@@ -1,4 +1,4 @@
-#define _CRT_SECURE_NO_WARNINGS
+п»ї#define _CRT_SECURE_NO_WARNINGS
 #include <Windows.h>
 #include <cstdio>
 #include "resource.h"
@@ -28,51 +28,55 @@ BOOL CALLBACK DlgProc(HWND hwnd, UINT uMsg, WPARAM wParam, LPARAM lParam)
 	switch (uMsg)
 	{
 	case WM_INITDIALOG:
-	{
-	}
+	{}
 	break;
 
 	case WM_COMMAND:
 	{
-		if (LOWORD(wParam) == IDCOPY) // броверяем, была ли нажата кнопка "Copy"
-		{ 
-			TCHAR buffer[256]; // буфер для текста
-			HWND hEdit1 = GetDlgItem(hwnd, IDC_EDIT1); // получаем дескриптор Edit Control 1
-			HWND hEdit2 = GetDlgItem(hwnd, IDC_EDIT2); // получаем дескриптор Edit Control 2
-			SendMessage(hEdit1, WM_GETTEXT, sizeof(buffer) / sizeof(TCHAR), (LPARAM)buffer); // получаем текст из Edit Control
-			SendMessage(hEdit2, WM_SETTEXT, 0, (LPARAM)buffer); // устанавливаем текст во второй Edit Control
+		switch (LOWORD(wParam))
+		{
+		case IDOK: MessageBox(hwnd, "Р‘С‹Р»Р° РЅР°Р¶Р°С‚Р° РєРЅРѕРїРєР° РћРљ", "Info", MB_OK | MB_ICONINFORMATION); break;
+		//case IDCOPY: MessageBox(hwnd, "Р‘С‹Р»Р° РЅР°Р¶Р°С‚Р° РєРЅРѕРїРєР° Copy", "Info", MB_OK | MB_ICONINFORMATION); break;
+		case IDCANCEL: EndDialog(hwnd, 0); break;
+		
+		case IDCOPY: // Р±СЂРѕРІРµСЂСЏРµРј, Р±С‹Р»Р° Р»Рё РЅР°Р¶Р°С‚Р° РєРЅРѕРїРєР° "Copy"
+		{
+			
+			TCHAR buffer[256]; // Р±СѓС„РµСЂ РґР»СЏ С‚РµРєСЃС‚Р°
+			HWND hEdit1 = GetDlgItem(hwnd, IDC_EDIT1); // РїРѕР»СѓС‡Р°РµРј РґРµСЃРєСЂРёРїС‚РѕСЂ Edit Control 1
+			HWND hEdit2 = GetDlgItem(hwnd, IDC_EDIT2); // РїРѕР»СѓС‡Р°РµРј РґРµСЃРєСЂРёРїС‚РѕСЂ Edit Control 2
+			SendMessage(hEdit1, WM_GETTEXT, sizeof(buffer) / sizeof(TCHAR), (LPARAM)buffer); // РїРѕР»СѓС‡Р°РµРј С‚РµРєСЃС‚ РёР· Edit Control
+			SendMessage(hEdit2, WM_SETTEXT, 0, (LPARAM)buffer); // СѓСЃС‚Р°РЅР°РІР»РёРІР°РµРј С‚РµРєСЃС‚ РІРѕ РІС‚РѕСЂРѕР№ Edit Control
+			break;
 		}
 
-		if (LOWORD(wParam) == IDC_BUTTON3) // кнопка "ADD"
+		case IDC_BUTTON3:  // РєРЅРѕРїРєР° "ADD"
 		{
-			HWND hListBox4 = GetDlgItem(hwnd, IDC_LIST4); // дескриптор list box
-			HWND hEdit3List = GetDlgItem(hwnd, IDC_EDIT3); // дескриптор кнопкни "ADD"
+
+			HWND hListBox4 = GetDlgItem(hwnd, IDC_LIST4); // РґРµСЃРєСЂРёРїС‚РѕСЂ list box
+			HWND hEdit3List = GetDlgItem(hwnd, IDC_EDIT3); // РґРµСЃРєСЂРёРїС‚РѕСЂ РєРЅРѕРїРєРЅРё "ADD"
 			const char buffer[256]{};
 			SendMessage(hEdit3List, WM_GETTEXT, sizeof(buffer) / sizeof(TCHAR), (LPARAM)buffer);
 
 			AddStringToListBox(hListBox4, buffer);
-			SetWindowText(hEdit3List, ""); // команда устанавливающая в "hEdit3List" (Edit Control)  пустую строку 
+			SetWindowText(hEdit3List, ""); // РєРѕРјР°РЅРґР° СѓСЃС‚Р°РЅР°РІР»РёРІР°СЋС‰Р°СЏ РІ "hEdit3List" (Edit Control)  РїСѓСЃС‚СѓСЋ СЃС‚СЂРѕРєСѓ 
+			break;
 		}
 
-		if (LOWORD(wParam) == IDC_BUTTON4) // button "DELETE"
+		case IDC_BUTTON4: // button "DELETE"
 		{
-			HWND hListBox4 = GetDlgItem(hwnd, IDC_LIST4); // дескриптор list box
-			SendMessage(hListBox4, LB_DELETESTRING, 0, 0); // удаление элимента из ListBox 
+
+			HWND hListBox4 = GetDlgItem(hwnd, IDC_LIST4); // РґРµСЃРєСЂРёРїС‚РѕСЂ list box
+			SendMessage(hListBox4, LB_DELETESTRING, 0, 0); // СѓРґР°Р»РµРЅРёРµ СЌР»РёРјРµРЅС‚Р° РёР· ListBox 
+			break;
 		}
-
-		switch (LOWORD(wParam))
-		{
-		case IDOK: MessageBox(hwnd, "Была нажата кнопка ОК", "Info", MB_OK | MB_ICONINFORMATION); break;
-		//case IDCOPY: MessageBox(hwnd, "Была нажата кнопка Copy", "Info", MB_OK | MB_ICONINFORMATION); break;
-		case IDCANCEL: EndDialog(hwnd, 0); break;
-
 		}
 	}
 	break;
 	
-	case WM_DESTROY: // обрабатываем событие закрытия окна
+	case WM_DESTROY: // РѕР±СЂР°Р±Р°С‚С‹РІР°РµРј СЃРѕР±С‹С‚РёРµ Р·Р°РєСЂС‹С‚РёСЏ РѕРєРЅР°
 	{
-		PostQuitMessage(0); // удаляем сообщение из очереди и завершаем приложение
+		PostQuitMessage(0); // СѓРґР°Р»СЏРµРј СЃРѕРѕР±С‰РµРЅРёРµ РёР· РѕС‡РµСЂРµРґРё Рё Р·Р°РІРµСЂС€Р°РµРј РїСЂРёР»РѕР¶РµРЅРёРµ
 		break;
 	}
 
