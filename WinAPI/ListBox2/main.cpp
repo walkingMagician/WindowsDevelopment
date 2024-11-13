@@ -27,9 +27,6 @@ BOOL CALLBACK DlgProc(HWND hwnd, UINT uMsg, WPARAM wParam, LPARAM lParam)
 	{
 	case WM_INITDIALOG:
 	{
-
-		
-
 		HICON hIcon = LoadIcon(GetModuleHandle(NULL), MAKEINTRESOURCE(IDI_ICON1));
 		SendMessage(hwnd, WM_SETICON, 0, (LPARAM)hIcon);
 
@@ -43,26 +40,38 @@ BOOL CALLBACK DlgProc(HWND hwnd, UINT uMsg, WPARAM wParam, LPARAM lParam)
 		switch (wParam)
 		{
 			
-		case VK_RETURN:
+		case VK_DELETE:
 			SendMessage(GetDlgItem(hwnd, IDC_BUTTON_ADD), BM_CLICK, 0, 0); //Клик по кнопке
 			break;
 
 		}break;
 
 	} break;
+
+	case WM_LBUTTONDBLCLK:
+	{
+		HWND hListBox = GetDlgItem(hwnd, IDC_LIST);
+		INT I = SendMessage(hListBox, LB_GETCURSEL, 0, 0);
+		CHAR sz_buffer[256];
+		SendMessage(hListBox, LB_GETTEXT, I, (LPARAM)sz_buffer);
+		MessageBox(hwnd, sz_buffer, "info", MB_OK);
+
+	} break;
+	
+
 	case WM_COMMAND:
 		switch (LOWORD(wParam))
 		{
 		case IDC_BUTTON_ADD:
 			DialogBox(GetModuleHandle(NULL), MAKEINTRESOURCE(IDD_DIALOG_ADD_ITEM), hwnd, DlgProcAddItem, 0);
 			break;
+
 		case IDC_BUTTON_REMUVE:
 		{
 			HWND hListBox = GetDlgItem(hwnd, IDC_LIST);
 			INT i = SendMessage(hListBox, LB_GETCURSEL, 0, 0);
 			SendMessage(hListBox, LB_DELETESTRING, i, 0);
-		}
-			break;
+		} break;
 
 		case IDOK: 
 		{
@@ -77,6 +86,8 @@ BOOL CALLBACK DlgProc(HWND hwnd, UINT uMsg, WPARAM wParam, LPARAM lParam)
 			MessageBox(hwnd, sz_message, "Info", MB_OK | MB_ICONINFORMATION);
 					
 		} break;
+
+
 		case IDCANCEL: EndDialog(hwnd, 0); break;
 		
 		} break;
