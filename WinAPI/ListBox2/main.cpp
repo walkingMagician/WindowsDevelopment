@@ -1,4 +1,4 @@
-#define _CRT_SECURE_NO_WARNINGS
+п»ї#define _CRT_SECURE_NO_WARNINGS
 #include <windows.h>
 #include <cstdio>
 #include <commctrl.h>
@@ -41,14 +41,14 @@ BOOL CALLBACK DlgProc(HWND hwnd, UINT uMsg, WPARAM wParam, LPARAM lParam)
 		{
 			
 		case VK_DELETE:
-			SendMessage(GetDlgItem(hwnd, IDC_BUTTON_ADD), BM_CLICK, 0, 0); //Клик по кнопке
+			SendMessage(GetDlgItem(hwnd, IDC_BUTTON_ADD), BM_CLICK, 0, 0); //РљР»РёРє РїРѕ РєРЅРѕРїРєРµ
 			break;
 
 		}break;
 
 	} break;
 
-	case WM_LBUTTONDBLCLK:
+	case WM_LBUTTONDBLCLK: // РґРІРѕР№РЅРѕР№ РєР»РёРµ
 	{
 		HWND hListBox = GetDlgItem(hwnd, IDC_LIST);
 		INT I = SendMessage(hListBox, LB_GETCURSEL, 0, 0);
@@ -75,14 +75,14 @@ BOOL CALLBACK DlgProc(HWND hwnd, UINT uMsg, WPARAM wParam, LPARAM lParam)
 
 		case IDOK: 
 		{
-			HWND hListBox = GetDlgItem(hwnd, IDC_LIST); // дескриптор нашего основного окна
+			HWND hListBox = GetDlgItem(hwnd, IDC_LIST); // РґРµСЃРєСЂРёРїС‚РѕСЂ РЅР°С€РµРіРѕ РѕСЃРЅРѕРІРЅРѕРіРѕ РѕРєРЅР°
 			CONST INT SIZE = 256;
-			CHAR sz_buffer[SIZE]{}; // массив под значение  
-			INT i = SendMessage(hListBox, LB_GETCURSEL, 0, 0); // выделяем значение мышкой 
+			CHAR sz_buffer[SIZE]{}; // РјР°СЃСЃРёРІ РїРѕРґ Р·РЅР°С‡РµРЅРёРµ  
+			INT i = SendMessage(hListBox, LB_GETCURSEL, 0, 0); // РІС‹РґРµР»СЏРµРј Р·РЅР°С‡РµРЅРёРµ РјС‹С€РєРѕР№ 
 			SendMessage(hListBox, LB_GETTEXT, i, (LPARAM)sz_buffer);
 
-			CHAR sz_message[SIZE]{}; // массив под вывод сообщения 
-			sprintf(sz_message, "вы выбрали элимент №%i co значением \"%s\".", i, sz_buffer);
+			CHAR sz_message[SIZE]{}; // РјР°СЃСЃРёРІ РїРѕРґ РІС‹РІРѕРґ СЃРѕРѕР±С‰РµРЅРёСЏ 
+			sprintf(sz_message, "РІС‹ РІС‹Р±СЂР°Р»Рё СЌР»РёРјРµРЅС‚ в„–%i co Р·РЅР°С‡РµРЅРёРµРј \"%s\".", i, sz_buffer);
 			MessageBox(hwnd, sz_message, "Info", MB_OK | MB_ICONINFORMATION);
 					
 		} break;
@@ -113,28 +113,28 @@ BOOL CALLBACK DlgProcAddItem(HWND hwnd, UINT uMsg, WPARAM wParam, LPARAM lParam)
 		{
 			CONST INT SIZE = 256;
 			CHAR OS_buffer[SIZE]{};
-			HWND hEdit = GetDlgItem(hwnd, IDC_EDIT_ADD_ITEM); // дескриптор edit control
-			SendMessage(hEdit, WM_GETTEXT, SIZE, (LPARAM)OS_buffer); // получение текста 1
-			HWND hParent = GetParent(hwnd); // получение родительского окна
-			HWND hListBox = GetDlgItem(hParent, IDC_LIST); // дескриптор бокса
+			HWND hEdit = GetDlgItem(hwnd, IDC_EDIT_ADD_ITEM); // РґРµСЃРєСЂРёРїС‚РѕСЂ edit control
+			SendMessage(hEdit, WM_GETTEXT, SIZE, (LPARAM)OS_buffer); // РїРѕР»СѓС‡РµРЅРёРµ С‚РµРєСЃС‚Р° 1
+			HWND hParent = GetParent(hwnd); // РїРѕР»СѓС‡РµРЅРёРµ СЂРѕРґРёС‚РµР»СЊСЃРєРѕРіРѕ РѕРєРЅР°
+			HWND hListBox = GetDlgItem(hParent, IDC_LIST); // РґРµСЃРєСЂРёРїС‚РѕСЂ Р±РѕРєСЃР°
 
-			int count = SendMessage(hListBox, LB_GETCOUNT, 0, 0); // получение кол-во элиментов 
-			BOOL flag = true; // флаг
+			int count = SendMessage(hListBox, LB_GETCOUNT, 0, 0); // РїРѕР»СѓС‡РµРЅРёРµ РєРѕР»-РІРѕ СЌР»РёРјРµРЅС‚РѕРІ 
+			BOOL flag = true; // С„Р»Р°Рі
 
 			for (int i = 0; i < count; i++)
 			{
 				CHAR sz_buffer[SIZE]{};
-				SendMessage(hListBox, LB_GETTEXT, i, (LPARAM)sz_buffer); // получение элимента из бокса
+				SendMessage(hListBox, LB_GETTEXT, i, (LPARAM)sz_buffer); // РїРѕР»СѓС‡РµРЅРёРµ СЌР»РёРјРµРЅС‚Р° РёР· Р±РѕРєСЃР°
 				if (strcmp(sz_buffer,OS_buffer) == 0)
 				{
 					flag = false;
 					break;
 				}
 			}	
-			if (flag && strlen(OS_buffer) && strlen(OS_buffer + 1)) // проверка на флаг, длину\пустоту
-				SendMessage(hListBox, LB_ADDSTRING, 0, (LPARAM)OS_buffer); // добавление текста
+			if (flag && strlen(OS_buffer) && strlen(OS_buffer + 1)) // РїСЂРѕРІРµСЂРєР° РЅР° С„Р»Р°Рі, РґР»РёРЅСѓ\РїСѓСЃС‚РѕС‚Сѓ
+				SendMessage(hListBox, LB_ADDSTRING, 0, (LPARAM)OS_buffer); // РґРѕР±Р°РІР»РµРЅРёРµ С‚РµРєСЃС‚Р°
 			else
-				MessageBox(hwnd, "Элемент уже существует или является пустым", "Error", MB_OK | MB_ICONERROR); // ошибка
+				MessageBox(hwnd, "Р­Р»РµРјРµРЅС‚ СѓР¶Рµ СЃСѓС‰РµСЃС‚РІСѓРµС‚ РёР»Рё СЏРІР»СЏРµС‚СЃСЏ РїСѓСЃС‚С‹Рј", "Error", MB_OK | MB_ICONERROR); // РѕС€РёР±РєР°
 
 		} 
 		case IDCANCEL: EndDialog(hwnd, 0); break;
