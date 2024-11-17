@@ -36,45 +36,26 @@ BOOL CALLBACK DlgProc(HWND hwnd, UINT uMsg, WPARAM wParam, LPARAM lParam)
 			SendMessage(hListBox, LB_ADDSTRING, 0, (LPARAM)g_VALUES[i]);
 	} break;
 
+	case WM_KEYUP:
+		// Обработка нажатия клавиши
+		if (wParam == VK_F1) {
+			PostQuitMessage(0); // Закрыть приложение при нажатии ESC
+		}
+		break;
 	
-
-	
-	
-
 	case WM_COMMAND:
 		switch (LOWORD(wParam))
 		{
-		
-		case IDC_LIST:
+		case IDC_LIST: // сообщение от листа
 		{
 			switch (HIWORD(wParam))
 			{
 			case LBN_DBLCLK: // двойной клика
-			{
-				HWND hListBox = (HWND)lParam;
-				INT I = SendMessage(hListBox, LB_GETCURSEL, 0, 0);
-				CHAR sz_buffer[256]{};
-				SendMessage(hListBox, LB_GETTEXT, I, (LPARAM)sz_buffer);
-				//MessageBox(hwnd, sz_buffer, "info", MB_OK);
-				DialogBox(GetModuleHandle(NULL), MAKEINTRESOURCE(IDD_DIALOG_ADD_ITEM), hwnd, DlgProcAddItem, 0);
-
-
+			{	
+				DialogBox(GetModuleHandle(NULL), MAKEINTRESOURCE(IDD_DIALOG_ADD_ITEM), hwnd, DlgProcAddItem , 0);
 			} break;
 
 			} break;
-
-		} break;
-
-		case WM_KEYDOWN:
-		{
-			switch (wParam)
-			{
-
-			case VK_DELETE:
-				SendMessage(GetDlgItem(hwnd, IDC_BUTTON_ADD), BM_CLICK, 0, 0); //Клик по кнопке
-				break;
-
-			}break;
 
 		} break;
 		
@@ -121,19 +102,38 @@ BOOL CALLBACK DlgProcAddItem(HWND hwnd, UINT uMsg, WPARAM wParam, LPARAM lParam)
 	switch (uMsg)
 	{
 	case WM_INITDIALOG:
+	{
+
 		SetFocus(GetDlgItem(hwnd, IDC_EDIT_ADD_ITEM));
-			break;
+	case IDC_LIST:
+	{
+		HWND hParent = GetParent(hwnd); // получение родительского окна
+		HWND hListBox = GetDlgItem(hParent, IDC_LIST);
+		INT I = SendMessage(hListBox, LB_GETCURSEL, 0, 0);
+		CHAR sz_buffer[256]{};
+		SendMessage(hListBox, LB_GETTEXT, I, (LPARAM)sz_buffer);
+		SetDlgItemText(hwnd, IDC_EDIT_ADD_ITEM, sz_buffer);
+		
+	} break;
+
+	} break;
+	
 	case WM_COMMAND:
 		switch (LOWORD(wParam))
-		{
+		{		
 		case IDOK:
 		{
+
+
 			CONST INT SIZE = 256;
 			CHAR OS_buffer[SIZE]{};
 			HWND hEdit = GetDlgItem(hwnd, IDC_EDIT_ADD_ITEM); // дескриптор edit control
-			SendMessage(hEdit, WM_GETTEXT, SIZE, (LPARAM)OS_buffer); // получение текста 1
+			SendMessage(hEdit, WM_GETTEXT, SIZE, (LPARAM)OS_buffer); // получение вводимого текста
+
 			HWND hParent = GetParent(hwnd); // получение родительского окна
 			HWND hListBox = GetDlgItem(hParent, IDC_LIST); // дескриптор бокса
+
+			INT I = SendMessage(hListBox, LB_GETCURSEL, 0, 0); // получение индекса при выборе мышки 
 
 			int count = SendMessage(hListBox, LB_GETCOUNT, 0, 0); // получение кол-во элиментов 
 			BOOL flag = true; // флаг
@@ -148,8 +148,11 @@ BOOL CALLBACK DlgProcAddItem(HWND hwnd, UINT uMsg, WPARAM wParam, LPARAM lParam)
 					break;
 				}
 			}	
-			if (flag && strlen(OS_buffer) && strlen(OS_buffer + 1)) // проверка на флаг, длину\пустоту
+			if (flag && strlen(OS_buffer)) // проверка на флаг, длину/пустоту
+			{
+				if (I >= 0) SendMessage(hListBox, LB_DELETESTRING, I, 0); // проверка на то брали из листа или нет 
 				SendMessage(hListBox, LB_ADDSTRING, 0, (LPARAM)OS_buffer); // добавление текста
+			}
 			else
 				MessageBox(hwnd, "Элемент уже существует или является пустым", "Error", MB_OK | MB_ICONERROR); // ошибка
 
