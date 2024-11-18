@@ -1,4 +1,4 @@
-#include<windows.h>
+ï»¿#include<windows.h>
 
 CONST CHAR g_sz_WINDOW_CLASS[] = "My Main Window";
 
@@ -37,14 +37,14 @@ INT WINAPI WinMain(HINSTANCE hInstance, HINSTANCE hPrevInst, LPSTR lpCmdLine, IN
 		NULL, // Ex-Styles
 		g_sz_WINDOW_CLASS, // Class name
 		g_sz_WINDOW_CLASS, // Window Title
-		WS_OVERLAPPEDWINDOW, // Window style. òàêîé ñòèëü âñåãäà çàäà¸òñÿ äëÿ ãëàâíîãî îêíà. 
-		CW_USEDEFAULT, CW_USEDEFAULT, // position - ïîëîæåíèå îêíà ïðè çàïóñêå
-		CW_USEDEFAULT, CW_USEDEFAULT, // size - ðàçìåð ñîçäîâàåìîãî îêíàîêíà 
+		WS_OVERLAPPEDWINDOW, // Window style. Ñ‚Ð°ÐºÐ¾Ð¹ ÑÑ‚Ð¸Ð»ÑŒ Ð²ÑÐµÐ³Ð´Ð° Ð·Ð°Ð´Ð°Ñ‘Ñ‚ÑÑ Ð´Ð»Ñ Ð³Ð»Ð°Ð²Ð½Ð¾Ð³Ð¾ Ð¾ÐºÐ½Ð°. 
+		CW_USEDEFAULT, CW_USEDEFAULT, // position - Ð¿Ð¾Ð»Ð¾Ð¶ÐµÐ½Ð¸Ðµ Ð¾ÐºÐ½Ð° Ð¿Ñ€Ð¸ Ð·Ð°Ð¿ÑƒÑÐºÐµ
+		CW_USEDEFAULT, CW_USEDEFAULT, // size - Ñ€Ð°Ð·Ð¼ÐµÑ€ ÑÐ¾Ð·Ð´Ð¾Ð²Ð°ÐµÐ¼Ð¾Ð³Ð¾ Ð¾ÐºÐ½Ð°Ð¾ÐºÐ½Ð° 
 		NULL,
-		NULL, // hMenu - äëÿ ãëàâíîãî îêíà ýòî ResourceID ãëàâíîãî ìåíþ,
-		// äëÿ äî÷åðíåãî îêíà (ýëèìåíòà êàêîãî-òî îêíà)
-		// ýòî ResourseID ñîîòâåòñòâóþùåãî ýòèìåíòà 
-		// ïîýòîìó ResourseID âñåãäà ìîæíî ïîëó÷èòü ïðè ïîìîùè ôóíêöèè GetdlgItem()
+		NULL, // hMenu - Ð´Ð»Ñ Ð³Ð»Ð°Ð²Ð½Ð¾Ð³Ð¾ Ð¾ÐºÐ½Ð° ÑÑ‚Ð¾ ResourceID Ð³Ð»Ð°Ð²Ð½Ð¾Ð³Ð¾ Ð¼ÐµÐ½ÑŽ,
+		// Ð´Ð»Ñ Ð´Ð¾Ñ‡ÐµÑ€Ð½ÐµÐ³Ð¾ Ð¾ÐºÐ½Ð° (ÑÐ»Ð¸Ð¼ÐµÐ½Ñ‚Ð° ÐºÐ°ÐºÐ¾Ð³Ð¾-Ñ‚Ð¾ Ð¾ÐºÐ½Ð°)
+		// ÑÑ‚Ð¾ ResourseID ÑÐ¾Ð¾Ñ‚Ð²ÐµÑ‚ÑÑ‚Ð²ÑƒÑŽÑ‰ÐµÐ³Ð¾ ÑÑ‚Ð¸Ð¼ÐµÐ½Ñ‚Ð° 
+		// Ð¿Ð¾ÑÑ‚Ð¾Ð¼Ñƒ ResourseID Ð²ÑÐµÐ³Ð´Ð° Ð¼Ð¾Ð¶Ð½Ð¾ Ð¿Ð¾Ð»ÑƒÑ‡Ð¸Ñ‚ÑŒ Ð¿Ñ€Ð¸ Ð¿Ð¾Ð¼Ð¾Ñ‰Ð¸ Ñ„ÑƒÐ½ÐºÑ†Ð¸Ð¸ GetdlgItem()
 		hInstance,
 		NULL
 	);
@@ -54,8 +54,8 @@ INT WINAPI WinMain(HINSTANCE hInstance, HINSTANCE hPrevInst, LPSTR lpCmdLine, IN
 		MessageBox(NULL, "Window creation failed", "", MB_OK);
 		return 0;
 	}
-	ShowWindow(hwnd, nCmdShow); // çàäà¸ò ðåæèì îòîáðàæåíèÿ îêíà (ðàçâ¸ðíóòî íà âåñü ýêðàí, ñâ¸ðíóòîå )
-	UpdateWindow(hwnd); // ïðîðèñîâûâàåò îêíî
+	ShowWindow(hwnd, nCmdShow); // Ð·Ð°Ð´Ð°Ñ‘Ñ‚ Ñ€ÐµÐ¶Ð¸Ð¼ Ð¾Ñ‚Ð¾Ð±Ñ€Ð°Ð¶ÐµÐ½Ð¸Ñ Ð¾ÐºÐ½Ð° (Ñ€Ð°Ð·Ð²Ñ‘Ñ€Ð½ÑƒÑ‚Ð¾ Ð½Ð° Ð²ÐµÑÑŒ ÑÐºÑ€Ð°Ð½, ÑÐ²Ñ‘Ñ€Ð½ÑƒÑ‚Ð¾Ðµ )
+	UpdateWindow(hwnd); // Ð¿Ñ€Ð¾Ñ€Ð¸ÑÐ¾Ð²Ñ‹Ð²Ð°ÐµÑ‚ Ð¾ÐºÐ½Ð¾
 
 	MSG msg;
 	while (GetMessage(&msg, NULL, 0, 0) > 0)
