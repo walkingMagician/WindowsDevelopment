@@ -78,6 +78,15 @@ BOOL CALLBACK DlgProc(HWND hwnd, UINT uMsg, WPARAM wParam, LPARAM lParam)
 		
 		} break;
 
+	case WM_VKEYTOITEM:
+	{
+		switch (LOWORD(wParam))
+		{
+		case VK_DELETE: SendMessage(hwnd, WM_COMMAND, LOWORD(IDC_BUTTON_REMUVE), 0); break;
+		case VK_RETURN: SendMessage(hwnd, WM_COMMAND, MAKEWPARAM(IDC_LIST, LBN_DBLCLK), (LPARAM)GetDlgItem(hwnd, IDC_LIST)); break;
+		} break;
+	} break;
+		
 	case WM_CLOSE:
 		EndDialog(hwnd, 0);
 		break;
