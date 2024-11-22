@@ -109,7 +109,7 @@ INT CALLBACK WndProc(HWND hwnd, UINT uMsg, WPARAM wParam, LPARAM lParam)
 		//	NULL,
 		//	NULL, 
 		//	NULL// Ничего не передаем в дополнительные параметры
-		//);
+		//); 
 	} break;
 
 	case WM_COMMAND:
