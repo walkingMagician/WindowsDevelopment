@@ -71,6 +71,12 @@ INT WINAPI WinMain(HINSTANCE hInstance, HINSTANCE hPrevInst, LPSTR lpCmdLine, IN
 		return 0;
 	}
 	
+	HCURSOR hCursor = (HCURSOR)LoadImage(hInstance, "amogus.ani", IMAGE_CURSOR, 0, 0, LR_LOADFROMFILE);
+	if (hCursor) {
+		// Установка курсора для окна
+		SetClassLongPtr(hwnd, GCLP_HCURSOR, (LONG_PTR)hCursor);
+	}
+
 	CenterWindow(hwnd);
 	ShowWindow(hwnd, nCmdShow); // задаёт режим отображения окна (развёрнуто на весь экран, свёрнутое )
 	UpdateWindow(hwnd); // прорисовывает окно
@@ -119,9 +125,7 @@ INT CALLBACK WndProc(HWND hwnd, UINT uMsg, WPARAM wParam, LPARAM lParam)
 
 	/*case WM_SETCURSOR:
 	{
-		HCURSOR hCursor;
-		hCursor = LoadCursor(NULL, (CHAR*)IDR_CURSR1);
-		SetCursor(hCursor);
+		
 
 	} break;*/
 
