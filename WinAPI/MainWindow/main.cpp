@@ -29,10 +29,12 @@ INT WINAPI WinMain(HINSTANCE hInstance, HINSTANCE hPrevInst, LPSTR lpCmdLine, IN
 	// cb...  - CountBytes
 
 	wClass.hIcon = LoadIcon(hInstance, MAKEINTRESOURCE(IDI_ICON1)); 
+	//wClass.hIcon = (HICON)LoadImage(hInstance, "ICO\\hIcon32.ico", IMAGE_BITMAP, LR_DEFAULTSIZE, LR_DEFAULTSIZE, LR_LOADFROMFILE);
 	// Используется для отображения значка окна в заголовке окна и на панелях задач
 	wClass.hIconSm = LoadIcon(hInstance, MAKEINTRESOURCE(IDI_ICON2));
+	//wClass.hIconSm = (HICON)LoadImage(hInstance, "ICO\\hIconSm16.ico", IMAGE_BITMAP, LR_DEFAULTSIZE, LR_DEFAULTSIZE, LR_LOADFROMFILE);
 	// предназначен для использования в заголовках окон и в списке задач
-	wClass.hCursor = LoadCursor(hInstance, IDC_ARROW);
+	wClass.hCursor = (HCURSOR)LoadImage(hInstance, "Cursor\\starcraft-original\\Working In Background.ani", IMAGE_CURSOR, LR_DEFAULTSIZE, LR_DEFAULTSIZE, LR_LOADFROMFILE);
 	wClass.hbrBackground = (HBRUSH)COLOR_WINDOW;
 
 	wClass.hInstance = hInstance;
@@ -71,11 +73,11 @@ INT WINAPI WinMain(HINSTANCE hInstance, HINSTANCE hPrevInst, LPSTR lpCmdLine, IN
 		return 0;
 	}
 	
-	HCURSOR hCursor = (HCURSOR)LoadImage(hInstance, "amogus.ani", IMAGE_CURSOR, 0, 0, LR_LOADFROMFILE);
-	if (hCursor) {
-		// Установка курсора для окна
-		SetClassLongPtr(hwnd, GCLP_HCURSOR, (LONG_PTR)hCursor);
-	}
+	//HCURSOR hCursor = (HCURSOR)LoadImage(hInstance, "amogus.ani", IMAGE_CURSOR, 0, 0, LR_LOADFROMFILE);
+	//if (hCursor) {
+	//	// Установка курсора для окна
+	//	SetClassLongPtr(hwnd, GCLP_HCURSOR, (LONG_PTR)hCursor);
+	//}
 
 	CenterWindow(hwnd);
 	ShowWindow(hwnd, nCmdShow); // задаёт режим отображения окна (развёрнуто на весь экран, свёрнутое )
@@ -120,16 +122,8 @@ INT CALLBACK WndProc(HWND hwnd, UINT uMsg, WPARAM wParam, LPARAM lParam)
 		//); 
 	} break;
 
-	case WM_COMMAND:
-	{} break;
-
-	/*case WM_SETCURSOR:
+	case WM_MOVE: 
 	{
-		
-
-	} break;*/
-
-	case WM_MOVE: {
 		RECT rect;
 		GetWindowRect(hwnd, &rect);  // Получаем положение окна
 
@@ -138,22 +132,14 @@ INT CALLBACK WndProc(HWND hwnd, UINT uMsg, WPARAM wParam, LPARAM lParam)
 
 		// Форматируем строку для заголовка
 		char title[100];
-		sprintf(title, "%s X: %d, Y: %d, Width: %d, Height: %d", g_sz_WINDOW_CLASS, rect.left, rect.top, width, height);
-		SetWindowText(hwnd, title);  // Устанавливаем заголовок окна
-	} break;
-
-	case WM_SIZE:
-	{
-		RECT rect;
-		GetWindowRect(hwnd, &rect);
-		int width = rect.right - rect.left;
-		int height = rect.bottom - rect.top;
-		
-		char title[100];
-		//sprintf(title, "Width %d, Height %d", width, height);
-		//SetWindowText(hwnd, title);
+		sprintf(title, "%s, X: %i, Y: %i, Width: %i, Height: %i", g_sz_WINDOW_CLASS, rect.left, rect.top, width, height);
+		SendMessage(hwnd, WM_SETTEXT, 0, (LPARAM)title);
+		//SetWindowText(hwnd, title);  // Устанавливаем заголовок окна
 
 	} break;
+
+	case WM_COMMAND:
+	{} break;
 
 	
 	case WM_DESTROY:
@@ -193,12 +179,12 @@ int WindowSizeY()
 void CenterWindow(HWND hwnd)
 {
 	// Получаем размеры экрана
-	RECT rcScreen;
-	SystemParametersInfo(SPI_GETWORKAREA, 0, &rcScreen, 0);
+	RECT rect;
+	SystemParametersInfo(SPI_GETWORKAREA, 0, &rect, 0);
 
 	// Вычисляем координаты для центрирования окна
-	int x = (rcScreen.right - rcScreen.left) / 2 - (WindowSizeX() / 2);
-	int y = (rcScreen.bottom - rcScreen.top) / 2 - (WindowSizeY() / 2);
+	int x = (rect.right - rect.left) / 2 - (WindowSizeX() / 2);
+	int y = (rect.bottom - rect.top) / 2 - (WindowSizeY() / 2);
 
 	// Устанавливаем положение окна
 	MoveWindow(hwnd, x, y, WindowSizeX(), WindowSizeY(), FALSE);
