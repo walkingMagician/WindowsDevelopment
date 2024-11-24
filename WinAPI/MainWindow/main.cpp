@@ -88,6 +88,8 @@ INT WINAPI WinMain(HINSTANCE hInstance, HINSTANCE hPrevInst, LPSTR lpCmdLine, IN
 
 INT CALLBACK WndProc(HWND hwnd, UINT uMsg, WPARAM wParam, LPARAM lParam)
 {
+
+	HCURSOR hcHand, hcArrow;
 	switch (uMsg)
 	{
 	case WM_PAINT:
@@ -114,6 +116,14 @@ INT CALLBACK WndProc(HWND hwnd, UINT uMsg, WPARAM wParam, LPARAM lParam)
 
 	case WM_COMMAND:
 	{} break;
+	case WM_SETCURSOR:
+	{
+		HCURSOR hCursor;
+		hCursor = LoadCursor(NULL, (CHAR*)IDR_CURSR1);
+		SetCursor(hCursor);
+
+	} break;
+
 	case WM_MOVE: {
 		RECT rect;
 		GetWindowRect(hwnd, &rect);  // Получаем положение окна
@@ -140,6 +150,7 @@ INT CALLBACK WndProc(HWND hwnd, UINT uMsg, WPARAM wParam, LPARAM lParam)
 
 	} break;
 
+	
 	case WM_DESTROY:
 	{
 		PostQuitMessage(0);
@@ -160,7 +171,7 @@ int WindowSizeX()
 	// Получение размера экрана
 	int screenWidth = GetSystemMetrics(SM_CXSCREEN);
 
-	// Рассчитываем размеры окна (75% высоты и ширины)
+	// Рассчитываем размеры окна (75% ширины)
 	int windowX = (screenWidth / 4) * 3;
 	return windowX;
 }
@@ -169,7 +180,7 @@ int WindowSizeY()
 	// Получение размера экрана
 	int screenHeight = GetSystemMetrics(SM_CYSCREEN);
 
-	// Рассчитываем размеры окна (75% высоты и ширины)
+	// Рассчитываем размеры окна (75% высоты)
 	int windowY = (screenHeight / 4) * 3;
 	return windowY;
 }

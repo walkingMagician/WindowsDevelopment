@@ -139,6 +139,9 @@
     <Image Include="ICO\hIcon32.ico" />
     <Image Include="ICO\hIconSm16.ico" />
   </ItemGroup>
+  <ItemGroup>
+    <None Include="Cursor\gam1571.ani" />
+  </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
   <ImportGroup Label="ExtensionTargets">
   </ImportGroup>
