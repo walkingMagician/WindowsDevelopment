@@ -4,6 +4,10 @@
 #pragma comment(lib,"user32")
 #include "resource.h"
 
+#define IDC_STATIC	1000
+#define IDC_EDIT	1001
+#define IDC_BUTTON	1002
+
 
 CONST CHAR g_sz_WINDOW_CLASS[] = "My Main Window";
 
@@ -63,6 +67,8 @@ INT WINAPI WinMain(HINSTANCE hInstance, HINSTANCE hPrevInst, LPSTR lpCmdLine, IN
 		// для дочернего окна (элимента какого-то окна)
 		// это ResourseID соответствующего этимента 
 		// поэтому ResourseID всегда можно получить при помощи функции GetdlgItem()
+		// кроме того этот resourseID будет "прилетать" в параметре LOWORD(wParam)
+		// при воздействии пользователя 
 		hInstance,
 		NULL
 	);
@@ -87,8 +93,9 @@ INT WINAPI WinMain(HINSTANCE hInstance, HINSTANCE hPrevInst, LPSTR lpCmdLine, IN
 	MSG msg;
 	while (GetMessage(&msg, NULL, 0, 0) > 0)
 	{
-		TranslateMessage(&msg);
-		DispatchMessage(&msg);
+		//TranslateMessage(&msg);
+		//DispatchMessage(&msg);
+		IsDialogMessage(hwnd, &msg);
 	}
 
 	return msg.wParam;
@@ -100,27 +107,40 @@ INT CALLBACK WndProc(HWND hwnd, UINT uMsg, WPARAM wParam, LPARAM lParam)
 	HCURSOR hcHand, hcArrow;
 	switch (uMsg)
 	{
-	case WM_PAINT:
-	{
-		PAINTSTRUCT paint;
-		HDC hdc = BeginPaint(hwnd, &paint);
-		EndPaint(hwnd, &paint);
-	} break;
 	case WM_CREATE:
 	{
-		//// Добавление статического текстового контроля
-		//CreateWindow(
-		//	"STATIC",  // Класс окна
-		//	"dfg",  // Текст
-		//	WS_VISIBLE | WS_CHILD,  // Стиль
-		//	10, 10,  // Позиция (x, y)
-		//	200, 20,  // Ширина и высота
-		//	hwnd,  // Родительское окно
-		//	NULL,
-		//	NULL, 
-		//	NULL// Ничего не передаем в дополнительные параметры
-		//); 
+		HWND hStatic = CreateWindowEx
+		(
+			NULL, 
+			"Static",
+			"",
+			WS_CHILD | WS_VISIBLE | WS_TABSTOP,
+			10, 10, 
+			500, 22, 
+			hwnd, 
+			(HMENU)IDC_STATIC,
+			GetModuleHandle(NULL), 
+			NULL
+		);
+
+		HWND hEdit = CreateWindowEx
+		(
+			NULL, "Edit", "",
+			WS_CHILD |WS_VISIBLE | WS_BORDER | ES_CENTER | WS_TABSTOP,
+			10, 32, 500, 22,
+			hwnd, (HMENU)IDC_EDIT, GetModuleHandle(NULL), NULL
+			);
+
+		HWND hButton = CreateWindowEx
+		(
+			NULL, "Button", "применить",
+			WS_CHILD | WS_VISIBLE | BS_PUSHBUTTON | WS_TABSTOP,
+			410, 58, 100, 22, 
+			hwnd, (HMENU)IDC_BUTTON, GetModuleHandle(NULL), NULL
+		);
+
 	} break;
+	
 
 	case WM_MOVE: 
 	{
@@ -139,7 +159,22 @@ INT CALLBACK WndProc(HWND hwnd, UINT uMsg, WPARAM wParam, LPARAM lParam)
 	} break;
 
 	case WM_COMMAND:
-	{} break;
+	{
+		switch (LOWORD(wParam))
+		{
+		case IDC_BUTTON:
+		{
+			HWND hEdit = GetDlgItem(hwnd, IDC_EDIT);
+			HWND hStatic = GetDlgItem(hwnd, IDC_STATIC);
+			CONST INT SIZE = 256;
+			CHAR sz_buffer[SIZE]{};
+			SendMessage(hEdit, WM_GETTEXT, SIZE, (LPARAM)sz_buffer);
+			SendMessage(hStatic, WM_SETTEXT, 0, (LPARAM)sz_buffer);
+			break;
+		} 
+
+		} break;
+	} break;
 
 	
 	case WM_DESTROY:
