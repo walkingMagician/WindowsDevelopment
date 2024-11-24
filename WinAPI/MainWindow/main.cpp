@@ -116,13 +116,14 @@ INT CALLBACK WndProc(HWND hwnd, UINT uMsg, WPARAM wParam, LPARAM lParam)
 
 	case WM_COMMAND:
 	{} break;
-	case WM_SETCURSOR:
+
+	/*case WM_SETCURSOR:
 	{
 		HCURSOR hCursor;
 		hCursor = LoadCursor(NULL, (CHAR*)IDR_CURSR1);
 		SetCursor(hCursor);
 
-	} break;
+	} break;*/
 
 	case WM_MOVE: {
 		RECT rect;
@@ -192,8 +193,8 @@ void CenterWindow(HWND hwnd)
 	SystemParametersInfo(SPI_GETWORKAREA, 0, &rcScreen, 0);
 
 	// Вычисляем координаты для центрирования окна
-	int x = (rcScreen.right - rcScreen.left) / 2 - (WindowSizeX() / 2) + rcScreen.left;
-	int y = (rcScreen.bottom - rcScreen.top) / 2 - (WindowSizeY() / 2) + rcScreen.top;
+	int x = (rcScreen.right - rcScreen.left) / 2 - (WindowSizeX() / 2);
+	int y = (rcScreen.bottom - rcScreen.top) / 2 - (WindowSizeY() / 2);
 
 	// Устанавливаем положение окна
 	MoveWindow(hwnd, x, y, WindowSizeX(), WindowSizeY(), FALSE);
