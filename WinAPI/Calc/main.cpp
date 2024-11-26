@@ -1,4 +1,5 @@
 ﻿#include<Windows.h>
+#include"resource.h"
 
 #define IDC_EDIT_DISPLAY	999
 #define IDC_BUTTON_0		1000
@@ -22,7 +23,7 @@
 #define IDC_BUTTON_CLR		1016 // Claear
 #define IDC_BUTTON_EQUAL	1017 // '='
 
-CONST CHAR g_sz_WINDOW_CLASS[] = "Calc_VPD_311";
+CONST CHAR g_sz_WINDOW_CLASS[] = "Calculator";
 
 CONST INT g_i_SCREEN_WIDTH = 400;
 CONST INT g_i_SCREEN_HEIGHT = 22;
@@ -49,8 +50,8 @@ INT WINAPI WinMain(HINSTANCE hInstance, HINSTANCE hPrevInst, LPSTR lpCmdLine, IN
 	wClass.cbClsExtra = 0;
 	wClass.cbWndExtra = 0;
 
-	wClass.hIcon = LoadIcon(hInstance, MAKEINTRESOURCE(IDI_APPLICATION));
-	wClass.hIconSm = LoadIcon(hInstance, MAKEINTRESOURCE(IDI_APPLICATION));
+	wClass.hIcon = LoadIcon(hInstance, MAKEINTRESOURCE(IDI_ICON1));
+	wClass.hIconSm = LoadIcon(hInstance, MAKEINTRESOURCE(IDI_ICON2));
 	wClass.hCursor = LoadCursor(hInstance, IDC_ARROW);
 	wClass.hbrBackground = (HBRUSH)COLOR_WINDOW;
 	
@@ -79,11 +80,11 @@ INT WINAPI WinMain(HINSTANCE hInstance, HINSTANCE hPrevInst, LPSTR lpCmdLine, IN
 	MSG msg;
 	while (GetMessage(&msg, NULL, 0, 0) > 0)
 	{
-		TranslateMessage(&msg);
-		DispatchMessage(&msg);
-		//IsDialogMessage(hwnd, &msg);
+		//TranslateMessage(&msg);
+		//DispatchMessage(&msg);
+		IsDialogMessage(hwnd, &msg);
 	}
-
+	
 	return msg.wParam;
 }
 
@@ -93,13 +94,15 @@ INT CALLBACK WndProc(HWND hwnd, UINT uMsg, WPARAM wParam, LPARAM lParam)
 	{
 	case WM_CREATE:
 	{
-		HWND hEdit = CreateWindowEx
+		HWND hButton0 = CreateWindowExA
 		(
-			NULL, "Edit", "0",
-			WS_CHILD | WS_VISIBLE | WS_BORDER | WS_TABSTOP | ES_RIGHT,
-			10, 10, 500, 22,
-			hwnd, (HMENU)1000, GetModuleHandle(NULL), NULL
+			NULL, "Button", "0", 
+			WS_CHILD | WS_VISIBLE | WS_TABSTOP | WS_BORDER,
+			g_i_INTERVAL, g_i_INTERVAL, 
+			g_i_BUTTON_SIZE, g_i_BUTTON_SIZE,
+			hwnd, (HMENU)IDC_BUTTON_0, GetModuleHandleA(NULL), NULL
 		);
+
 	} break;
 	case WM_COMMAND:
 		break;
