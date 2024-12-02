@@ -163,6 +163,7 @@ INT CALLBACK WndProc(HWND hwnd, UINT uMsg, WPARAM wParam, LPARAM lParam)
 		CONST INT SIZE = 256;
 		CHAR sz_display[SIZE]{};
 		CHAR sz_digit[2]{};
+		// INT size_display = strlen(sz_display);
 		if (LOWORD(wParam) >= IDC_BUTTON_0 && LOWORD(wParam) <= IDC_BUTTON_9)
 		{
 			sz_digit[0] = LOWORD(wParam) - IDC_BUTTON_0 + '0';
@@ -179,8 +180,30 @@ INT CALLBACK WndProc(HWND hwnd, UINT uMsg, WPARAM wParam, LPARAM lParam)
 			if (strchr(sz_display, '.')) break;
 			strcat(sz_display, ".");
 			SendMessage(hEditDisplay, WM_SETTEXT, 0, (LPARAM)sz_display);
+		}
+		if (LOWORD(wParam) == IDC_BUTTON_BSP)
+		{
+			SendMessage(hEditDisplay, EM_SETSEL, 0, 1);
+			SendMessage(hEditDisplay, EM_REPLACESEL, TRUE, (LPARAM)"");
+		}
+		if (LOWORD(wParam) == IDC_BUTTON_CLR)
+		{
+			SendMessage(hEditDisplay, EM_SETSEL, 0, -1);
+			SendMessage(hEditDisplay, EM_REPLACESEL, TRUE, (LPARAM)"");
+		}
+		if (LOWORD(wParam) == IDC_BUTTON_PLUS)
+		{
+			CHAR first[SIZE]{};
+			CHAR second[SIZE]{};
+			CHAR sz_buffer[SIZE]{};
+
+			SendMessage(hEditDisplay, WM_GETTEXT, SIZE, (LPARAM)first);
+			SendMessage(hEditDisplay, WM_SETTEXT, 0, (LPARAM)"+");
+			SendMessage(hEditDisplay, WM_GETTEXT, SIZE, (LPARAM)second);
+
 
 		}
+
 
 	} break;
 	case WM_DESTROY:
