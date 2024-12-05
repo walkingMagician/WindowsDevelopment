@@ -238,6 +238,7 @@ INT CALLBACK WndProc(HWND hwnd, UINT uMsg, WPARAM wParam, LPARAM lParam)
 			char operators = '+';
 			double result = 0;
 
+
 			SendMessage(hEditDisplay, WM_GETTEXT, SIZE, (LPARAM)sz_display);
 			const char* index = sz_display;
 
