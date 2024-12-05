@@ -62,7 +62,8 @@ INT WINAPI WinMain(HINSTANCE hInstance, HINSTANCE hPrevInst, LPSTR lpCmdLine, IN
 	return msg.wParam;
 }
 
-int counter = 0; // счетчик
+//INT counter = 0; // счетчик
+
 INT CALLBACK WndProc(HWND hwnd, UINT uMsg, WPARAM wParam, LPARAM lParam)
 {
 	switch (uMsg)
@@ -165,6 +166,7 @@ INT CALLBACK WndProc(HWND hwnd, UINT uMsg, WPARAM wParam, LPARAM lParam)
 		CHAR sz_display[SIZE]{};
 		CHAR sz_digit[2]{};
 		INT size_display = 0;
+
 		if (LOWORD(wParam) >= IDC_BUTTON_0 && LOWORD(wParam) <= IDC_BUTTON_9)
 		{
 			sz_digit[0] = LOWORD(wParam) - IDC_BUTTON_0 + '0';
@@ -178,12 +180,8 @@ INT CALLBACK WndProc(HWND hwnd, UINT uMsg, WPARAM wParam, LPARAM lParam)
 		if (LOWORD(wParam) == IDC_BUTTON_POINT)
 		{
 			SendMessage(hEditDisplay, WM_GETTEXT, SIZE, (LPARAM)sz_display);
-			if (counter == 0)
-			{
-				//if (strchr(sz_display, '.')) break;
-				strcat(sz_display, ".");
-				counter++;
-			}
+			if (strchr(sz_display, '.')) break;
+			strcat(sz_display, ".");
 			SendMessage(hEditDisplay, WM_SETTEXT, 0, (LPARAM)sz_display);
 		}
 		if (LOWORD(wParam) == IDC_BUTTON_BSP)
@@ -209,15 +207,13 @@ INT CALLBACK WndProc(HWND hwnd, UINT uMsg, WPARAM wParam, LPARAM lParam)
 		}
 		if (LOWORD(wParam) == IDC_BUTTON_MINUS) // '-'
 		{
-			counter = 0;
 			SendMessage(hEditDisplay, WM_GETTEXT, SIZE, (LPARAM)sz_display);
 			if (strchr(sz_display, '-')) break;
 			strcat(sz_display, "-");
 			SendMessage(hEditDisplay, WM_SETTEXT, 0, (LPARAM)sz_display);
 		}
 		if (LOWORD(wParam) == IDC_BUTTON_ASTER) // '*'
-		{
-			counter = 0;
+		{			
 			SendMessage(hEditDisplay, WM_GETTEXT, SIZE, (LPARAM)sz_display);
 			if (strchr(sz_display, '*')) break;
 			strcat(sz_display, "*");
@@ -225,7 +221,6 @@ INT CALLBACK WndProc(HWND hwnd, UINT uMsg, WPARAM wParam, LPARAM lParam)
 		}
 		if (LOWORD(wParam) == IDC_BUTTON_SLESH) // '/'
 		{
-			counter = 0;
 			SendMessage(hEditDisplay, WM_GETTEXT, SIZE, (LPARAM)sz_display);
 			if (strchr(sz_display, '/')) break;
 			strcat(sz_display, "/");
@@ -254,7 +249,7 @@ INT CALLBACK WndProc(HWND hwnd, UINT uMsg, WPARAM wParam, LPARAM lParam)
 					case '-': result -= number; break;
 					case '*': result *= number; break;
 					case '/':
-					
+
 						if (number != 0)
 							result /= number;
 						else
@@ -269,7 +264,7 @@ INT CALLBACK WndProc(HWND hwnd, UINT uMsg, WPARAM wParam, LPARAM lParam)
 				}
 			}
 			sprintf(sz_buffer_cash, "%.2f", result);
-			SendMessage(hEditDisplay, WM_SETTEXT, 0, (LPARAM)sz_buffer_cash);
+			SendMessage(hEditDisplay, WM_SETTEXT, 0, (LPARAM)sz_buffer_cash);	
 		}
 	} break;
 
