@@ -62,6 +62,7 @@ INT WINAPI WinMain(HINSTANCE hInstance, HINSTANCE hPrevInst, LPSTR lpCmdLine, IN
 	return msg.wParam;
 }
 
+int counter = 0; // счетчик
 INT CALLBACK WndProc(HWND hwnd, UINT uMsg, WPARAM wParam, LPARAM lParam)
 {
 	switch (uMsg)
@@ -162,7 +163,6 @@ INT CALLBACK WndProc(HWND hwnd, UINT uMsg, WPARAM wParam, LPARAM lParam)
 		HWND hEditDisplay = GetDlgItem(hwnd, IDC_EDIT_DISPLAY);
 		CONST INT SIZE = 256;
 		CHAR sz_display[SIZE]{};
-		CHAR sz_buffer_cash[SIZE]{};
 		CHAR sz_digit[2]{};
 		INT size_display = 0;
 		if (LOWORD(wParam) >= IDC_BUTTON_0 && LOWORD(wParam) <= IDC_BUTTON_9)
@@ -178,11 +178,12 @@ INT CALLBACK WndProc(HWND hwnd, UINT uMsg, WPARAM wParam, LPARAM lParam)
 		if (LOWORD(wParam) == IDC_BUTTON_POINT)
 		{
 			SendMessage(hEditDisplay, WM_GETTEXT, SIZE, (LPARAM)sz_display);
-			
-
-
-			if (strchr(sz_display, '.')) break;
-			strcat(sz_display, ".");
+			if (counter == 0)
+			{
+				//if (strchr(sz_display, '.')) break;
+				strcat(sz_display, ".");
+				counter++;
+			}
 			SendMessage(hEditDisplay, WM_SETTEXT, 0, (LPARAM)sz_display);
 		}
 		if (LOWORD(wParam) == IDC_BUTTON_BSP)
@@ -199,29 +200,32 @@ INT CALLBACK WndProc(HWND hwnd, UINT uMsg, WPARAM wParam, LPARAM lParam)
 			SendMessage(hEditDisplay, EM_REPLACESEL, TRUE, (LPARAM)"");
 		}
 
-		if (LOWORD(wParam) == IDC_BUTTON_PLUS)
+		if (LOWORD(wParam) == IDC_BUTTON_PLUS) // '+'
 		{
 			SendMessage(hEditDisplay, WM_GETTEXT, SIZE, (LPARAM)sz_display);
 			if (strchr(sz_display, '+')) break;
 			strcat(sz_display, "+");
 			SendMessage(hEditDisplay, WM_SETTEXT, 0, (LPARAM)sz_display);
 		}
-		if (LOWORD(wParam) == IDC_BUTTON_MINUS)
+		if (LOWORD(wParam) == IDC_BUTTON_MINUS) // '-'
 		{
+			counter = 0;
 			SendMessage(hEditDisplay, WM_GETTEXT, SIZE, (LPARAM)sz_display);
 			if (strchr(sz_display, '-')) break;
 			strcat(sz_display, "-");
 			SendMessage(hEditDisplay, WM_SETTEXT, 0, (LPARAM)sz_display);
 		}
-		if (LOWORD(wParam) == IDC_BUTTON_ASTER)
+		if (LOWORD(wParam) == IDC_BUTTON_ASTER) // '*'
 		{
+			counter = 0;
 			SendMessage(hEditDisplay, WM_GETTEXT, SIZE, (LPARAM)sz_display);
 			if (strchr(sz_display, '*')) break;
 			strcat(sz_display, "*");
 			SendMessage(hEditDisplay, WM_SETTEXT, 0, (LPARAM)sz_display);
 		}
-		if (LOWORD(wParam) == IDC_BUTTON_SLESH)
+		if (LOWORD(wParam) == IDC_BUTTON_SLESH) // '/'
 		{
+			counter = 0;
 			SendMessage(hEditDisplay, WM_GETTEXT, SIZE, (LPARAM)sz_display);
 			if (strchr(sz_display, '/')) break;
 			strcat(sz_display, "/");
@@ -230,10 +234,12 @@ INT CALLBACK WndProc(HWND hwnd, UINT uMsg, WPARAM wParam, LPARAM lParam)
 
 		if (LOWORD(wParam) == IDC_BUTTON_EQUAL)
 		{
+			CHAR sz_buffer_cash[SIZE]{};
+			char operators = '+';
 			double result = 0;
+
 			SendMessage(hEditDisplay, WM_GETTEXT, SIZE, (LPARAM)sz_display);
 			const char* index = sz_display;
-			char operators = '+';
 
 			while (*index)
 			{
