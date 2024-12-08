@@ -62,8 +62,6 @@ INT WINAPI WinMain(HINSTANCE hInstance, HINSTANCE hPrevInst, LPSTR lpCmdLine, IN
 	return msg.wParam;
 }
 
-//INT counter = 0; // счетчик
-
 INT CALLBACK WndProc(HWND hwnd, UINT uMsg, WPARAM wParam, LPARAM lParam)
 {
 	switch (uMsg)
@@ -187,10 +185,11 @@ INT CALLBACK WndProc(HWND hwnd, UINT uMsg, WPARAM wParam, LPARAM lParam)
 		if (LOWORD(wParam) == IDC_BUTTON_BSP)
 		{
 			SendMessage(hEditDisplay, WM_GETTEXT, SIZE, (LPARAM)sz_display);
-			size_display = strlen(sz_display);
-			
-			SendMessage(hEditDisplay, EM_SETSEL, size_display - 1, size_display);
-			SendMessage(hEditDisplay, EM_REPLACESEL, TRUE, (LPARAM)"");
+			if (strlen(sz_display) > 1)
+				sz_display[strlen(sz_display) - 1] = 0;
+			else
+				sz_display[0] = '0';
+			SendMessage(hEditDisplay, WM_SETTEXT, 0, size_display);
 		}
 		if (LOWORD(wParam) == IDC_BUTTON_CLR)
 		{
