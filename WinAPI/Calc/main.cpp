@@ -163,7 +163,7 @@ INT CALLBACK WndProc(HWND hwnd, UINT uMsg, WPARAM wParam, LPARAM lParam)
 				BUTTON_SHIFT_X(3),
 				BUTTON_SHIFT_Y(3-i),
 				g_i_BUTTON_SIZE, g_i_BUTTON_SIZE,
-				hwnd, (HMENU)IDC_BUTTON_PLUS + i, GetModuleHandle(NULL), NULL
+				hwnd, (HMENU)(IDC_BUTTON_PLUS + i), GetModuleHandle(NULL), NULL
 			);
 		}
 
