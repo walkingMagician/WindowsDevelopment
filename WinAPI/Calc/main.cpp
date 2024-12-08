@@ -189,82 +189,13 @@ INT CALLBACK WndProc(HWND hwnd, UINT uMsg, WPARAM wParam, LPARAM lParam)
 				sz_display[strlen(sz_display) - 1] = 0;
 			else
 				sz_display[0] = '0';
-			SendMessage(hEditDisplay, WM_SETTEXT, 0, size_display);
+			SendMessage(hEditDisplay, WM_SETTEXT, 0, (LPARAM)size_display);
 		}
 		if (LOWORD(wParam) == IDC_BUTTON_CLR)
 		{
-			SendMessage(hEditDisplay, EM_SETSEL, 0, -1);
-			SendMessage(hEditDisplay, EM_REPLACESEL, TRUE, (LPARAM)"");
+			SendMessage(hEditDisplay, WM_SETTEXT, 0, (LPARAM)"");
 		}
 
-		if (LOWORD(wParam) == IDC_BUTTON_PLUS) // '+'
-		{
-			SendMessage(hEditDisplay, WM_GETTEXT, SIZE, (LPARAM)sz_display);
-			if (strchr(sz_display, '+')) break;
-			strcat(sz_display, "+");
-			SendMessage(hEditDisplay, WM_SETTEXT, 0, (LPARAM)sz_display);
-		}
-		if (LOWORD(wParam) == IDC_BUTTON_MINUS) // '-'
-		{
-			SendMessage(hEditDisplay, WM_GETTEXT, SIZE, (LPARAM)sz_display);
-			if (strchr(sz_display, '-')) break;
-			strcat(sz_display, "-");
-			SendMessage(hEditDisplay, WM_SETTEXT, 0, (LPARAM)sz_display);
-		}
-		if (LOWORD(wParam) == IDC_BUTTON_ASTER) // '*'
-		{			
-			SendMessage(hEditDisplay, WM_GETTEXT, SIZE, (LPARAM)sz_display);
-			if (strchr(sz_display, '*')) break;
-			strcat(sz_display, "*");
-			SendMessage(hEditDisplay, WM_SETTEXT, 0, (LPARAM)sz_display);
-		}
-		if (LOWORD(wParam) == IDC_BUTTON_SLESH) // '/'
-		{
-			SendMessage(hEditDisplay, WM_GETTEXT, SIZE, (LPARAM)sz_display);
-			if (strchr(sz_display, '/')) break;
-			strcat(sz_display, "/");
-			SendMessage(hEditDisplay, WM_SETTEXT, 0, (LPARAM)sz_display);
-		}
-
-		if (LOWORD(wParam) == IDC_BUTTON_EQUAL)
-		{
-			CHAR sz_buffer_cash[SIZE]{};
-			char operators = '+';
-			double result = 0;
-
-			SendMessage(hEditDisplay, WM_GETTEXT, SIZE, (LPARAM)sz_display);
-			const char* index = sz_display;
-
-			while (*index)
-			{
-				if (*index >= '0' && *index <= '9')
-				{
-					double number = 0;
-					number = strtod(index, (char**)&index);
-
-					switch (operators)
-					{
-					case '+': result += number; break;
-					case '-': result -= number; break;
-					case '*': result *= number; break;
-					case '/':
-
-						if (number != 0)
-							result /= number;
-						else
-							return 0; // Обработка деления на ноль
-						break;
-					}
-				}
-				else
-				{
-					operators = *index;
-					index++;
-				}
-			}
-			sprintf(sz_buffer_cash, "%.2f", result);
-			SendMessage(hEditDisplay, WM_SETTEXT, 0, (LPARAM)sz_buffer_cash);	
-		}
 	} break;
 
 	case WM_DESTROY:
