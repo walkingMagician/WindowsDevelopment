@@ -9,6 +9,8 @@
 CONST CHAR g_sz_WINDOW_CLASS[] = "Calculator";
 
 CONST CHAR* g_OPERATIONS[] = { "+","-", "*" ,"/" };
+CONST CHAR* SKIN[] = { "ButtonBMP\\Metal_mistral\\Button_plus.bmp", "ButtonBMP\\Metal_mistral\\Button_minus.bmp",
+"ButtonBMP\\Metal_mistral\\Button_aster.bmp", "ButtonBMP\\Metal_mistral\\Button_slash.bmp" };
 
 
 INT CALLBACK WndProc(HWND hwnd, UINT uMsg, WPARAM wParam, LPARAM lParam);
@@ -52,8 +54,12 @@ INT WINAPI WinMain(HINSTANCE hInstance, HINSTANCE hPrevInst, LPSTR lpCmdLine, IN
 		NULL, NULL, hInstance, NULL
 	);
 
+
+	//SetSkin(hwnd, SKIN);
+
 	ShowWindow(hwnd, nCmdShow);
 	UpdateWindow(hwnd);
+
 
 	MSG msg;
 	while (GetMessage(&msg, NULL, 0, 0) > 0)
@@ -111,9 +117,10 @@ INT CALLBACK WndProc(HWND hwnd, UINT uMsg, WPARAM wParam, LPARAM lParam)
 			g_i_BUTTON_DOUBLE_SIZE, g_i_BUTTON_SIZE,
 			hwnd, (HMENU)IDC_BUTTON_0, GetModuleHandle(NULL), NULL
 		);
+
 		HBITMAP bmpButton_0 =
 			(HBITMAP)LoadImage(NULL,
-				"ButtonBMP\\button_0.bmp", 
+				"ButtonBMP\\Button_0.bmp", 
 				IMAGE_BITMAP, 
 				g_i_BUTTON_DOUBLE_SIZE, g_i_BUTTON_SIZE,
 				LR_LOADFROMFILE);
@@ -129,7 +136,30 @@ INT CALLBACK WndProc(HWND hwnd, UINT uMsg, WPARAM wParam, LPARAM lParam)
 			hwnd, (HMENU)IDC_BUTTON_POINT, GetModuleHandle(NULL), NULL
 		);
 
+		
+		
 		for (int i = 0; i < 4; i++)
+		{
+			HWND hButton = CreateWindowEx
+			(
+				NULL, "Button", g_OPERATIONS[i],
+				WS_CHILD | WS_VISIBLE,
+				BUTTON_SHIFT_X(3),
+				BUTTON_SHIFT_Y(3 - i),
+				g_i_BUTTON_SIZE, g_i_BUTTON_SIZE,
+				hwnd, (HMENU)(IDC_BUTTON_PLUS + i), GetModuleHandle(NULL), NULL
+			);
+
+			HBITMAP bmpButton =
+				(HBITMAP)LoadImage(NULL,
+					SKIN[i],
+					IMAGE_BITMAP,
+					g_i_BUTTON_SIZE, g_i_BUTTON_SIZE,
+					LR_LOADFROMFILE);
+			SendMessage(hButton, BM_SETIMAGE, IMAGE_BITMAP, (LPARAM)bmpButton);
+		}
+
+		/*for (int i = 0; i < 4; i++)
 		{
 			CreateWindowEx
 			(
@@ -140,7 +170,7 @@ INT CALLBACK WndProc(HWND hwnd, UINT uMsg, WPARAM wParam, LPARAM lParam)
 				g_i_BUTTON_SIZE, g_i_BUTTON_SIZE,
 				hwnd, (HMENU)(IDC_BUTTON_PLUS + i), GetModuleHandle(NULL), NULL
 			);
-		}
+		}*/
 
 		CreateWindowEx
 		(
