@@ -137,6 +137,7 @@
     <ResourceCompile Include="Resource.rc" />
   </ItemGroup>
   <ItemGroup>
+    <Image Include="ButtonBMP\button_0.bmp" />
     <Image Include="ICO\icon_calc.ico" />
     <Image Include="ICO\icon_calc_sm.ico" />
   </ItemGroup>
