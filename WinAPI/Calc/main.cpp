@@ -89,6 +89,21 @@ INT CALLBACK WndProc(HWND hwnd, UINT uMsg, WPARAM wParam, LPARAM lParam)
 			g_i_SCREEN_WIDTH, g_i_SCREEN_HEIGHT,
 			hwnd, (HMENU)IDC_EDIT_DISPLAY, GetModuleHandleA(NULL), NULL
 		);
+
+		AddFontResource("Fonts\\Fatal.ttf");
+		HFONT hFont = CreateFont
+		(
+			g_i_FONT_HEIGHT, g_i_FONT_WIDTH,
+			0, 0,
+			FW_MEDIUM, 0, 0, 0, // Bold, italic, underline, strackeout
+			ANSI_CHARSET,
+			OUT_CHARACTER_PRECIS,
+			CLIP_CHARACTER_PRECIS,
+			ANTIALIASED_QUALITY, 
+			FF_DONTCARE,
+			"Fatal (TRIAL)"
+		);
+		SendMessage(hEdit, WM_SETFONT, (WPARAM)hFont, TRUE);
 		
 		CHAR sz_digit[2] = {};
 		for (int i = 6; i >= 0; i -= 3)
@@ -403,6 +418,7 @@ INT CALLBACK WndProc(HWND hwnd, UINT uMsg, WPARAM wParam, LPARAM lParam)
 		InsertMenu(hMenu, 0, MF_BYPOSITION | MF_STRING, 0, NULL);
 		InsertMenu(hMenu, 0, MF_BYPOSITION | MF_STRING, IDR_METAL_MISTRAL, "metal mistral");
 		InsertMenu(hMenu, 0, MF_BYPOSITION | MF_STRING, IDR_SQUARE_BLUE, "square blue");
+		CheckMenuItem(hMenu, index, MF_BYPOSITION | MF_CHECKED);
 
 
 		// использование контекстного меню 
@@ -412,6 +428,7 @@ INT CALLBACK WndProc(HWND hwnd, UINT uMsg, WPARAM wParam, LPARAM lParam)
 		case IDR_SQUARE_BLUE:	//SetSkin(hwnd, "square_blue"); break;
 		case IDR_METAL_MISTRAL:	//SetSkin(hwnd, "metal_mistral"); break;
 			index = item - IDR_SQUARE_BLUE;
+			//ModifyMenu(hMenu, item - IDR_SQUARE_BLUE, MF_BYCOMMAND | MF_STRING | MF_CHECKED, item, NULL);
 			break;
 		case IDR_EXIT: SendMessage(hwnd, WM_CLOSE, 0, 0); break;
 		} 
