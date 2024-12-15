@@ -10,65 +10,9 @@ CONST CHAR g_sz_WINDOW_CLASS[] = "Calculator";
 
 CONST CHAR* g_OPERATIONS[] = { "+","-", "*" ,"/" };
 
-CONST CHAR* SKIN_OPERATIONS_METAL[] = {
-	"ButtonBMP\\Metal_mistral\\button_plus.bmp",
-	"ButtonBMP\\Metal_mistral\\button_minus.bmp",
-	"ButtonBMP\\Metal_mistral\\Button_aster.bmp",
-	"ButtonBMP\\Metal_mistral\\button_slash.bmp"
-};
-CONST CHAR* SKIN_OPERATORS_METAL[] = {
-	"ButtonBMP\\Metal_mistral\\button_0.bmp",
-	"ButtonBMP\\Metal_mistral\\button_clr.bmp",
-	"ButtonBMP\\Metal_mistral\\button_bsp.bmp",
-	"ButtonBMP\\Metal_mistral\\button_point.bmp",
-	"ButtonBMP\\Metal_mistral\\button_equal.bmp"
-}; // 0-0, 1-clr, 2-bsp, 3-point, 4-equal
-CONST CHAR* SKIN_NUMBERS_METAL[] = { 
-	"ButtonBMP\\Metal_mistral\\button_1.bmp",
-	"ButtonBMP\\Metal_mistral\\button_2.bmp",
-	"ButtonBMP\\Metal_mistral\\button_3.bmp",
-	"ButtonBMP\\Metal_mistral\\button_4.bmp",
-	"ButtonBMP\\Metal_mistral\\button_5.bmp",
-	"ButtonBMP\\Metal_mistral\\button_6.bmp",
-	"ButtonBMP\\Metal_mistral\\button_7.bmp",
-	"ButtonBMP\\Metal_mistral\\button_8.bmp",
-	"ButtonBMP\\Metal_mistral\\button_9.bmp"
-};
-
-CONST CHAR* SKIN_OPERATIONS_BLUE[] = {
-	"ButtonBMP\\square_blue\\button_plus.bmp",
-	"ButtonBMP\\square_blue\\button_minus.bmp",
-	"ButtonBMP\\square_blue\\Button_aster.bmp",
-	"ButtonBMP\\square_blue\\button_slash.bmp"
-};
-CONST CHAR* SKIN_OPERATORS_BLUE[] = {
-	"ButtonBMP\\square_blue\\button_0.bmp",
-	"ButtonBMP\\square_blue\\button_clr.bmp",
-	"ButtonBMP\\square_blue\\button_bsp.bmp",
-	"ButtonBMP\\square_blue\\button_point.bmp",
-	"ButtonBMP\\square_blue\\button_equal.bmp"
-};
-CONST CHAR* SKIN_NUMBERS_BLUE[] = { 
-	"ButtonBMP\\square_blue\\button_1.bmp",
-	"ButtonBMP\\square_blue\\button_2.bmp",
-	"ButtonBMP\\square_blue\\button_3.bmp",
-	"ButtonBMP\\square_blue\\button_4.bmp",
-	"ButtonBMP\\square_blue\\button_5.bmp",
-	"ButtonBMP\\square_blue\\button_6.bmp",
-	"ButtonBMP\\square_blue\\button_7.bmp",
-	"ButtonBMP\\square_blue\\button_8.bmp",
-	"ButtonBMP\\square_blue\\button_9.bmp"
-};
-
-COLORREF bgColor = RGB(255, 255, 255);
-void SetBackgroundColor(COLORREF color);
-
 INT CALLBACK WndProc(HWND hwnd, UINT uMsg, WPARAM wParam, LPARAM lParam);
 INT GetTitleBarHeight(HWND hwnd);
-VOID SetSkin(HWND hwnd, CONST CHAR* skin);
-VOID SetSkinMetal(HWND hwnd);
-VOID SetSkinBlue(HWND hwnd);
-
+VOID SetSkin(HWND hwnd, CONST CHAR skin[]);
 
 
 INT WINAPI WinMain(HINSTANCE hInstance, HINSTANCE hPrevInst, LPSTR lpCmdLine, INT nCmdShow)
@@ -108,7 +52,6 @@ INT WINAPI WinMain(HINSTANCE hInstance, HINSTANCE hPrevInst, LPSTR lpCmdLine, IN
 	);
 
 
-
 	ShowWindow(hwnd, nCmdShow);
 	UpdateWindow(hwnd);
 
@@ -135,6 +78,7 @@ INT CALLBACK WndProc(HWND hwnd, UINT uMsg, WPARAM wParam, LPARAM lParam)
 	case WM_CREATE:
 	{
 
+
 		HWND hEdit = CreateWindowEx
 		(
 			NULL, "Edit", "0", 
@@ -153,7 +97,7 @@ INT CALLBACK WndProc(HWND hwnd, UINT uMsg, WPARAM wParam, LPARAM lParam)
 				CreateWindowEx
 				(
 					NULL, "Button", sz_digit,
-					WS_CHILD | WS_VISIBLE,
+					WS_CHILD | WS_VISIBLE | BS_BITMAP,
 					g_i_BUTTON_START_X + (g_i_BUTTON_SIZE + g_i_INTERVAL) * j,
 					g_i_BUTTON_START_Y + (g_i_BUTTON_SIZE + g_i_INTERVAL) * (2 - i /3),
 					g_i_BUTTON_SIZE, g_i_BUTTON_SIZE, 
@@ -167,7 +111,7 @@ INT CALLBACK WndProc(HWND hwnd, UINT uMsg, WPARAM wParam, LPARAM lParam)
 		CreateWindowEx
 		(
 			NULL, "Button", "0",
-			WS_CHILD | WS_VISIBLE,
+			WS_CHILD | WS_VISIBLE | BS_BITMAP,
 			BUTTON_SHIFT_X(0), BUTTON_SHIFT_Y(3),
 			g_i_BUTTON_DOUBLE_SIZE, g_i_BUTTON_SIZE,
 			hwnd, (HMENU)IDC_BUTTON_0, GetModuleHandle(NULL), NULL
@@ -176,7 +120,7 @@ INT CALLBACK WndProc(HWND hwnd, UINT uMsg, WPARAM wParam, LPARAM lParam)
 		CreateWindowEx
 		(
 			NULL, "Button", ".",
-			WS_CHILD | WS_VISIBLE,
+			WS_CHILD | WS_VISIBLE | BS_BITMAP,
 			BUTTON_SHIFT_X(2),
 			BUTTON_SHIFT_Y(3),
 			g_i_BUTTON_SIZE, g_i_BUTTON_SIZE, 
@@ -188,7 +132,7 @@ INT CALLBACK WndProc(HWND hwnd, UINT uMsg, WPARAM wParam, LPARAM lParam)
 			CreateWindowEx
 			(
 				NULL, "Button", g_OPERATIONS[i],
-				WS_CHILD | WS_VISIBLE,
+				WS_CHILD | WS_VISIBLE | BS_BITMAP,
 				BUTTON_SHIFT_X(3),
 				BUTTON_SHIFT_Y(3-i),
 				g_i_BUTTON_SIZE, g_i_BUTTON_SIZE,
@@ -199,7 +143,7 @@ INT CALLBACK WndProc(HWND hwnd, UINT uMsg, WPARAM wParam, LPARAM lParam)
 		CreateWindowEx
 		(
 			NULL, "Button", "<-",
-			WS_CHILD | WS_VISIBLE,
+			WS_CHILD | WS_VISIBLE | BS_BITMAP,
 			BUTTON_SHIFT_X(4), BUTTON_SHIFT_Y(0),
 			g_i_BUTTON_SIZE, g_i_BUTTON_SIZE,
 			hwnd, (HMENU)IDC_BUTTON_BSP, GetModuleHandle(NULL), NULL
@@ -208,7 +152,7 @@ INT CALLBACK WndProc(HWND hwnd, UINT uMsg, WPARAM wParam, LPARAM lParam)
 		CreateWindowEx
 		(
 			NULL, "Button", "C",
-			WS_CHILD | WS_VISIBLE,
+			WS_CHILD | WS_VISIBLE | BS_BITMAP,
 			BUTTON_SHIFT_X(4), BUTTON_SHIFT_Y(1),
 			g_i_BUTTON_SIZE, g_i_BUTTON_SIZE,
 			hwnd, (HMENU)IDC_BUTTON_CLR, GetModuleHandle(NULL), NULL
@@ -216,11 +160,13 @@ INT CALLBACK WndProc(HWND hwnd, UINT uMsg, WPARAM wParam, LPARAM lParam)
 		CreateWindowEx
 		(
 			NULL, "Button", "=",
-			WS_CHILD | WS_VISIBLE,
+			WS_CHILD | WS_VISIBLE | BS_BITMAP,
 			BUTTON_SHIFT_X(4), BUTTON_SHIFT_Y(2),
 			g_i_BUTTON_SIZE, g_i_BUTTON_DOUBLE_SIZE,
 			hwnd, (HMENU)IDC_BUTTON_EQUAL, GetModuleHandle(NULL), NULL
 		);
+
+		SetSkin(hwnd, "metal_mistral");
 
 	} break;
 
@@ -236,7 +182,6 @@ INT CALLBACK WndProc(HWND hwnd, UINT uMsg, WPARAM wParam, LPARAM lParam)
 		SetFocus(hwnd);
 
 		
-
 		HWND hEditDisplay = GetDlgItem(hwnd, IDC_EDIT_DISPLAY);
 		CONST INT SIZE = 256;
 		CHAR sz_display[SIZE]{};
@@ -314,33 +259,6 @@ INT CALLBACK WndProc(HWND hwnd, UINT uMsg, WPARAM wParam, LPARAM lParam)
 			SendMessage(hEditDisplay, WM_SETTEXT, 0, (LPARAM)sz_display);
 		}
 
-		if (LOWORD(wParam) == 1)
-		{
-			SetSkinMetal(hwnd);
-			SetBackgroundColor(RGB(158, 156, 148)); // Изменяем на красный
-			InvalidateRect(hwnd, NULL, TRUE);
-		}
-		if (LOWORD(wParam) == 2)
-		{
-			SetSkinBlue(hwnd);
-		}
-
-
-	} break;
-
-	case WM_CONTEXTMENU:
-	{
-
-		HMENU hMenu = CreatePopupMenu();
-		AppendMenu(hMenu, MF_STRING, 1, "Metal");
-		AppendMenu(hMenu, MF_STRING, 2, "stule two");
-
-		POINT pt;
-		GetCursorPos(&pt);
-		TrackPopupMenu(hMenu, TPM_RIGHTBUTTON, pt.x, pt.y, 0, hwnd, NULL);
-
-		DestroyMenu(hMenu);
-
 	} break;
 
 	case WM_KEYDOWN:
@@ -363,16 +281,6 @@ INT CALLBACK WndProc(HWND hwnd, UINT uMsg, WPARAM wParam, LPARAM lParam)
 		}
 
 	} break;
-
-	case WM_ERASEBKGND: {
-		HDC hdc = (HDC)wParam;
-		HBRUSH hBrush = CreateSolidBrush(bgColor); // Синий цвет
-		RECT rect;
-		GetClientRect(hwnd, &rect); // Получаем размеры клиентской области
-		FillRect(hdc, &rect, hBrush); // Закрашиваем фон
-		DeleteObject(hBrush); // Освобождаем кисть
-		return 1; // Сообщаем, что мы обработали это сообщение
-	}
 
 	case WM_DESTROY: 
 	{
@@ -397,134 +305,42 @@ INT GetTitleBarHeight(HWND hwnd)
 	return title_bar_height;
 }
 
-VOID SetSkin(HWND hwnd, CONST CHAR* skin)
+CONST CHAR* g_BUTTONS[] =
 {
-	HBITMAP hBitmap = (HBITMAP)LoadImage
-	(
-		NULL,
-		skin,
-		IMAGE_BITMAP,
-		g_i_BUTTON_SIZE, g_i_BUTTON_SIZE,
-		LR_LOADFROMFILE
-	);
-	if(hBitmap)
-		SendMessage(hwnd, BM_SETIMAGE, IMAGE_BITMAP, (LPARAM)hBitmap);
-}
+	"button_0.bmp",
+	"button_1.bmp",
+	"button_2.bmp",
+	"button_3.bmp",
+	"button_4.bmp",
+	"button_5.bmp",
+	"button_6.bmp",
+	"button_7.bmp",
+	"button_8.bmp",
+	"button_9.bmp",
+	"button_point.bmp",
+	"button_plus.bmp",
+	"button_minu.bmp",
+	"button_aster.bmp",
+	"button_slash.bmp",
+	"button_bsp.bmp",
+	"button_clr.bmp",
+	"button_equal.bmp",
+};
 
-void SetBackgroundColor(COLORREF color) {
-	bgColor = color; // Изменяем текущий цвет фона
-}
-
-VOID SetSkinMetal(HWND hwnd)
+VOID SetSkin(HWND hwnd, CONST CHAR skin[])
 {
-	CHAR sz_digit[2] = {};
-	for (int i = 6; i >= 0; i -= 3)
+	CHAR sz_filename[MAX_PATH]{};
+	for (int i = IDC_BUTTON_0; i <= IDC_BUTTON_EQUAL; i++)
 	{
-		for (int j = 0; j < 3; j++)
-		{
-			sz_digit[0] = i + j + '1';
-			HWND hButton_num = CreateWindowEx
-			(
-				NULL, "Button", sz_digit,
-				WS_CHILD | WS_VISIBLE | BS_BITMAP,
-				g_i_BUTTON_START_X + (g_i_BUTTON_SIZE + g_i_INTERVAL) * j,
-				g_i_BUTTON_START_Y + (g_i_BUTTON_SIZE + g_i_INTERVAL) * (2 - i / 3),
-				g_i_BUTTON_SIZE, g_i_BUTTON_SIZE,
-				hwnd, (HMENU)(IDC_BUTTON_1 + i + j),
-				GetModuleHandle(NULL),
-				NULL
-			);
-			SetSkin(hButton_num, SKIN_NUMBERS_METAL[i + j]);
-		}
-	}
-
-	HWND hButton_0 = CreateWindowEx
-	(
-		NULL, "Button", "0",
-		WS_CHILD | WS_VISIBLE | BS_BITMAP,
-		BUTTON_SHIFT_X(0), BUTTON_SHIFT_Y(3),
-		g_i_BUTTON_DOUBLE_SIZE, g_i_BUTTON_SIZE,
-		hwnd, (HMENU)IDC_BUTTON_0, GetModuleHandle(NULL), NULL
-	);
-
-	HBITMAP bmpButton_0 = (HBITMAP)LoadImage
-	(
-		NULL,
-		SKIN_OPERATORS_METAL[0],
-		IMAGE_BITMAP,
-		g_i_BUTTON_DOUBLE_SIZE, g_i_BUTTON_SIZE,
-		LR_LOADFROMFILE
-	);
-	SendMessage(hButton_0, BM_SETIMAGE, IMAGE_BITMAP, (LPARAM)bmpButton_0);
-
-	HWND hButton_point = CreateWindowEx
-	(
-		NULL, "Button", ".",
-		WS_CHILD | WS_VISIBLE | BS_BITMAP,
-		BUTTON_SHIFT_X(2),
-		BUTTON_SHIFT_Y(3),
-		g_i_BUTTON_SIZE, g_i_BUTTON_SIZE,
-		hwnd, (HMENU)IDC_BUTTON_POINT, GetModuleHandle(NULL), NULL
-	);
-	SetSkin(hButton_point, SKIN_OPERATORS_METAL[3]);
-
-	HWND hButton_bsp = CreateWindowEx
-	(
-		NULL, "Button", "<-",
-		WS_CHILD | WS_VISIBLE | BS_BITMAP,
-		BUTTON_SHIFT_X(4), BUTTON_SHIFT_Y(0),
-		g_i_BUTTON_SIZE, g_i_BUTTON_SIZE,
-		hwnd, (HMENU)IDC_BUTTON_BSP, GetModuleHandle(NULL), NULL
-	);
-	SetSkin(hButton_bsp, SKIN_OPERATORS_METAL[2]);
-
-	for (int i = 0; i < 4; i++)
-	{
-		HWND hButton_op = CreateWindowEx
+		HWND hButton = GetDlgItem(hwnd, i);
+		sprintf(sz_filename, "ButtonsBMP\\%s\\%s", skin, g_BUTTONS[i - IDC_BUTTON_0]);
+		HBITMAP bmpButton = (HBITMAP)LoadImage
 		(
-			NULL, "Button", g_OPERATIONS[i],
-			WS_CHILD | WS_VISIBLE | BS_BITMAP,
-			BUTTON_SHIFT_X(3),
-			BUTTON_SHIFT_Y(3 - i),
-			g_i_BUTTON_SIZE, g_i_BUTTON_SIZE,
-			hwnd, (HMENU)(IDC_BUTTON_PLUS + i), GetModuleHandle(NULL), NULL
+			NULL, sz_filename, IMAGE_BITMAP,
+			i == IDC_BUTTON_0 ? g_i_BUTTON_DOUBLE_SIZE : g_i_BUTTON_SIZE,
+			i == IDC_BUTTON_EQUAL ? g_i_BUTTON_DOUBLE_SIZE : g_i_BUTTON_SIZE,
+			LR_LOADFROMFILE
 		);
-
-		SetSkin(hButton_op, SKIN_OPERATIONS_METAL[i]);
+		SendMessage(hButton, BM_SETIMAGE, IMAGE_BITMAP, (LPARAM)bmpButton);
 	}
-
-	HWND hButton_c = CreateWindowEx
-	(
-		NULL, "Button", "C",
-		WS_CHILD | WS_VISIBLE | BS_BITMAP,
-		BUTTON_SHIFT_X(4), BUTTON_SHIFT_Y(1),
-		g_i_BUTTON_SIZE, g_i_BUTTON_SIZE,
-		hwnd, (HMENU)IDC_BUTTON_CLR, GetModuleHandle(NULL), NULL
-	);
-	SetSkin(hButton_c, SKIN_OPERATORS_METAL[1]);
-
-	HWND hButton_equal = CreateWindowEx
-	(
-		NULL, "Button", "=",
-		WS_CHILD | WS_VISIBLE | BS_BITMAP,
-		BUTTON_SHIFT_X(4), BUTTON_SHIFT_Y(2),
-		g_i_BUTTON_SIZE, g_i_BUTTON_DOUBLE_SIZE,
-		hwnd, (HMENU)IDC_BUTTON_EQUAL, GetModuleHandle(NULL), NULL
-	);
-
-	HBITMAP bmpButton_equal = (HBITMAP)LoadImage
-	(
-		NULL,
-		SKIN_OPERATORS_METAL[4],
-		IMAGE_BITMAP,
-		g_i_BUTTON_SIZE, g_i_BUTTON_DOUBLE_SIZE,
-		LR_LOADFROMFILE
-	);
-	SendMessage(hButton_equal, BM_SETIMAGE, IMAGE_BITMAP, (LPARAM)bmpButton_equal);
-
-}
-
-VOID SetSkinBlue(HWND hwnd)
-{
-
 }

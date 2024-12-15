@@ -26,9 +26,6 @@
     <Image Include="ICO\icon_calc_sm.ico">
       <Filter>Resource Files</Filter>
     </Image>
-    <Image Include="ButtonBMP\button_0.bmp">
-      <Filter>Resource Files</Filter>
-    </Image>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="Dimensions.h">
