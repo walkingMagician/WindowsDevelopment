@@ -10,20 +10,20 @@ CONST CHAR g_sz_WINDOW_CLASS[] = "Calculator";
 
 CONST CHAR* g_OPERATIONS[] = { "+","-", "*" ,"/" };
 
-CONST CHAR* SKIN_OPERATIONS_METTAL[] = {
+CONST CHAR* SKIN_OPERATIONS_METAL[] = {
 	"ButtonBMP\\Metal_mistral\\button_plus.bmp",
 	"ButtonBMP\\Metal_mistral\\button_minus.bmp",
 	"ButtonBMP\\Metal_mistral\\Button_aster.bmp",
 	"ButtonBMP\\Metal_mistral\\button_slash.bmp"
 };
-CONST CHAR* SKIN_OPERATORS_METTAL[] = {
+CONST CHAR* SKIN_OPERATORS_METAL[] = {
 	"ButtonBMP\\Metal_mistral\\button_0.bmp",
 	"ButtonBMP\\Metal_mistral\\button_clr.bmp",
 	"ButtonBMP\\Metal_mistral\\button_bsp.bmp",
 	"ButtonBMP\\Metal_mistral\\button_point.bmp",
 	"ButtonBMP\\Metal_mistral\\button_equal.bmp"
 }; // 0-0, 1-clr, 2-bsp, 3-point, 4-equal
-CONST CHAR* SKIN_NUMBERS_METTAL[] = { 
+CONST CHAR* SKIN_NUMBERS_METAL[] = { 
 	"ButtonBMP\\Metal_mistral\\button_1.bmp",
 	"ButtonBMP\\Metal_mistral\\button_2.bmp",
 	"ButtonBMP\\Metal_mistral\\button_3.bmp",
@@ -60,12 +60,15 @@ CONST CHAR* SKIN_NUMBERS_BLUE[] = {
 	"ButtonBMP\\square_blue\\button_9.bmp"
 };
 
+COLORREF bgColor = RGB(255, 255, 255);
+void SetBackgroundColor(COLORREF color);
 
 INT CALLBACK WndProc(HWND hwnd, UINT uMsg, WPARAM wParam, LPARAM lParam);
 INT GetTitleBarHeight(HWND hwnd);
 VOID SetSkin(HWND hwnd, CONST CHAR* skin);
 VOID SetSkinMetal(HWND hwnd);
 VOID SetSkinBlue(HWND hwnd);
+
 
 
 INT WINAPI WinMain(HINSTANCE hInstance, HINSTANCE hPrevInst, LPSTR lpCmdLine, INT nCmdShow)
@@ -221,7 +224,6 @@ INT CALLBACK WndProc(HWND hwnd, UINT uMsg, WPARAM wParam, LPARAM lParam)
 
 	} break;
 
-
 	case WM_COMMAND:
 	{
 		static DOUBLE a = DBL_MIN;
@@ -232,6 +234,8 @@ INT CALLBACK WndProc(HWND hwnd, UINT uMsg, WPARAM wParam, LPARAM lParam)
 		static BOOL equal_pressed = FALSE;
 
 		SetFocus(hwnd);
+
+		
 
 		HWND hEditDisplay = GetDlgItem(hwnd, IDC_EDIT_DISPLAY);
 		CONST INT SIZE = 256;
@@ -313,6 +317,8 @@ INT CALLBACK WndProc(HWND hwnd, UINT uMsg, WPARAM wParam, LPARAM lParam)
 		if (LOWORD(wParam) == 1)
 		{
 			SetSkinMetal(hwnd);
+			SetBackgroundColor(RGB(158, 156, 148)); // Изменяем на красный
+			InvalidateRect(hwnd, NULL, TRUE);
 		}
 		if (LOWORD(wParam) == 2)
 		{
@@ -326,13 +332,12 @@ INT CALLBACK WndProc(HWND hwnd, UINT uMsg, WPARAM wParam, LPARAM lParam)
 	{
 
 		HMENU hMenu = CreatePopupMenu();
-		AppendMenu(hMenu, MF_STRING, 1, "stule one");
+		AppendMenu(hMenu, MF_STRING, 1, "Metal");
 		AppendMenu(hMenu, MF_STRING, 2, "stule two");
 
 		POINT pt;
 		GetCursorPos(&pt);
 		TrackPopupMenu(hMenu, TPM_RIGHTBUTTON, pt.x, pt.y, 0, hwnd, NULL);
-
 
 		DestroyMenu(hMenu);
 
@@ -359,9 +364,19 @@ INT CALLBACK WndProc(HWND hwnd, UINT uMsg, WPARAM wParam, LPARAM lParam)
 
 	} break;
 
-	case WM_DESTROY:
+	case WM_ERASEBKGND: {
+		HDC hdc = (HDC)wParam;
+		HBRUSH hBrush = CreateSolidBrush(bgColor); // Синий цвет
+		RECT rect;
+		GetClientRect(hwnd, &rect); // Получаем размеры клиентской области
+		FillRect(hdc, &rect, hBrush); // Закрашиваем фон
+		DeleteObject(hBrush); // Освобождаем кисть
+		return 1; // Сообщаем, что мы обработали это сообщение
+	}
+
+	case WM_DESTROY: 
 	{
-		PostQuitMessage(0); 
+		PostQuitMessage(0);
 	} break;
 	case WM_CLOSE:
 		DestroyWindow(hwnd); break;
@@ -384,7 +399,6 @@ INT GetTitleBarHeight(HWND hwnd)
 
 VOID SetSkin(HWND hwnd, CONST CHAR* skin)
 {
-
 	HBITMAP hBitmap = (HBITMAP)LoadImage
 	(
 		NULL,
@@ -395,6 +409,10 @@ VOID SetSkin(HWND hwnd, CONST CHAR* skin)
 	);
 	if(hBitmap)
 		SendMessage(hwnd, BM_SETIMAGE, IMAGE_BITMAP, (LPARAM)hBitmap);
+}
+
+void SetBackgroundColor(COLORREF color) {
+	bgColor = color; // Изменяем текущий цвет фона
 }
 
 VOID SetSkinMetal(HWND hwnd)
@@ -416,7 +434,7 @@ VOID SetSkinMetal(HWND hwnd)
 				GetModuleHandle(NULL),
 				NULL
 			);
-			SetSkin(hButton_num, SKIN_NUMBERS_METTAL[i + j]);
+			SetSkin(hButton_num, SKIN_NUMBERS_METAL[i + j]);
 		}
 	}
 
@@ -432,7 +450,7 @@ VOID SetSkinMetal(HWND hwnd)
 	HBITMAP bmpButton_0 = (HBITMAP)LoadImage
 	(
 		NULL,
-		SKIN_OPERATORS_METTAL[0],
+		SKIN_OPERATORS_METAL[0],
 		IMAGE_BITMAP,
 		g_i_BUTTON_DOUBLE_SIZE, g_i_BUTTON_SIZE,
 		LR_LOADFROMFILE
@@ -448,7 +466,7 @@ VOID SetSkinMetal(HWND hwnd)
 		g_i_BUTTON_SIZE, g_i_BUTTON_SIZE,
 		hwnd, (HMENU)IDC_BUTTON_POINT, GetModuleHandle(NULL), NULL
 	);
-	SetSkin(hButton_point, SKIN_OPERATORS_METTAL[3]);
+	SetSkin(hButton_point, SKIN_OPERATORS_METAL[3]);
 
 	HWND hButton_bsp = CreateWindowEx
 	(
@@ -458,7 +476,7 @@ VOID SetSkinMetal(HWND hwnd)
 		g_i_BUTTON_SIZE, g_i_BUTTON_SIZE,
 		hwnd, (HMENU)IDC_BUTTON_BSP, GetModuleHandle(NULL), NULL
 	);
-	SetSkin(hButton_bsp, SKIN_OPERATORS_METTAL[2]);
+	SetSkin(hButton_bsp, SKIN_OPERATORS_METAL[2]);
 
 	for (int i = 0; i < 4; i++)
 	{
@@ -472,7 +490,7 @@ VOID SetSkinMetal(HWND hwnd)
 			hwnd, (HMENU)(IDC_BUTTON_PLUS + i), GetModuleHandle(NULL), NULL
 		);
 
-		SetSkin(hButton_op, SKIN_OPERATIONS_METTAL[i]);
+		SetSkin(hButton_op, SKIN_OPERATIONS_METAL[i]);
 	}
 
 	HWND hButton_c = CreateWindowEx
@@ -483,7 +501,7 @@ VOID SetSkinMetal(HWND hwnd)
 		g_i_BUTTON_SIZE, g_i_BUTTON_SIZE,
 		hwnd, (HMENU)IDC_BUTTON_CLR, GetModuleHandle(NULL), NULL
 	);
-	SetSkin(hButton_c, SKIN_OPERATORS_METTAL[1]);
+	SetSkin(hButton_c, SKIN_OPERATORS_METAL[1]);
 
 	HWND hButton_equal = CreateWindowEx
 	(
@@ -497,7 +515,7 @@ VOID SetSkinMetal(HWND hwnd)
 	HBITMAP bmpButton_equal = (HBITMAP)LoadImage
 	(
 		NULL,
-		SKIN_OPERATORS_METTAL[4],
+		SKIN_OPERATORS_METAL[4],
 		IMAGE_BITMAP,
 		g_i_BUTTON_SIZE, g_i_BUTTON_DOUBLE_SIZE,
 		LR_LOADFROMFILE
