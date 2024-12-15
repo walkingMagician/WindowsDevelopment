@@ -373,6 +373,29 @@ INT CALLBACK WndProc(HWND hwnd, UINT uMsg, WPARAM wParam, LPARAM lParam)
 
 	} break;
 
+	case WM_CONTEXTMENU:
+	{
+		HMENU hMenu = CreatePopupMenu(); // создаём всплывающие меню 
+		// добавляем пункты в созданное меню 
+		InsertMenu(hMenu, 0, MF_BYPOSITION | MF_STRING, IDR_EXIT, "Exit");
+		InsertMenu(hMenu, 0, MF_BYPOSITION | MF_STRING, 0, NULL);
+		InsertMenu(hMenu, 0, MF_BYPOSITION | MF_STRING, IDR_METAL_MISTRAL, "metal mistral");
+		InsertMenu(hMenu, 0, MF_BYPOSITION | MF_STRING, IDR_SQUARE_BLUE, "square blue");
+
+
+		// использование контекстного меню 
+		switch (TrackPopupMenu(hMenu,TPM_RETURNCMD | TPM_RIGHTALIGN | TPM_BOTTOMALIGN, LOWORD(lParam), HIWORD(lParam), 0, hwnd, NULL))
+		{
+		case IDR_SQUARE_BLUE:	SetSkin(hwnd, "square_blue"); break;
+		case IDR_METAL_MISTRAL:	SetSkin(hwnd, "metal_mistral"); break;
+		case IDR_EXIT: SendMessage(hwnd, WM_CLOSE, 0, 0); break;
+		} 
+
+		// удаляем меню
+		DestroyMenu(hMenu);
+
+	} break;
+
 	case WM_DESTROY: 
 	{
 		PostQuitMessage(0);
