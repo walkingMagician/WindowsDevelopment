@@ -15,6 +15,10 @@ INT CALLBACK WndProc(HWND hwnd, UINT uMsg, WPARAM wParam, LPARAM lParam);
 INT GetTitleBarHeight(HWND hwnd);
 VOID SetSkin(HWND hwnd, CONST CHAR skin[]);
 
+HFONT hCurrentFont;
+HFONT hFont1;
+HFONT hFont2;
+
 
 INT WINAPI WinMain(HINSTANCE hInstance, HINSTANCE hPrevInst, LPSTR lpCmdLine, INT nCmdShow)
 {
@@ -90,8 +94,8 @@ INT CALLBACK WndProc(HWND hwnd, UINT uMsg, WPARAM wParam, LPARAM lParam)
 			hwnd, (HMENU)IDC_EDIT_DISPLAY, GetModuleHandleA(NULL), NULL
 		);
 
-		AddFontResource("Fonts\\Fatal.ttf");
-		HFONT hFont = CreateFont
+		//AddFontResource("Fonts\\Fatal.ttf");
+		hFont1 = CreateFont
 		(
 			g_i_FONT_HEIGHT, g_i_FONT_WIDTH,
 			0, 0,
@@ -99,11 +103,23 @@ INT CALLBACK WndProc(HWND hwnd, UINT uMsg, WPARAM wParam, LPARAM lParam)
 			ANSI_CHARSET,
 			OUT_CHARACTER_PRECIS,
 			CLIP_CHARACTER_PRECIS,
-			ANTIALIASED_QUALITY, 
+			ANTIALIASED_QUALITY,
 			FF_DONTCARE,
 			"Fatal (TRIAL)"
 		);
-		SendMessage(hEdit, WM_SETFONT, (WPARAM)hFont, TRUE);
+		HFONT hFont2 = CreateFont
+		(
+			g_i_FONT_HEIGHT, g_i_FONT_WIDTH,
+			0, 0,
+			FW_MEDIUM, 0, 0, 0, // Bold, italic, underline, strackeout
+			ANSI_CHARSET,
+			OUT_CHARACTER_PRECIS,
+			CLIP_CHARACTER_PRECIS,
+			ANTIALIASED_QUALITY,
+			FF_DONTCARE,
+			"Fatal (TRIAL)"
+		);
+		hCurrentFont = hFont1;
 		
 		CHAR sz_digit[2] = {};
 		for (int i = 6; i >= 0; i -= 3)
@@ -174,6 +190,7 @@ INT CALLBACK WndProc(HWND hwnd, UINT uMsg, WPARAM wParam, LPARAM lParam)
 			g_i_BUTTON_SIZE, g_i_BUTTON_SIZE,
 			hwnd, (HMENU)IDC_BUTTON_CLR, GetModuleHandle(NULL), NULL
 		);
+
 		CreateWindowEx
 		(
 			NULL, "Button", "=",
@@ -297,6 +314,19 @@ INT CALLBACK WndProc(HWND hwnd, UINT uMsg, WPARAM wParam, LPARAM lParam)
 			SendMessage(hEditDisplay, WM_SETTEXT, 0, (LPARAM)sz_display);
 		}
 
+		//////////////////////////////////////////////
+
+		if (LOWORD(wParam) == '3')
+		{
+			hCurrentFont = hFont1;
+			 InvalidateRect(hwnd, NULL, TRUE);
+		}
+		if (LOWORD(wParam) == '4')
+		{
+			hCurrentFont = hFont2;
+			InvalidateRect(hwnd, NULL, TRUE);
+		}
+
 	} break;
 
 	case WM_KEYDOWN:
@@ -412,13 +442,27 @@ INT CALLBACK WndProc(HWND hwnd, UINT uMsg, WPARAM wParam, LPARAM lParam)
 
 	case WM_CONTEXTMENU:
 	{
-		HMENU hMenu = CreatePopupMenu(); // создаём всплывающие меню 
-		// добавляем пункты в созданное меню 
-		InsertMenu(hMenu, 0, MF_BYPOSITION | MF_STRING, IDR_EXIT, "Exit");
-		InsertMenu(hMenu, 0, MF_BYPOSITION | MF_STRING, 0, NULL);
-		InsertMenu(hMenu, 0, MF_BYPOSITION | MF_STRING, IDR_METAL_MISTRAL, "metal mistral");
-		InsertMenu(hMenu, 0, MF_BYPOSITION | MF_STRING, IDR_SQUARE_BLUE, "square blue");
-		CheckMenuItem(hMenu, index, MF_BYPOSITION | MF_CHECKED);
+		//HMENU hMenu = CreatePopupMenu(); // создаём всплывающие меню 
+		//// добавляем пункты в созданное меню 
+		
+		//InsertMenu(hMenu, 0, MF_BYPOSITION | MF_STRING, IDR_EXIT, "Exit");
+		//InsertMenu(hMenu, 0, MF_BYPOSITION | MF_STRING, 0, NULL);
+		//InsertMenu(hMenu, 0, MF_BYPOSITION | MF_STRING | MF_POPUP, (UINT_PTR)CreatePopupMenu(), "Skin");
+		//InsertMenu(hMenu, 1, MF_BYPOSITION | MF_STRING | MF_POPUP, (UINT_PTR)CreatePopupMenu(), "Font");
+		//CheckMenuItem(hMenu, index, MF_BYPOSITION | MF_CHECKED);
+
+		HMENU hMenu = CreatePopupMenu();
+		HMENU hSubSkinMenu = CreatePopupMenu();
+		HMENU hSubFontMenu = CreatePopupMenu();
+
+		AppendMenu(hMenu, MF_POPUP, (UINT_PTR)hSubSkinMenu, "Skin");
+		AppendMenu(hMenu, MF_POPUP, (UINT_PTR)hSubFontMenu, "Font");
+
+		AppendMenu(hSubSkinMenu, MF_STRING, IDR_SQUARE_BLUE, "square blue");
+		AppendMenu(hSubSkinMenu, MF_STRING, IDR_METAL_MISTRAL, "metal mistral");
+		AppendMenu(hSubFontMenu, MF_STRING, 3, "Подпункт 2.1");
+		AppendMenu(hSubFontMenu, MF_STRING, 4, "Подпункт 2.2");
+		
 
 
 		// использование контекстного меню 
@@ -433,6 +477,8 @@ INT CALLBACK WndProc(HWND hwnd, UINT uMsg, WPARAM wParam, LPARAM lParam)
 		case IDR_EXIT: SendMessage(hwnd, WM_CLOSE, 0, 0); break;
 		} 
 
+		
+
 		HWND hEditDisplay = GetDlgItem(hwnd, IDC_EDIT_DISPLAY);
 		HDC hdcDisplay = GetDC(hEditDisplay);
 		SendMessage(hwnd, WM_CTLCOLOREDIT, (WPARAM)hdcDisplay, 0);
@@ -441,9 +487,24 @@ INT CALLBACK WndProc(HWND hwnd, UINT uMsg, WPARAM wParam, LPARAM lParam)
 		SetFocus(hEditDisplay);
 
 		// удаляем меню
+		DestroyMenu(hSubFontMenu);
+		DestroyMenu(hSubSkinMenu);
 		DestroyMenu(hMenu);
 
 	} break;
+	case WM_PAINT:
+	{
+		PAINTSTRUCT ps;
+		HWND hEdit = GetDlgItem(hwnd, IDC_EDIT_DISPLAY);
+		HDC hdc = BeginPaint(hwnd, &ps);
+		SelectObject(hdc, hCurrentFont); // выбираем текущий шрифт
+
+		// Рисуем текст
+		SendMessage(hEdit, WM_SETFONT, (WPARAM)hCurrentFont, TRUE);
+
+		EndPaint(hEdit, &ps);
+		break;
+	}
 
 	case WM_DESTROY: 
 	{
