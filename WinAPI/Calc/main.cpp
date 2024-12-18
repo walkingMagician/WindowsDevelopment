@@ -3,6 +3,7 @@
 #include<stdio.h>
 #include<cstdio>
 #include<float.h>
+#include<commctrl.h>
 #include"resource.h"
 #include"Dimensions.h"
 #include"Skins.h"
@@ -15,9 +16,10 @@ INT CALLBACK WndProc(HWND hwnd, UINT uMsg, WPARAM wParam, LPARAM lParam);
 INT GetTitleBarHeight(HWND hwnd);
 VOID SetSkin(HWND hwnd, CONST CHAR skin[]);
 
-HFONT hCurrentFont;
-HFONT hFont1;
-HFONT hFont2;
+void fontFatal(HWND hwnd);
+void fontEbbe(HWND hwnd);
+
+
 
 
 INT WINAPI WinMain(HINSTANCE hInstance, HINSTANCE hPrevInst, LPSTR lpCmdLine, INT nCmdShow)
@@ -75,7 +77,6 @@ INT WINAPI WinMain(HINSTANCE hInstance, HINSTANCE hPrevInst, LPSTR lpCmdLine, IN
 
 INT CALLBACK WndProc(HWND hwnd, UINT uMsg, WPARAM wParam, LPARAM lParam)
 {
-
 	static INT index = 0;
 
 	switch (uMsg)
@@ -94,8 +95,8 @@ INT CALLBACK WndProc(HWND hwnd, UINT uMsg, WPARAM wParam, LPARAM lParam)
 			hwnd, (HMENU)IDC_EDIT_DISPLAY, GetModuleHandleA(NULL), NULL
 		);
 
-		//AddFontResource("Fonts\\Fatal.ttf");
-		hFont1 = CreateFont
+		AddFontResource("Fonts\\Fatal.ttf");
+		HFONT hFont = CreateFont
 		(
 			g_i_FONT_HEIGHT, g_i_FONT_WIDTH,
 			0, 0,
@@ -107,19 +108,7 @@ INT CALLBACK WndProc(HWND hwnd, UINT uMsg, WPARAM wParam, LPARAM lParam)
 			FF_DONTCARE,
 			"Fatal (TRIAL)"
 		);
-		HFONT hFont2 = CreateFont
-		(
-			g_i_FONT_HEIGHT, g_i_FONT_WIDTH,
-			0, 0,
-			FW_MEDIUM, 0, 0, 0, // Bold, italic, underline, strackeout
-			ANSI_CHARSET,
-			OUT_CHARACTER_PRECIS,
-			CLIP_CHARACTER_PRECIS,
-			ANTIALIASED_QUALITY,
-			FF_DONTCARE,
-			"Fatal (TRIAL)"
-		);
-		hCurrentFont = hFont1;
+		SendMessage(hEdit, WM_SETFONT, (WPARAM)hFont, TRUE);
 		
 		CHAR sz_digit[2] = {};
 		for (int i = 6; i >= 0; i -= 3)
@@ -225,6 +214,62 @@ INT CALLBACK WndProc(HWND hwnd, UINT uMsg, WPARAM wParam, LPARAM lParam)
 
 	} break;
 
+	case WM_CONTEXTMENU:
+	{
+		//HMENU hMenu = CreatePopupMenu(); // создаём всплывающие меню 
+		//// добавляем пункты в созданное меню 
+		
+		//InsertMenu(hMenu, 0, MF_BYPOSITION | MF_STRING, IDR_EXIT, "Exit");
+		//InsertMenu(hMenu, 0, MF_BYPOSITION | MF_STRING, 0, NULL);
+		//InsertMenu(hMenu, 0, MF_BYPOSITION | MF_STRING | MF_POPUP, (UINT_PTR)CreatePopupMenu(), "Skin");
+		//InsertMenu(hMenu, 1, MF_BYPOSITION | MF_STRING | MF_POPUP, (UINT_PTR)CreatePopupMenu(), "Font");
+		//CheckMenuItem(hMenu, index, MF_BYPOSITION | MF_CHECKED);
+
+		HMENU hMenu = CreatePopupMenu();
+		HMENU hSubSkinMenu = CreatePopupMenu();
+		HMENU hSubFontMenu = CreatePopupMenu();
+
+		AppendMenu(hMenu, MF_POPUP | MF_STRING, (UINT_PTR)hSubSkinMenu, "Skin");
+		AppendMenu(hMenu, MF_POPUP | MF_STRING, (UINT_PTR)hSubFontMenu, "Font");
+
+		AppendMenu(hSubSkinMenu, MF_STRING, IDR_SQUARE_BLUE, "square blue");
+		AppendMenu(hSubSkinMenu, MF_STRING, IDR_METAL_MISTRAL, "metal mistral");
+		AppendMenu(hSubFontMenu, MF_STRING, IDR_FONT_FATAL, "Fatal");
+		AppendMenu(hSubFontMenu, MF_STRING, IDR_FONT_EBBE, "Ebbe");
+
+		// использование контекстного меню 
+		DWORD item = TrackPopupMenu(hMenu, TPM_RETURNCMD | TPM_RIGHTALIGN | TPM_BOTTOMALIGN, LOWORD(lParam), HIWORD(lParam), 0, hwnd, NULL);
+		switch (item)
+		{
+		case IDR_SQUARE_BLUE:	//SetSkin(hwnd, "square_blue"); break;
+		case IDR_METAL_MISTRAL:	//SetSkin(hwnd, "metal_mistral"); break;
+			index = item - IDR_SQUARE_BLUE;
+			//ModifyMenu(hMenu, item - IDR_SQUARE_BLUE, MF_BYCOMMAND | MF_STRING | MF_CHECKED, item, NULL);
+			break;
+		case IDR_FONT_FATAL: fontFatal(hwnd); break;
+		case IDR_FONT_EBBE: fontEbbe(hwnd); break;
+		case IDR_EXIT: SendMessage(hwnd, WM_CLOSE, 0, 0); break;
+		} 
+
+
+
+		
+
+		HWND hEditDisplay = GetDlgItem(hwnd, IDC_EDIT_DISPLAY);
+		HDC hdcDisplay = GetDC(hEditDisplay);
+		SendMessage(hwnd, WM_CTLCOLOREDIT, (WPARAM)hdcDisplay, 0);
+		ReleaseDC(hEditDisplay, hdcDisplay);
+		SetSkin(hwnd, g_SKIN[index]);
+		SetFocus(hEditDisplay);
+
+		// удаляем меню
+		DestroyMenu(hSubFontMenu);
+		DestroyMenu(hSubSkinMenu);
+		DestroyMenu(hMenu);
+
+	} break;
+
+
 	case WM_COMMAND:
 	{
 		static DOUBLE a = DBL_MIN;
@@ -242,6 +287,7 @@ INT CALLBACK WndProc(HWND hwnd, UINT uMsg, WPARAM wParam, LPARAM lParam)
 		CHAR sz_display[SIZE]{};
 		CHAR sz_digit[2]{};
 		INT size_display = 0;
+		CHAR buffer[256]{};
 
 		if (LOWORD(wParam) >= IDC_BUTTON_0 && LOWORD(wParam) <= IDC_BUTTON_9)
 		{
@@ -316,16 +362,6 @@ INT CALLBACK WndProc(HWND hwnd, UINT uMsg, WPARAM wParam, LPARAM lParam)
 
 		//////////////////////////////////////////////
 
-		if (LOWORD(wParam) == '3')
-		{
-			hCurrentFont = hFont1;
-			 InvalidateRect(hwnd, NULL, TRUE);
-		}
-		if (LOWORD(wParam) == '4')
-		{
-			hCurrentFont = hFont2;
-			InvalidateRect(hwnd, NULL, TRUE);
-		}
 
 	} break;
 
@@ -440,71 +476,7 @@ INT CALLBACK WndProc(HWND hwnd, UINT uMsg, WPARAM wParam, LPARAM lParam)
 
 	} break;
 
-	case WM_CONTEXTMENU:
-	{
-		//HMENU hMenu = CreatePopupMenu(); // создаём всплывающие меню 
-		//// добавляем пункты в созданное меню 
-		
-		//InsertMenu(hMenu, 0, MF_BYPOSITION | MF_STRING, IDR_EXIT, "Exit");
-		//InsertMenu(hMenu, 0, MF_BYPOSITION | MF_STRING, 0, NULL);
-		//InsertMenu(hMenu, 0, MF_BYPOSITION | MF_STRING | MF_POPUP, (UINT_PTR)CreatePopupMenu(), "Skin");
-		//InsertMenu(hMenu, 1, MF_BYPOSITION | MF_STRING | MF_POPUP, (UINT_PTR)CreatePopupMenu(), "Font");
-		//CheckMenuItem(hMenu, index, MF_BYPOSITION | MF_CHECKED);
 
-		HMENU hMenu = CreatePopupMenu();
-		HMENU hSubSkinMenu = CreatePopupMenu();
-		HMENU hSubFontMenu = CreatePopupMenu();
-
-		AppendMenu(hMenu, MF_POPUP, (UINT_PTR)hSubSkinMenu, "Skin");
-		AppendMenu(hMenu, MF_POPUP, (UINT_PTR)hSubFontMenu, "Font");
-
-		AppendMenu(hSubSkinMenu, MF_STRING, IDR_SQUARE_BLUE, "square blue");
-		AppendMenu(hSubSkinMenu, MF_STRING, IDR_METAL_MISTRAL, "metal mistral");
-		AppendMenu(hSubFontMenu, MF_STRING, 3, "Подпункт 2.1");
-		AppendMenu(hSubFontMenu, MF_STRING, 4, "Подпункт 2.2");
-		
-
-
-		// использование контекстного меню 
-		DWORD item = TrackPopupMenu(hMenu, TPM_RETURNCMD | TPM_RIGHTALIGN | TPM_BOTTOMALIGN, LOWORD(lParam), HIWORD(lParam), 0, hwnd, NULL);
-		switch (item)
-		{
-		case IDR_SQUARE_BLUE:	//SetSkin(hwnd, "square_blue"); break;
-		case IDR_METAL_MISTRAL:	//SetSkin(hwnd, "metal_mistral"); break;
-			index = item - IDR_SQUARE_BLUE;
-			//ModifyMenu(hMenu, item - IDR_SQUARE_BLUE, MF_BYCOMMAND | MF_STRING | MF_CHECKED, item, NULL);
-			break;
-		case IDR_EXIT: SendMessage(hwnd, WM_CLOSE, 0, 0); break;
-		} 
-
-		
-
-		HWND hEditDisplay = GetDlgItem(hwnd, IDC_EDIT_DISPLAY);
-		HDC hdcDisplay = GetDC(hEditDisplay);
-		SendMessage(hwnd, WM_CTLCOLOREDIT, (WPARAM)hdcDisplay, 0);
-		ReleaseDC(hEditDisplay, hdcDisplay);
-		SetSkin(hwnd, g_SKIN[index]);
-		SetFocus(hEditDisplay);
-
-		// удаляем меню
-		DestroyMenu(hSubFontMenu);
-		DestroyMenu(hSubSkinMenu);
-		DestroyMenu(hMenu);
-
-	} break;
-	case WM_PAINT:
-	{
-		PAINTSTRUCT ps;
-		HWND hEdit = GetDlgItem(hwnd, IDC_EDIT_DISPLAY);
-		HDC hdc = BeginPaint(hwnd, &ps);
-		SelectObject(hdc, hCurrentFont); // выбираем текущий шрифт
-
-		// Рисуем текст
-		SendMessage(hEdit, WM_SETFONT, (WPARAM)hCurrentFont, TRUE);
-
-		EndPaint(hEdit, &ps);
-		break;
-	}
 
 	case WM_DESTROY: 
 	{
@@ -567,4 +539,42 @@ VOID SetSkin(HWND hwnd, CONST CHAR skin[])
 		);
 		SendMessage(hButton, BM_SETIMAGE, IMAGE_BITMAP, (LPARAM)bmpButton);
 	}
+}
+
+void fontFatal(HWND hwnd)
+{
+	HWND hEdit = GetDlgItem(hwnd, IDC_EDIT_DISPLAY);
+	AddFontResource("Fonts\\Fatal.ttf");
+	HFONT hFont = CreateFont
+	(
+		g_i_FONT_HEIGHT, g_i_FONT_WIDTH,
+		0, 0,
+		FW_MEDIUM, 0, 0, 0, // Bold, italic, underline, strackeout
+		ANSI_CHARSET,
+		OUT_CHARACTER_PRECIS,
+		CLIP_CHARACTER_PRECIS,
+		ANTIALIASED_QUALITY,
+		FF_DONTCARE,
+		"Fatal (TRIAL)"
+	);
+	SendMessage(hEdit, WM_SETFONT, (WPARAM)hFont, TRUE);
+}
+
+void fontEbbe(HWND hwnd)
+{
+	HWND hEdit = GetDlgItem(hwnd, IDC_EDIT_DISPLAY);
+	AddFontResource("Fonts\\Ebbe.ttf");
+	HFONT hFont = CreateFont
+	(
+		g_i_FONT_HEIGHT, g_i_FONT_WIDTH,
+		0, 0,
+		FW_MEDIUM, 0, 0, 0, // Bold, italic, underline, strackeout
+		ANSI_CHARSET,
+		OUT_CHARACTER_PRECIS,
+		CLIP_CHARACTER_PRECIS,
+		ANTIALIASED_QUALITY,
+		FF_DONTCARE,
+		"Ebbe"
+	);
+	SendMessage(hEdit, WM_SETFONT, (WPARAM)hFont, TRUE);
 }
