@@ -19,8 +19,7 @@ VOID SetSkin(HWND hwnd, CONST CHAR skin[]);
 void fontFatal(HWND hwnd);
 void fontEbbe(HWND hwnd);
 
-
-
+HMODULE hModule = LoadLibrary("LibraryResource.lib");
 
 INT WINAPI WinMain(HINSTANCE hInstance, HINSTANCE hPrevInst, LPSTR lpCmdLine, INT nCmdShow)
 {
