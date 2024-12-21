@@ -4,9 +4,12 @@
 #include<cstdio>
 #include<float.h>
 #include<commctrl.h>
-#include"resource.h"
 #include"Dimensions.h"
+#include"resource.h"
+#include"resource.h"
 #include"Skins.h"
+
+
 
 CONST CHAR g_sz_WINDOW_CLASS[] = "Calculator";
 
@@ -19,10 +22,12 @@ VOID SetSkin(HWND hwnd, CONST CHAR skin[]);
 void fontFatal(HWND hwnd);
 void fontEbbe(HWND hwnd);
 
-HMODULE hModule = LoadLibrary("LibraryResource.lib");
+
 
 INT WINAPI WinMain(HINSTANCE hInstance, HINSTANCE hPrevInst, LPSTR lpCmdLine, INT nCmdShow)
 {
+
+	HINSTANCE hInst = LoadLibrary("ResourceLib.dll");
 
 	WNDCLASSEX wClass;
 	ZeroMemory(&wClass, sizeof(wClass));
@@ -32,8 +37,8 @@ INT WINAPI WinMain(HINSTANCE hInstance, HINSTANCE hPrevInst, LPSTR lpCmdLine, IN
 	wClass.cbClsExtra = 0;
 	wClass.cbWndExtra = 0;
 
-	wClass.hIcon = LoadIcon(hInstance, MAKEINTRESOURCE(IDI_ICON1));
-	wClass.hIconSm = LoadIcon(hInstance, MAKEINTRESOURCE(IDI_ICON2));
+	wClass.hIcon = LoadIcon(hInst, MAKEINTRESOURCE(IDI_ICON1));
+	wClass.hIconSm = LoadIcon(hInst, MAKEINTRESOURCE(IDI_ICON2));
 	wClass.hCursor = LoadCursor(hInstance, IDC_ARROW);
 	wClass.hbrBackground = (HBRUSH)COLOR_WINDOW;
 
@@ -230,6 +235,8 @@ INT CALLBACK WndProc(HWND hwnd, UINT uMsg, WPARAM wParam, LPARAM lParam)
 
 		AppendMenu(hMenu, MF_POPUP | MF_STRING, (UINT_PTR)hSubSkinMenu, "Skin");
 		AppendMenu(hMenu, MF_POPUP | MF_STRING, (UINT_PTR)hSubFontMenu, "Font");
+		AppendMenu(hMenu, MF_STRING | MF_SEPARATOR, 0, NULL);
+		AppendMenu(hMenu, MF_STRING, IDR_EXIT, "Exit");
 
 		AppendMenu(hSubSkinMenu, MF_STRING, IDR_SQUARE_BLUE, "square blue");
 		AppendMenu(hSubSkinMenu, MF_STRING, IDR_METAL_MISTRAL, "metal mistral");
@@ -267,7 +274,6 @@ INT CALLBACK WndProc(HWND hwnd, UINT uMsg, WPARAM wParam, LPARAM lParam)
 		DestroyMenu(hMenu);
 
 	} break;
-
 
 	case WM_COMMAND:
 	{
@@ -376,6 +382,7 @@ INT CALLBACK WndProc(HWND hwnd, UINT uMsg, WPARAM wParam, LPARAM lParam)
 		}
 		else if (wParam >= 0x60 && wParam <= 0x69)
 		{
+			
 			SendMessage(GetDlgItem(hwnd, wParam - 0x60 + IDC_BUTTON_0), BM_SETSTATE, TRUE, 0);
 		}
 
@@ -474,8 +481,6 @@ INT CALLBACK WndProc(HWND hwnd, UINT uMsg, WPARAM wParam, LPARAM lParam)
 		}
 
 	} break;
-
-
 
 	case WM_DESTROY: 
 	{
