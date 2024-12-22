@@ -15,6 +15,7 @@ CONST CHAR* g_OPERATIONS[] = { "+","-", "*" ,"/" };
 INT CALLBACK WndProc(HWND hwnd, UINT uMsg, WPARAM wParam, LPARAM lParam);
 INT GetTitleBarHeight(HWND hwnd);
 VOID SetSkin(HWND hwnd, CONST CHAR skin[]);
+VOID SetSkinFromDll(HWND hwnd, CONST CHAR skin[]);
 
 void fontFatal(HWND hwnd);
 void fontEbbe(HWND hwnd);
@@ -191,7 +192,8 @@ INT CALLBACK WndProc(HWND hwnd, UINT uMsg, WPARAM wParam, LPARAM lParam)
 		);
 
 
-		SetSkin(hwnd, "square_blue");
+		//SetSkin(hwnd, "square_blue");
+		SetSkinFromDll(hwnd, "square_blue.dll");
 
 	} break;
 
@@ -260,7 +262,7 @@ INT CALLBACK WndProc(HWND hwnd, UINT uMsg, WPARAM wParam, LPARAM lParam)
 		HDC hdcDisplay = GetDC(hEditDisplay);
 		SendMessage(hwnd, WM_CTLCOLOREDIT, (WPARAM)hdcDisplay, 0);
 		ReleaseDC(hEditDisplay, hdcDisplay);
-		SetSkin(hwnd, g_SKIN[index]);
+		SetSkinFromDll(hwnd, g_SKIN[index]);
 		SetFocus(hEditDisplay);
 
 		// удаляем меню
@@ -269,7 +271,6 @@ INT CALLBACK WndProc(HWND hwnd, UINT uMsg, WPARAM wParam, LPARAM lParam)
 		DestroyMenu(hMenu);
 
 	} break;
-
 
 	case WM_COMMAND:
 	{
@@ -392,7 +393,7 @@ INT CALLBACK WndProc(HWND hwnd, UINT uMsg, WPARAM wParam, LPARAM lParam)
 			SendMessage(GetDlgItem(hwnd, IDC_BUTTON_MINUS), BM_SETSTATE,TRUE, 0);
 			break;
 		case VK_MULTIPLY:
-			SendMessage(GetDlgItem(hwnd, IDC_BUTTON_MINUS), BM_SETSTATE,TRUE, 0);
+			SendMessage(GetDlgItem(hwnd, IDC_BUTTON_ASTER), BM_SETSTATE,TRUE, 0);
 			break;
 		case VK_OEM_2:
 		case VK_DIVIDE:
@@ -478,7 +479,6 @@ INT CALLBACK WndProc(HWND hwnd, UINT uMsg, WPARAM wParam, LPARAM lParam)
 	} break;
 
 
-
 	case WM_DESTROY: 
 	{
 		PostQuitMessage(0);
@@ -540,6 +540,29 @@ VOID SetSkin(HWND hwnd, CONST CHAR skin[])
 		);
 		SendMessage(hButton, BM_SETIMAGE, IMAGE_BITMAP, (LPARAM)bmpButton);
 	}
+}
+
+VOID SetSkinFromDll(HWND hwnd, CONST CHAR skin[])
+{
+	HMODULE hModule = LoadLibrary(skin);
+	
+	for (int i = IDC_BUTTON_0; i <= IDC_BUTTON_EQUAL; i++)
+	{
+		HWND hButton = GetDlgItem(hwnd, i);
+		HBITMAP bmpButton = (HBITMAP)LoadImage
+		(
+			hModule,
+			MAKEINTRESOURCE(i),
+			IMAGE_BITMAP,
+			i == IDC_BUTTON_0 ? g_i_BUTTON_DOUBLE_SIZE : g_i_BUTTON_SIZE,
+			i == IDC_BUTTON_EQUAL ? g_i_BUTTON_DOUBLE_SIZE : g_i_BUTTON_SIZE,
+			LR_SHARED // с NULL тоже работает
+		);
+		SendMessage(hButton, BM_SETIMAGE, IMAGE_BITMAP, (LPARAM)bmpButton);
+		// IMAGE_BITMAP можно заменить на '0'
+	}
+	
+	FreeLibrary(hModule);
 }
 
 void fontFatal(HWND hwnd)
