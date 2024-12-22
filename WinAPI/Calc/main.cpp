@@ -108,6 +108,7 @@ INT CALLBACK WndProc(HWND hwnd, UINT uMsg, WPARAM wParam, LPARAM lParam)
 			FF_DONTCARE,
 			"Fatal (TRIAL)"
 		);
+
 		SendMessage(hEdit, WM_SETFONT, (WPARAM)hFont, TRUE);
 		
 		CHAR sz_digit[2] = {};
