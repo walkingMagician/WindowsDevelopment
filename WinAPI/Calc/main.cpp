@@ -7,6 +7,7 @@
 #include"resource.h"
 #include"Dimensions.h"
 #include"Skins.h"
+#include"Fonts.h"
 
 CONST CHAR g_sz_WINDOW_CLASS[] = "Calculator";
 
@@ -16,6 +17,8 @@ INT CALLBACK WndProc(HWND hwnd, UINT uMsg, WPARAM wParam, LPARAM lParam);
 INT GetTitleBarHeight(HWND hwnd);
 VOID SetSkin(HWND hwnd, CONST CHAR skin[]);
 VOID SetSkinFromDll(HWND hwnd, CONST CHAR skin[]);
+VOID LoadFontFromDLL(HMODULE hFontModule, INT resourceID);
+VOID LoadFontsFromDLL(HMODULE hFontsModule);
 
 void fontFatal(HWND hwnd);
 void fontEbbe(HWND hwnd);
@@ -96,13 +99,14 @@ INT CALLBACK WndProc(HWND hwnd, UINT uMsg, WPARAM wParam, LPARAM lParam)
 		);
 
 		hFontsModule = LoadLibrary("Fonts.dll");
-		HRSRC hFntRes = FindResource(hFontsModule, MAKEINTRESOURCE(2002), MAKEINTRESOURCE(RT_FONT));
+		/*HRSRC hFntRes = FindResource(hFontsModule, MAKEINTRESOURCE(2001), MAKEINTRESOURCE(RT_FONT));
 		HGLOBAL hFntMem = LoadResource(hFontsModule, hFntRes);
 		VOID* fntData = LockResource(hFntMem);
 		DWORD nFonts = 0;
 		DWORD len = SizeofResource(hFontsModule, hFntRes);
-		AddFontMemResourceEx(fntData, len, NULL, &nFonts);
+		AddFontMemResourceEx(fntData, len, NULL, &nFonts);*/
 		//AddFontResource("Fonts\\Fatal.ttf");
+		LoadFontsFromDLL(hFontsModule);
 		HFONT hFont = CreateFont
 		(
 			g_i_FONT_HEIGHT, g_i_FONT_WIDTH,
@@ -113,7 +117,7 @@ INT CALLBACK WndProc(HWND hwnd, UINT uMsg, WPARAM wParam, LPARAM lParam)
 			CLIP_CHARACTER_PRECIS,
 			ANTIALIASED_QUALITY,
 			FF_DONTCARE,
-			"Ebbe"
+			g_FONT_NAMES[1]
 		);
 		SendMessage(hEdit, WM_SETFONT, (WPARAM)hFont, TRUE);
 		
@@ -239,6 +243,8 @@ INT CALLBACK WndProc(HWND hwnd, UINT uMsg, WPARAM wParam, LPARAM lParam)
 
 		AppendMenu(hMenu, MF_POPUP | MF_STRING, (UINT_PTR)hSubSkinMenu, "Skin");
 		AppendMenu(hMenu, MF_POPUP | MF_STRING, (UINT_PTR)hSubFontMenu, "Font");
+		AppendMenu(hMenu, MF_SEPARATOR | MF_STRING, 0, NULL);
+		AppendMenu(hMenu, MF_POPUP | MF_STRING, IDR_EXIT, "Exit");
 
 		AppendMenu(hSubSkinMenu, MF_STRING, IDR_SQUARE_BLUE, "square blue");
 		AppendMenu(hSubSkinMenu, MF_STRING, IDR_METAL_MISTRAL, "metal mistral");
@@ -607,4 +613,22 @@ void fontEbbe(HWND hwnd)
 		"Ebbe"
 	);
 	SendMessage(hEdit, WM_SETFONT, (WPARAM)hFont, TRUE);
+}
+
+VOID LoadFontFromDLL(HMODULE hFontModule, INT resourceID)
+{
+	HRSRC hFntRes = FindResource(hFontModule, MAKEINTRESOURCE(resourceID), MAKEINTRESOURCE(RT_FONT));
+	HGLOBAL hFntMem = LoadResource(hFontModule, hFntRes);
+	VOID* fntData = LockResource(hFntMem);
+	DWORD nFonts = 0;
+	DWORD len = SizeofResource(hFontModule, hFntRes);
+	AddFontMemResourceEx(fntData, len, NULL, &nFonts);
+}
+
+VOID LoadFontsFromDLL(HMODULE hFontsModule)
+{
+	for (int i = 2001; i <= 2002; i++)
+	{
+		LoadFontFromDLL(hFontsModule, i);
+	}
 }

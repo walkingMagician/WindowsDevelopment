@@ -130,6 +130,7 @@
     <ClCompile Include="main.cpp" />
   </ItemGroup>
   <ItemGroup>
+    <ClInclude Include="Fonts.h" />
     <ClInclude Include="Skins.h" />
     <ClInclude Include="Dimensions.h" />
     <ClInclude Include="resource.h" />

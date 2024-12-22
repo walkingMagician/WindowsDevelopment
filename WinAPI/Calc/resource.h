@@ -5,12 +5,18 @@
 #define IDI_ICON1               101
 #define IDI_ICON2               102
 
+#define IDR_SKINS				200
 #define IDR_SQUARE_BLUE			201
 #define IDR_METAL_MISTRAL		202
-#define IDR_FONT_FATAL 203
-#define IDR_FONT_EBBE 204
+#define IDR_FONT_FATAL			203
+#define IDR_FONT_EBBE			204
+
+#define IDR_FONTS				250
+#define IDR_FATAL				251
+#define IDR_EBBE				252
 
 #define IDR_EXIT				299
+
 
 #define IDC_EDIT_DISPLAY	999
 
