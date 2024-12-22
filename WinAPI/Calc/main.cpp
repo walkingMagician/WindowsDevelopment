@@ -21,8 +21,6 @@ void fontFatal(HWND hwnd);
 void fontEbbe(HWND hwnd);
 
 
-
-
 INT WINAPI WinMain(HINSTANCE hInstance, HINSTANCE hPrevInst, LPSTR lpCmdLine, INT nCmdShow)
 {
 
@@ -79,6 +77,7 @@ INT WINAPI WinMain(HINSTANCE hInstance, HINSTANCE hPrevInst, LPSTR lpCmdLine, IN
 INT CALLBACK WndProc(HWND hwnd, UINT uMsg, WPARAM wParam, LPARAM lParam)
 {
 	static INT index = 0;
+	static HMODULE hFontsModule = NULL;
 
 	switch (uMsg)
 	{
@@ -96,7 +95,14 @@ INT CALLBACK WndProc(HWND hwnd, UINT uMsg, WPARAM wParam, LPARAM lParam)
 			hwnd, (HMENU)IDC_EDIT_DISPLAY, GetModuleHandleA(NULL), NULL
 		);
 
-		AddFontResource("Fonts\\Fatal.ttf");
+		hFontsModule = LoadLibrary("Fonts.dll");
+		HRSRC hFntRes = FindResource(hFontsModule, MAKEINTRESOURCE(2002), MAKEINTRESOURCE(RT_FONT));
+		HGLOBAL hFntMem = LoadResource(hFontsModule, hFntRes);
+		VOID* fntData = LockResource(hFntMem);
+		DWORD nFonts = 0;
+		DWORD len = SizeofResource(hFontsModule, hFntRes);
+		AddFontMemResourceEx(fntData, len, NULL, &nFonts);
+		//AddFontResource("Fonts\\Fatal.ttf");
 		HFONT hFont = CreateFont
 		(
 			g_i_FONT_HEIGHT, g_i_FONT_WIDTH,
@@ -107,9 +113,8 @@ INT CALLBACK WndProc(HWND hwnd, UINT uMsg, WPARAM wParam, LPARAM lParam)
 			CLIP_CHARACTER_PRECIS,
 			ANTIALIASED_QUALITY,
 			FF_DONTCARE,
-			"Fatal (TRIAL)"
+			"Ebbe"
 		);
-
 		SendMessage(hEdit, WM_SETFONT, (WPARAM)hFont, TRUE);
 		
 		CHAR sz_digit[2] = {};
@@ -481,6 +486,7 @@ INT CALLBACK WndProc(HWND hwnd, UINT uMsg, WPARAM wParam, LPARAM lParam)
 
 	case WM_DESTROY: 
 	{
+		FreeLibrary(hFontsModule);
 		PostQuitMessage(0);
 	} break;
 	case WM_CLOSE:
