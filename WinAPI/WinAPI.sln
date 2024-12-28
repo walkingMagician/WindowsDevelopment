@@ -19,6 +19,8 @@ Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "Resource_Only_DLL", "Resour
 EndProject
 Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "Font_only_DLL", "Font_only_DLL\Font_only_DLL.vcxproj", "{06EA1AB0-8380-4285-AB18-7C83DF7122E0}"
 EndProject
+Project("{54435603-DBB4-11D2-8724-00A0C9A8B90C}") = "Setup", "Setup\Setup.vdproj", "{EFB3CF93-741D-46CD-8EAA-3A1A4016DD4A}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|x64 = Debug|x64
@@ -91,6 +93,10 @@ Global
 		{06EA1AB0-8380-4285-AB18-7C83DF7122E0}.Release|x64.Build.0 = Release|x64
 		{06EA1AB0-8380-4285-AB18-7C83DF7122E0}.Release|x86.ActiveCfg = Release|Win32
 		{06EA1AB0-8380-4285-AB18-7C83DF7122E0}.Release|x86.Build.0 = Release|Win32
+		{EFB3CF93-741D-46CD-8EAA-3A1A4016DD4A}.Debug|x64.ActiveCfg = Debug
+		{EFB3CF93-741D-46CD-8EAA-3A1A4016DD4A}.Debug|x86.ActiveCfg = Debug
+		{EFB3CF93-741D-46CD-8EAA-3A1A4016DD4A}.Release|x64.ActiveCfg = Release
+		{EFB3CF93-741D-46CD-8EAA-3A1A4016DD4A}.Release|x86.ActiveCfg = Release
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
