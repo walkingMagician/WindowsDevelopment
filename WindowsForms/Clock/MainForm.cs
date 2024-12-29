@@ -43,7 +43,9 @@ namespace Clock
                 labelTime.Text += $"\n{DateTime.Now.ToString("yyyy.MM.dd")}";
             if (checkBoxShowWeekday.Checked)
                 labelTime.Text += $"\n{DateTime.Now.DayOfWeek}";
-
+            notifyIcon.Text = $"{DateTime.Now.ToString("HH:mm:ss")}\n" +
+                $"{DateTime.Now.ToString("yyyy.MM.dd")}\n" +
+                $"{DateTime.Now.DayOfWeek}";
         }
 
         private void buttonHideControls_Click(object sender, EventArgs e)
@@ -55,6 +57,7 @@ namespace Clock
         {
             SetVisibility(true);
         }
+
     }
 }
 
