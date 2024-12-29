@@ -142,7 +142,6 @@
   </ItemGroup>
   <ItemGroup>
     <Image Include="ButtonBMP\square_blue\button_0.bmp" />
-    <Image Include="ButtonBMP\square_blue\button_0_raw.bmp" />
     <Image Include="ButtonBMP\square_blue\button_1.bmp" />
     <Image Include="ButtonBMP\square_blue\button_2.bmp" />
     <Image Include="ButtonBMP\square_blue\button_3.bmp" />

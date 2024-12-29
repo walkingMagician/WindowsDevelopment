@@ -28,9 +28,6 @@
     <Image Include="ButtonBMP\square_blue\button_0.bmp">
       <Filter>Resource Files</Filter>
     </Image>
-    <Image Include="ButtonBMP\square_blue\button_0_raw.bmp">
-      <Filter>Resource Files</Filter>
-    </Image>
     <Image Include="ButtonBMP\square_blue\button_1.bmp">
       <Filter>Resource Files</Filter>
     </Image>

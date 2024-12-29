@@ -17,8 +17,9 @@ INT CALLBACK WndProc(HWND hwnd, UINT uMsg, WPARAM wParam, LPARAM lParam);
 INT GetTitleBarHeight(HWND hwnd);
 VOID SetSkin(HWND hwnd, CONST CHAR skin[]);
 VOID SetSkinFromDll(HWND hwnd, CONST CHAR skin[]);
-VOID LoadFontFromDLL(HMODULE hFontModule, INT resourceID);
+VOID LoadFontFromDLL(HMODULE hFontModule);
 VOID LoadFontsFromDLL(HMODULE hFontsModule);
+VOID SetFont(HWND hwnd, CONST CHAR font_name[]);
 
 void fontFatal(HWND hwnd);
 void fontEbbe(HWND hwnd);
@@ -80,6 +81,7 @@ INT WINAPI WinMain(HINSTANCE hInstance, HINSTANCE hPrevInst, LPSTR lpCmdLine, IN
 INT CALLBACK WndProc(HWND hwnd, UINT uMsg, WPARAM wParam, LPARAM lParam)
 {
 	static INT index = 0;
+	static INT font_index = 0;
 	static HMODULE hFontsModule = NULL;
 
 	switch (uMsg)
@@ -106,21 +108,23 @@ INT CALLBACK WndProc(HWND hwnd, UINT uMsg, WPARAM wParam, LPARAM lParam)
 		DWORD len = SizeofResource(hFontsModule, hFntRes);
 		AddFontMemResourceEx(fntData, len, NULL, &nFonts);*/
 		//AddFontResource("Fonts\\Fatal.ttf");
-		LoadFontsFromDLL(hFontsModule);
-		HFONT hFont = CreateFont
-		(
-			g_i_FONT_HEIGHT, g_i_FONT_WIDTH,
-			0, 0,
-			FW_MEDIUM, 0, 0, 0, // Bold, italic, underline, strackeout
-			ANSI_CHARSET,
-			OUT_CHARACTER_PRECIS,
-			CLIP_CHARACTER_PRECIS,
-			ANTIALIASED_QUALITY,
-			FF_DONTCARE,
-			g_FONT_NAMES[1]
-		);
-		SendMessage(hEdit, WM_SETFONT, (WPARAM)hFont, TRUE);
-		
+		//LoadFontsFromDLL(hFontsModule);
+		//HFONT hFont = CreateFont
+		//(
+		//	g_i_FONT_HEIGHT, g_i_FONT_WIDTH,
+		//	0, 0,
+		//	FW_MEDIUM, 0, 0, 0, // Bold, italic, underline, strackeout
+		//	ANSI_CHARSET,
+		//	OUT_CHARACTER_PRECIS,
+		//	CLIP_CHARACTER_PRECIS,
+		//	ANTIALIASED_QUALITY,
+		//	FF_DONTCARE,
+		//	g_FONT_NAMES[1]
+		//);
+		//SendMessage(hEdit, WM_SETFONT, (WPARAM)hFont, TRUE);
+		LoadFontFromDLL(hFontsModule);
+		SetFont(hwnd, g_FONT_NAMES[index]);
+
 		CHAR sz_digit[2] = {};
 		for (int i = 6; i >= 0; i -= 3)
 		{
@@ -267,14 +271,13 @@ INT CALLBACK WndProc(HWND hwnd, UINT uMsg, WPARAM wParam, LPARAM lParam)
 
 
 
-		
-
 		HWND hEditDisplay = GetDlgItem(hwnd, IDC_EDIT_DISPLAY);
 		HDC hdcDisplay = GetDC(hEditDisplay);
 		SendMessage(hwnd, WM_CTLCOLOREDIT, (WPARAM)hdcDisplay, 0);
 		ReleaseDC(hEditDisplay, hdcDisplay);
 		SetSkinFromDll(hwnd, g_SKIN[index]);
 		SetFocus(hEditDisplay);
+		//SetFont(hwnd, g_FONT_NAMES[font_index]);
 
 		// удаляем меню
 		DestroyMenu(hSubFontMenu);
@@ -615,9 +618,9 @@ void fontEbbe(HWND hwnd)
 	SendMessage(hEdit, WM_SETFONT, (WPARAM)hFont, TRUE);
 }
 
-VOID LoadFontFromDLL(HMODULE hFontModule, INT resourceID)
+VOID LoadFontFromDLL(HMODULE hFontModule)
 {
-	HRSRC hFntRes = FindResource(hFontModule, MAKEINTRESOURCE(resourceID), MAKEINTRESOURCE(RT_FONT));
+	HRSRC hFntRes = FindResource(hFontModule, MAKEINTRESOURCE(2001), MAKEINTRESOURCE(RT_FONT));
 	HGLOBAL hFntMem = LoadResource(hFontModule, hFntRes);
 	VOID* fntData = LockResource(hFntMem);
 	DWORD nFonts = 0;
@@ -629,6 +632,24 @@ VOID LoadFontsFromDLL(HMODULE hFontsModule)
 {
 	for (int i = 2001; i <= 2002; i++)
 	{
-		LoadFontFromDLL(hFontsModule, i);
+		LoadFontFromDLL(hFontsModule);
 	}
+}
+
+VOID SetFont(HWND hwnd, CONST CHAR font_name[])
+{
+	HWND hEdit = GetDlgItem(hwnd, IDC_EDIT_DISPLAY);
+	HFONT hFont = CreateFont
+	(
+		g_i_FONT_HEIGHT, g_i_FONT_WIDTH,
+		0, 0,
+		FW_MEDIUM, 0, 0, 0, // Bold, italic, underline, strackeout
+		ANSI_CHARSET,
+		OUT_CHARACTER_PRECIS,
+		CLIP_CHARACTER_PRECIS,
+		ANTIALIASED_QUALITY,
+		FF_DONTCARE,
+		font_name
+	);
+	SendMessage(hEdit, WM_SETFONT, (WPARAM)hFont, TRUE);
 }
