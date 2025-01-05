@@ -166,6 +166,7 @@
             this.toolStripMenuItemLoadOnWindowsStartup.Name = "toolStripMenuItemLoadOnWindowsStartup";
             this.toolStripMenuItemLoadOnWindowsStartup.Size = new System.Drawing.Size(207, 22);
             this.toolStripMenuItemLoadOnWindowsStartup.Text = "Load on windows startup";
+            this.toolStripMenuItemLoadOnWindowsStartup.Click += new System.EventHandler(this.toolStripMenuItemLoadOnWindowsStartup_Click);
             // 
             // toolStripSeparator4
             // 

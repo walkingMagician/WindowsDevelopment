@@ -10,6 +10,9 @@ using System.Text;
 using System.Threading.Tasks;
 using System.Windows.Forms;
 using System.Drawing.Text;
+using Microsoft.Win32;
+
+
 
 namespace Clock
 {
@@ -35,7 +38,46 @@ namespace Clock
             this.Location = new Point(Screen.PrimaryScreen.Bounds.Width - this.Width, 50);
 
             LoadFont();
+
+            
+
+
         }
+
+
+        //---------------- working with the registry -------------------//
+        private bool IsApplicationInStartup() // проверка на автозагрузку
+        {
+            using (RegistryKey Key = 
+                Registry.CurrentUser.OpenSubKey
+                ("SOFTWARE\\Microsoft\\Windows\\CurrentVersion\\Run"))
+            {
+                return Key.GetValue("Clock") != null;
+            }
+        }
+
+        private void AddToStartup() // добавление в атозагрузку
+        {
+            using (RegistryKey Key =
+                Registry.CurrentUser.OpenSubKey
+                ("SOFTWARE\\Microsoft\\Windows\\CurrentVersion\\Run", true))
+            {
+                Key.SetValue("Clock", "\"" + Application.ExecutablePath + "\"");
+            }
+        }
+
+        private void RemuveFromStartup() // удаление из автозагрузки 
+        {
+            using (RegistryKey Key =
+                Registry.CurrentUser.OpenSubKey
+                ("SOFTWARE\\Microsoft\\Windows\\CurrentVersion\\Run", true))
+            {
+                if (Key.GetValue("Clock") != null)
+                    Key.DeleteValue("Clock", false);
+            }
+        }
+
+        //--------------------------------------------------------------//
 
         void SetVisibility(bool visible)
         {
@@ -122,6 +164,11 @@ namespace Clock
             
             customFont = new Font(fontCollection.Families[index], 32);
             labelTime.Font = customFont;
+        }
+
+        private void toolStripMenuItemLoadOnWindowsStartup_Click(object sender, EventArgs e)
+        {
+
         }
     }
 }
