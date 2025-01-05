@@ -39,10 +39,6 @@
             this.toolStripMenuItemShowWeekday = new System.Windows.Forms.ToolStripMenuItem();
             this.toolStripSeparator2 = new System.Windows.Forms.ToolStripSeparator();
             this.toolStripMenuItemChooseFont = new System.Windows.Forms.ToolStripMenuItem();
-            this.toolStripMenuItemMoscow = new System.Windows.Forms.ToolStripMenuItem();
-            this.toolStripMenuItemEbbe = new System.Windows.Forms.ToolStripMenuItem();
-            this.toolStripMenuItemDefault = new System.Windows.Forms.ToolStripMenuItem();
-            this.toolStripMenuItemFatal = new System.Windows.Forms.ToolStripMenuItem();
             this.toolStripMenuItemColors = new System.Windows.Forms.ToolStripMenuItem();
             this.toolStripMenuItemBackgroundColor = new System.Windows.Forms.ToolStripMenuItem();
             this.toolStripMenuItemForegroundColor = new System.Windows.Forms.ToolStripMenuItem();
@@ -131,38 +127,10 @@
             // 
             // toolStripMenuItemChooseFont
             // 
-            this.toolStripMenuItemChooseFont.DropDownItems.AddRange(new System.Windows.Forms.ToolStripItem[] {
-            this.toolStripMenuItemMoscow,
-            this.toolStripMenuItemEbbe,
-            this.toolStripMenuItemFatal,
-            this.toolStripMenuItemDefault});
             this.toolStripMenuItemChooseFont.Name = "toolStripMenuItemChooseFont";
             this.toolStripMenuItemChooseFont.Size = new System.Drawing.Size(207, 22);
             this.toolStripMenuItemChooseFont.Text = "Choose font";
-            // 
-            // toolStripMenuItemMoscow
-            // 
-            this.toolStripMenuItemMoscow.Name = "toolStripMenuItemMoscow";
-            this.toolStripMenuItemMoscow.Size = new System.Drawing.Size(180, 22);
-            this.toolStripMenuItemMoscow.Text = "Moscow";
-            // 
-            // toolStripMenuItemEbbe
-            // 
-            this.toolStripMenuItemEbbe.Name = "toolStripMenuItemEbbe";
-            this.toolStripMenuItemEbbe.Size = new System.Drawing.Size(180, 22);
-            this.toolStripMenuItemEbbe.Text = "Ebbe";
-            // 
-            // toolStripMenuItemDefault
-            // 
-            this.toolStripMenuItemDefault.Name = "toolStripMenuItemDefault";
-            this.toolStripMenuItemDefault.Size = new System.Drawing.Size(180, 22);
-            this.toolStripMenuItemDefault.Text = "Default";
-            // 
-            // toolStripMenuItemFatal
-            // 
-            this.toolStripMenuItemFatal.Name = "toolStripMenuItemFatal";
-            this.toolStripMenuItemFatal.Size = new System.Drawing.Size(180, 22);
-            this.toolStripMenuItemFatal.Text = "Fatal";
+            this.toolStripMenuItemChooseFont.Click += new System.EventHandler(this.toolStripMenuItemChooseFont_Click);
             // 
             // toolStripMenuItemColors
             // 
@@ -175,14 +143,16 @@
             // 
             // toolStripMenuItemBackgroundColor
             // 
+            this.toolStripMenuItemBackgroundColor.CheckOnClick = true;
             this.toolStripMenuItemBackgroundColor.Name = "toolStripMenuItemBackgroundColor";
-            this.toolStripMenuItemBackgroundColor.Size = new System.Drawing.Size(168, 22);
+            this.toolStripMenuItemBackgroundColor.Size = new System.Drawing.Size(180, 22);
             this.toolStripMenuItemBackgroundColor.Text = "Background color";
             // 
             // toolStripMenuItemForegroundColor
             // 
+            this.toolStripMenuItemForegroundColor.CheckOnClick = true;
             this.toolStripMenuItemForegroundColor.Name = "toolStripMenuItemForegroundColor";
-            this.toolStripMenuItemForegroundColor.Size = new System.Drawing.Size(168, 22);
+            this.toolStripMenuItemForegroundColor.Size = new System.Drawing.Size(180, 22);
             this.toolStripMenuItemForegroundColor.Text = "Foreground color";
             // 
             // toolStripSeparator3
@@ -295,10 +265,6 @@
         private System.Windows.Forms.ToolStripMenuItem toolStripMenuItemLoadOnWindowsStartup;
         private System.Windows.Forms.ToolStripSeparator toolStripSeparator4;
         private System.Windows.Forms.ToolStripMenuItem toolStripMenuItemExit;
-        private System.Windows.Forms.ToolStripMenuItem toolStripMenuItemMoscow;
-        private System.Windows.Forms.ToolStripMenuItem toolStripMenuItemDefault;
-        private System.Windows.Forms.ToolStripMenuItem toolStripMenuItemEbbe;
-        private System.Windows.Forms.ToolStripMenuItem toolStripMenuItemFatal;
     }
 }
 

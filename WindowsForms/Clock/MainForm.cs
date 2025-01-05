@@ -17,6 +17,16 @@ namespace Clock
     {
         private bool isTopMost = false;
 
+        string[] strFont = {
+            "MOSCOW2024.otf",
+            "Ebbe.ttf",
+            "Fatal (TRIAL).ttf",
+            "micross.ttf"
+        };
+        int index = 0;
+        Font customFont;
+        PrivateFontCollection fontCollection = new PrivateFontCollection();
+
         public MainForm()
         {
             InitializeComponent();
@@ -24,7 +34,7 @@ namespace Clock
             labelTime.BackColor = Color.AliceBlue;
             this.Location = new Point(Screen.PrimaryScreen.Bounds.Width - this.Width, 50);
 
-
+            LoadFont();
         }
 
         void SetVisibility(bool visible)
@@ -37,7 +47,21 @@ namespace Clock
             this.TransparencyKey = visible ? Color.Empty : this.BackColor;
         }
 
-
+        void LoadFont()
+        {
+            foreach (string strF in strFont)
+            {
+                try
+                {
+                    fontCollection.AddFontFile(strF);
+                }
+                catch (Exception ex)
+                {
+                    MessageBox.Show($"Error loading the font from {strF}: {ex.Message}");
+                }
+            }
+            //не знаю почему но он сортирует по имени строки в fontCollection 
+        }
 
         private void timer_Tick(object sender, EventArgs e)
         {
@@ -82,7 +106,7 @@ namespace Clock
         {
             toolStripMenuItemShowDate.Checked = !toolStripMenuItemShowDate.Checked;
             checkBoxShowDate.Checked = !toolStripMenuItemShowDate.Checked;
-            
+
         }
 
         private void toolStripMenuItemShowWeekday_Click(object sender, EventArgs e)
@@ -90,9 +114,15 @@ namespace Clock
             toolStripMenuItemShowWeekday.Checked = !toolStripMenuItemShowWeekday.Checked;
             checkBoxShowWeekday.Checked = !toolStripMenuItemShowWeekday.Checked;
         }
-           
 
-
+        private void toolStripMenuItemChooseFont_Click(object sender, EventArgs e)
+        {
+            //индекс = (индекс + 1) % массив.Length;
+            index = (index + 1) % strFont.Length;
+            
+            customFont = new Font(fontCollection.Families[index], 32);
+            labelTime.Font = customFont;
+        }
     }
 }
 
