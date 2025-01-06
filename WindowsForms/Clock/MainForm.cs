@@ -9,8 +9,9 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 using System.Windows.Forms;
-using System.Drawing.Text;
 using Microsoft.Win32;
+using Newtonsoft.Json;
+
 
 
 
@@ -18,18 +19,26 @@ namespace Clock
 {
     public partial class MainForm : Form
     {
-        private bool isTopMost = false;
+        // -------- JSON ----------//
+        private const string SETTINGS_FILE_PATH = "settingsClock.json"; // путь к файлу
 
+        //------- TIME DATA --------//
+        private bool isTopMost = false;
+        private bool isCheckedData = false;
+        private bool isCheckedWeekDay = false;
+
+        //-------- font -------//
+        int index = 0;
         string[] strFont = {
             "MOSCOW2024.otf",
             "Ebbe.ttf",
             "Fatal (TRIAL).ttf",
             "micross.ttf"
         };
-        int index = 0;
         Font customFont;
         PrivateFontCollection fontCollection = new PrivateFontCollection();
 
+        //--------------------//
         public MainForm()
         {
             InitializeComponent();
@@ -37,16 +46,20 @@ namespace Clock
             labelTime.BackColor = Color.AliceBlue;
             this.Location = new Point(Screen.PrimaryScreen.Bounds.Width - this.Width, 50);
 
-            LoadFont();
-
+            LoadFont(); // загрузка шрифтов 
             
-
-
+            // синхронизация на есть в автозагрузке или нету 
+            toolStripMenuItemLoadOnWindowsStartup.Checked = IsApplicationInStartup(); 
+        
         }
+
+        // ----------------------- json -------------------------------//
+
+        // --------------- ---------------------- ----------------------//
 
 
         //---------------- working with the registry -------------------//
-        private bool IsApplicationInStartup() // проверка на автозагрузку
+        private bool IsApplicationInStartup() // проверка статуса автозагрузки
         {
             using (RegistryKey Key = 
                 Registry.CurrentUser.OpenSubKey
@@ -77,19 +90,20 @@ namespace Clock
             }
         }
 
-        //--------------------------------------------------------------//
+        //---------------- --------------------- -------------------//
+
 
         void SetVisibility(bool visible)
         {
             checkBoxShowDate.Visible = visible;
-            checkBoxShowWeekday.Visible = visible;
+            checkBoxShowWeekDay.Visible = visible;
             buttonHideControls.Visible = visible;
             this.FormBorderStyle = visible ? FormBorderStyle.FixedDialog : FormBorderStyle.None;
             this.ShowInTaskbar = visible;
             this.TransparencyKey = visible ? Color.Empty : this.BackColor;
         }
 
-        void LoadFont()
+        void LoadFont() // FONT 
         {
             foreach (string strF in strFont)
             {
@@ -105,6 +119,7 @@ namespace Clock
             //не знаю почему но он сортирует по имени строки в fontCollection 
         }
 
+        //----------------- Timer Tick -----------------------// 
         private void timer_Tick(object sender, EventArgs e)
         {
             // оброботчик события - эта самая обычная функция, которая неявно вызывается
@@ -114,18 +129,34 @@ namespace Clock
 
             //labelTime.Text = DateTime.Now.ToString("hh:mm tt", System.Globalization.CultureInfo.InvariantCulture);
             labelTime.Text = DateTime.Now.ToString("HH:mm:ss");
-            if (checkBoxShowDate.Checked)
-            {
+            if (isCheckedData)
                 labelTime.Text += $"\n{DateTime.Now.ToString("yyyy.MM.dd")}";
-            }
-            if (checkBoxShowWeekday.Checked)
+            
+            if (isCheckedWeekDay)
                 labelTime.Text += $"\n{DateTime.Now.DayOfWeek}";
-            toolStripMenuItemShowDate.Checked = checkBoxShowDate.Checked;
-            toolStripMenuItemShowWeekday.Checked = checkBoxShowWeekday.Checked;
+
+            // syncing with showData and showWeekDay (false\true)
+            checkBoxShowDate.Checked = isCheckedData;
+            toolStripMenuItemShowDate.Checked = isCheckedData;
+
+            checkBoxShowWeekDay.Checked = isCheckedWeekDay;
+            toolStripMenuItemShowWeekday.Checked = isCheckedWeekDay;
 
             notifyIcon.Text = $"{DateTime.Now.ToString("HH:mm:ss")}\n" +
                 $"{DateTime.Now.ToString("yyyy.MM.dd")}\n" +
                 $"{DateTime.Now.DayOfWeek}";
+        }
+
+        //------------------------- processing methods ---------------------------//
+        private void checkBoxShowDate_CheckedChanged(object sender, EventArgs e)
+        {
+            isCheckedData = checkBoxShowDate.Checked;
+            toolStripMenuItemShowDate.Checked = isCheckedData;
+        }
+        private void checkBoxShowWeekDay_CheckedChanged(object sender, EventArgs e)
+        {
+            isCheckedWeekDay = checkBoxShowWeekDay.Checked;
+            toolStripMenuItemShowWeekday.Checked = isCheckedData;
         }
 
         private void buttonHideControls_Click(object sender, EventArgs e)
@@ -146,15 +177,21 @@ namespace Clock
 
         private void toolStripMenuItemShowDate_Click(object sender, EventArgs e)
         {
-            toolStripMenuItemShowDate.Checked = !toolStripMenuItemShowDate.Checked;
-            checkBoxShowDate.Checked = !toolStripMenuItemShowDate.Checked;
 
+            /*isCheckedData = !isCheckedData;
+            checkBoxShowDate.Checked = isCheckedData;
+            toolStripMenuItemShowDate.Checked = isCheckedData;*/
         }
 
         private void toolStripMenuItemShowWeekday_Click(object sender, EventArgs e)
         {
-            toolStripMenuItemShowWeekday.Checked = !toolStripMenuItemShowWeekday.Checked;
-            checkBoxShowWeekday.Checked = !toolStripMenuItemShowWeekday.Checked;
+            
+            isCheckedWeekDay = !isCheckedWeekDay;
+            checkBoxShowWeekDay.Checked = isCheckedWeekDay;
+            toolStripMenuItemShowWeekday.Checked = isCheckedWeekDay;
+
+            //toolStripMenuItemShowWeekday.Checked = !toolStripMenuItemShowWeekday.Checked;
+            //checkBoxShowWeekDay.Checked = !toolStripMenuItemShowWeekday.Checked;
         }
 
         private void toolStripMenuItemChooseFont_Click(object sender, EventArgs e)
@@ -165,12 +202,37 @@ namespace Clock
             customFont = new Font(fontCollection.Families[index], 32);
             labelTime.Font = customFont;
         }
+        private void toolStripMenuItemExit_Click(object sender, EventArgs e)
+        {
+            this.Close();
+        }
 
         private void toolStripMenuItemLoadOnWindowsStartup_Click(object sender, EventArgs e)
         {
+            
+            // проверка на статуст в автозагрузке
+            if (IsApplicationInStartup()) 
+            { // если есть удалить 
+                RemuveFromStartup();
+                toolStripMenuItemLoadOnWindowsStartup.Checked = false;
+            }
+            else
+            { // если нету добавить
+                AddToStartup();
+                toolStripMenuItemLoadOnWindowsStartup.Checked = true;
+            }
+            
+        }
 
+        
+        private class Settings
+        { 
+            public bool IsTopMost { get; set; }
+            public bool IsCheckedData { get; set; }
+            public bool IsCheckedWeekDay { get; set; }
         }
     }
 }
+
 
 // taskkill -f -im clock.exe
