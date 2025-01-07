@@ -11,6 +11,7 @@ using System.Threading.Tasks;
 using System.Windows.Forms;
 using Microsoft.Win32;
 using Newtonsoft.Json;
+using System.IO;
 
 
 
@@ -21,11 +22,12 @@ namespace Clock
     {
         // -------- JSON ----------//
         private const string SETTINGS_FILE_PATH = "settingsClock.json"; // путь к файлу
+        private SettingsUser settingsUser;
 
         //------- TIME DATA --------//
         private bool isTopMost = false;
-        private bool isCheckedData = false;
-        private bool isCheckedWeekDay = false;
+        //private bool isCheckedData;
+        //private bool isCheckedWeekDay;
 
         //-------- font -------//
         int index = 0;
@@ -47,13 +49,45 @@ namespace Clock
             this.Location = new Point(Screen.PrimaryScreen.Bounds.Width - this.Width, 50);
 
             LoadFont(); // загрузка шрифтов 
-            
+            LoadSettings();
+
             // синхронизация на есть в автозагрузке или нету 
             toolStripMenuItemLoadOnWindowsStartup.Checked = IsApplicationInStartup(); 
         
         }
 
         // ----------------------- json -------------------------------//
+        private void LoadSettings() // дисериализация
+        {
+            settingsUser = LoadSettingsUser(SETTINGS_FILE_PATH);
+        }
+        private void LoadSaveUser() // сохранение
+        {
+            SaveUserData(SETTINGS_FILE_PATH, settingsUser);
+        }
+
+        private void SaveUserData(string filePath, SettingsUser settingsUser)
+        { // метод создание и сохранение (сереализация)
+            var json = JsonConvert.SerializeObject(settingsUser, Formatting.Indented);
+            File.WriteAllText(filePath, json);
+        }
+
+        private SettingsUser LoadSettingsUser(string filepath)
+        { // метод десериализации объекта
+            if (!File.Exists(filepath))
+            {
+                SettingsUser DefaultUser = new SettingsUser
+                {
+                    Data = false,
+                    WeekDay = false,
+                    Index = 0
+                };
+                LoadSaveUser(); // сохраняем данные по умолчанию
+                return DefaultUser;
+            }
+            var json = File.ReadAllText(filepath); // десериализации 
+            return JsonConvert.DeserializeObject<SettingsUser>(json);
+        }
 
         // --------------- ---------------------- ----------------------//
 
@@ -122,41 +156,48 @@ namespace Clock
         //----------------- Timer Tick -----------------------// 
         private void timer_Tick(object sender, EventArgs e)
         {
+
             // оброботчик события - эта самая обычная функция, которая неявно вызывается
             //          при возникноввении определенного события 
             // у элемента интерфейса может быть множество событий 
             // и одно из них будет событие по умолчанию 
 
             //labelTime.Text = DateTime.Now.ToString("hh:mm tt", System.Globalization.CultureInfo.InvariantCulture);
+            LoadSaveUser(); // так сказать открываем
+
             labelTime.Text = DateTime.Now.ToString("HH:mm:ss");
-            if (isCheckedData)
+            if (settingsUser.Data)
                 labelTime.Text += $"\n{DateTime.Now.ToString("yyyy.MM.dd")}";
             
-            if (isCheckedWeekDay)
+            if (settingsUser.WeekDay)
                 labelTime.Text += $"\n{DateTime.Now.DayOfWeek}";
 
             // syncing with showData and showWeekDay (false\true)
-            checkBoxShowDate.Checked = isCheckedData;
-            toolStripMenuItemShowDate.Checked = isCheckedData;
+            checkBoxShowDate.Checked = settingsUser.Data;
+            toolStripMenuItemShowDate.Checked = settingsUser.Data;
 
-            checkBoxShowWeekDay.Checked = isCheckedWeekDay;
-            toolStripMenuItemShowWeekday.Checked = isCheckedWeekDay;
+            checkBoxShowWeekDay.Checked = settingsUser.WeekDay;
+            toolStripMenuItemShowWeekday.Checked = settingsUser.WeekDay;
+
+            
 
             notifyIcon.Text = $"{DateTime.Now.ToString("HH:mm:ss")}\n" +
                 $"{DateTime.Now.ToString("yyyy.MM.dd")}\n" +
                 $"{DateTime.Now.DayOfWeek}";
+
+            LoadSettings(); // а тут закрываем (смутное представление работы)
         }
 
         //------------------------- processing methods ---------------------------//
         private void checkBoxShowDate_CheckedChanged(object sender, EventArgs e)
         {
-            isCheckedData = checkBoxShowDate.Checked;
-            toolStripMenuItemShowDate.Checked = isCheckedData;
+            settingsUser.Data = checkBoxShowDate.Checked;
+            toolStripMenuItemShowDate.Checked = settingsUser.Data;
         }
         private void checkBoxShowWeekDay_CheckedChanged(object sender, EventArgs e)
         {
-            isCheckedWeekDay = checkBoxShowWeekDay.Checked;
-            toolStripMenuItemShowWeekday.Checked = isCheckedData;
+            settingsUser.WeekDay = checkBoxShowWeekDay.Checked;
+            toolStripMenuItemShowWeekday.Checked = settingsUser.WeekDay;
         }
 
         private void buttonHideControls_Click(object sender, EventArgs e)
@@ -178,17 +219,17 @@ namespace Clock
         private void toolStripMenuItemShowDate_Click(object sender, EventArgs e)
         {
 
-            /*isCheckedData = !isCheckedData;
-            checkBoxShowDate.Checked = isCheckedData;
-            toolStripMenuItemShowDate.Checked = isCheckedData;*/
+            settingsUser.Data = !settingsUser.Data;
+            checkBoxShowDate.Checked = settingsUser.Data;
+            toolStripMenuItemShowDate.Checked = settingsUser.Data;
         }
 
         private void toolStripMenuItemShowWeekday_Click(object sender, EventArgs e)
         {
-            
-            isCheckedWeekDay = !isCheckedWeekDay;
-            checkBoxShowWeekDay.Checked = isCheckedWeekDay;
-            toolStripMenuItemShowWeekday.Checked = isCheckedWeekDay;
+
+            settingsUser.WeekDay = !settingsUser.WeekDay;
+            checkBoxShowWeekDay.Checked = settingsUser.WeekDay;
+            toolStripMenuItemShowWeekday.Checked = settingsUser.WeekDay;
 
             //toolStripMenuItemShowWeekday.Checked = !toolStripMenuItemShowWeekday.Checked;
             //checkBoxShowWeekDay.Checked = !toolStripMenuItemShowWeekday.Checked;
@@ -223,15 +264,14 @@ namespace Clock
             }
             
         }
-
-        
-        private class Settings
-        { 
-            public bool IsTopMost { get; set; }
-            public bool IsCheckedData { get; set; }
-            public bool IsCheckedWeekDay { get; set; }
-        }
     }
+    public class SettingsUser
+    {
+        public bool Data { get; set; }
+        public bool WeekDay { get; set; }
+        public int Index { get; set; }
+    }
+
 }
 
 
