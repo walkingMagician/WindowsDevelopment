@@ -26,7 +26,7 @@ namespace Clock
         static string SETTINGS_FILE_PATH; // file path
         private SettingsUser settingsUser;
 
-        //------- TIME DATA --------//
+        //------- TopMost --------//
         private bool isTopMost = false; 
         // пусть ставить user быть выше всех или нет
 
@@ -83,16 +83,25 @@ namespace Clock
 
         private SettingsUser LoadSettingsUser(string filepath)
         { // метод десериализации объекта
-            if (!File.Exists(filepath))
+ 
+            try
             {
-                SettingsUser DefaultUser = new SettingsUser
+                if (!File.Exists(filepath))
                 {
-                    Data = false,
-                    WeekDay = false,
-                    Index = 0
-                };
-                LoadSaveUser(); // сохраняем данные по умолчанию
-                return DefaultUser;
+                    SettingsUser DefaultUser = new SettingsUser
+                    {
+                        Data = false,
+                        WeekDay = false,
+                        Index = 0
+                    };
+                    
+                    LoadSaveUser(); // сохраняем данные по умолчанию
+                    return DefaultUser;
+                }
+            }
+            catch (Exception ex)
+            {
+                MessageBox.Show($"error file not found \n{filepath}: \n{ex.Message}");
             }
             var json = File.ReadAllText(filepath); // десериализации 
             return JsonConvert.DeserializeObject<SettingsUser>(json);
@@ -147,7 +156,7 @@ namespace Clock
         }
 
 
-        void LoadFont() // FONT 
+        void LoadFont() // method dynamic donwload 
         {
             foreach (string strF in strFont)
             {
@@ -155,7 +164,6 @@ namespace Clock
                 {
                     string fullPath = Path.Combine(Directory, strF);
                     fontCollection.AddFontFile(fullPath);
-
                 }
                 catch (Exception ex)
                 {
@@ -165,7 +173,7 @@ namespace Clock
             //не знаю почему но он сортирует по имени строки в fontCollection 
         }
 
-        private void LoadCustomFont(int index)
+        private void LoadCustomFont(int index) // метод по загрузки шрифта в label
         {
             customFont = new Font(fontCollection.Families[index], 32);
             labelTime.Font = customFont;
@@ -257,7 +265,6 @@ namespace Clock
         {
             //индекс = (индекс + 1) % массив.Length;
             settingsUser.Index = (settingsUser.Index + 1) % strFont.Length;
-            
         }
         private void toolStripMenuItemExit_Click(object sender, EventArgs e)
         {
@@ -266,7 +273,6 @@ namespace Clock
 
         private void toolStripMenuItemLoadOnWindowsStartup_Click(object sender, EventArgs e)
         {
-            
             // проверка на статуст в автозагрузке
             if (IsApplicationInStartup()) 
             { // если есть удалить 
@@ -278,10 +284,10 @@ namespace Clock
                 AddToStartup();
                 toolStripMenuItemLoadOnWindowsStartup.Checked = true;
             }
-            
+
         }
     }
-    public class SettingsUser
+    public class SettingsUser // event saving variables class
     {
         public bool Data { get; set; }
         public bool WeekDay { get; set; }
