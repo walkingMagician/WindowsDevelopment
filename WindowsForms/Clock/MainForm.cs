@@ -15,13 +15,14 @@ using System.IO;
 
 
 
-
 namespace Clock
 {
     public partial class MainForm : Form
     {
+        // -------- directory ----------//
+        string Directory;
         // -------- JSON ----------//
-        private const string SETTINGS_FILE_PATH = "settingsClock.json"; // путь к файлу
+        static string SETTINGS_FILE_PATH;
         private SettingsUser settingsUser;
 
         //------- TIME DATA --------//
@@ -41,15 +42,24 @@ namespace Clock
         PrivateFontCollection fontCollection = new PrivateFontCollection();
 
         //--------------------//
+
         public MainForm()
         {
+            //--------- directory and json -----------//
+            Directory = AppDomain.CurrentDomain.BaseDirectory;
+            SETTINGS_FILE_PATH = Path.Combine(Directory, "settingsClock.json"); // путь к файлу
+            // ---------- --------------- ---------- //
+
+
             InitializeComponent();
 
             labelTime.BackColor = Color.AliceBlue;
             this.Location = new Point(Screen.PrimaryScreen.Bounds.Width - this.Width, 50);
 
+            LoadSettings(); // Json 
             LoadFont(); // загрузка шрифтов 
-            LoadSettings();
+            
+
 
             // синхронизация на есть в автозагрузке или нету 
             toolStripMenuItemLoadOnWindowsStartup.Checked = IsApplicationInStartup(); 
@@ -137,13 +147,16 @@ namespace Clock
             this.TransparencyKey = visible ? Color.Empty : this.BackColor;
         }
 
+
         void LoadFont() // FONT 
         {
             foreach (string strF in strFont)
             {
                 try
                 {
-                    fontCollection.AddFontFile(strF);
+                    string fullPath = Path.Combine(Directory, strF);
+                    fontCollection.AddFontFile(fullPath);
+
                 }
                 catch (Exception ex)
                 {
@@ -151,6 +164,12 @@ namespace Clock
                 }
             }
             //не знаю почему но он сортирует по имени строки в fontCollection 
+        }
+
+        private void LoadCustomFont(int index)
+        {
+            customFont = new Font(fontCollection.Families[index], 32);
+            labelTime.Font = customFont;
         }
 
         //----------------- Timer Tick -----------------------// 
@@ -179,11 +198,11 @@ namespace Clock
             checkBoxShowWeekDay.Checked = settingsUser.WeekDay;
             toolStripMenuItemShowWeekday.Checked = settingsUser.WeekDay;
 
-            
-
             notifyIcon.Text = $"{DateTime.Now.ToString("HH:mm:ss")}\n" +
                 $"{DateTime.Now.ToString("yyyy.MM.dd")}\n" +
                 $"{DateTime.Now.DayOfWeek}";
+
+            LoadCustomFont(settingsUser.Index);
 
             LoadSettings(); // а тут закрываем (смутное представление работы)
         }
@@ -238,10 +257,8 @@ namespace Clock
         private void toolStripMenuItemChooseFont_Click(object sender, EventArgs e)
         {
             //индекс = (индекс + 1) % массив.Length;
-            index = (index + 1) % strFont.Length;
+            settingsUser.Index = (settingsUser.Index + 1) % strFont.Length;
             
-            customFont = new Font(fontCollection.Families[index], 32);
-            labelTime.Font = customFont;
         }
         private void toolStripMenuItemExit_Click(object sender, EventArgs e)
         {
