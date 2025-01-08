@@ -20,15 +20,15 @@ namespace Clock
     public partial class MainForm : Form
     {
         // -------- directory ----------//
-        string Directory;
+        string Directory; // path directory
+
         // -------- JSON ----------//
-        static string SETTINGS_FILE_PATH;
+        static string SETTINGS_FILE_PATH; // file path
         private SettingsUser settingsUser;
 
         //------- TIME DATA --------//
-        private bool isTopMost = false;
-        //private bool isCheckedData;
-        //private bool isCheckedWeekDay;
+        private bool isTopMost = false; 
+        // пусть ставить user быть выше всех или нет
 
         //-------- font -------//
         int index = 0;
@@ -59,7 +59,6 @@ namespace Clock
             LoadSettings(); // Json 
             LoadFont(); // загрузка шрифтов 
             
-
 
             // синхронизация на есть в автозагрузке или нету 
             toolStripMenuItemLoadOnWindowsStartup.Checked = IsApplicationInStartup(); 
