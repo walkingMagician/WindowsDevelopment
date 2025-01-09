@@ -53,12 +53,15 @@ namespace Clock
 
             InitializeComponent();
 
-            labelTime.BackColor = Color.AliceBlue;
+            //labelTime.BackColor = Color.AliceBlue;
             this.Location = new Point(Screen.PrimaryScreen.Bounds.Width - this.Width, 50);
 
             LoadSettings(); // Json 
-            LoadFont(); // загрузка шрифтов 
-            
+            LoadFont(); // loading Font 
+
+            labelTime.ForeColor = settingsUser.ColorLabelFont; // loading the saved color 
+            BackColor = settingsUser.ColorBackground; // loading background
+            labelTime.BackColor = settingsUser.ColorBackground; // загружаем задний фон labelTime
 
             // синхронизация на есть в автозагрузке или нету 
             toolStripMenuItemLoadOnWindowsStartup.Checked = IsApplicationInStartup(); 
@@ -70,21 +73,21 @@ namespace Clock
         {
             settingsUser = LoadSettingsUser(SETTINGS_FILE_PATH);
         }
-        private void LoadSaveUser() // сохранение
+        private void LoadSaveUser() // Save
         {
             SaveUserData(SETTINGS_FILE_PATH, settingsUser);
         }
 
-        private void SaveUserData(string filePath, SettingsUser settingsUser)
+        private void SaveUserData(string filePath, SettingsUser settingsUser) 
         { // метод создание и сохранение (сереализация)
-            var json = JsonConvert.SerializeObject(settingsUser, Formatting.Indented);
+            string json = JsonConvert.SerializeObject(settingsUser, Formatting.Indented);
             File.WriteAllText(filePath, json);
         }
 
         private SettingsUser LoadSettingsUser(string filepath)
         { // метод десериализации объекта
- 
-            try
+            
+            try 
             {
                 if (!File.Exists(filepath))
                 {
@@ -92,7 +95,9 @@ namespace Clock
                     {
                         Data = false,
                         WeekDay = false,
-                        Index = 0
+                        Index = 0,
+                        ColorLabelFont = Color.Black,
+                        ColorBackground = Color.White
                     };
                     
                     LoadSaveUser(); // сохраняем данные по умолчанию
@@ -103,8 +108,8 @@ namespace Clock
             {
                 MessageBox.Show($"error file not found \n{filepath}: \n{ex.Message}");
             }
-            var json = File.ReadAllText(filepath); // десериализации 
-            return JsonConvert.DeserializeObject<SettingsUser>(json);
+            string json = File.ReadAllText(filepath); 
+            return JsonConvert.DeserializeObject<SettingsUser>(json); // десериализации 
         }
 
         // --------------- ---------------------- ----------------------//
@@ -286,12 +291,45 @@ namespace Clock
             }
 
         }
+
+        // ----------------------- COLOR Front ------------------ //
+        private void toolStripMenuItemForegroundColor_Click(object sender, EventArgs e)
+        { // font color
+            // Создание диалогового окна выбора цвета
+            using (ColorDialog colorDialog = new ColorDialog())
+            {
+                if (colorDialog.ShowDialog() == DialogResult.OK)
+                {
+                    // Изменение цвета текста метки на выбранный цвет
+                    labelTime.ForeColor = colorDialog.Color;
+                    settingsUser.ColorLabelFont = colorDialog.Color;
+                    SaveUserData(SETTINGS_FILE_PATH, settingsUser);
+                }
+            }
+        }
+
+        private void toolStripMenuItemBackgroundColor_Click(object sender, EventArgs e)
+        { // background color
+            using (ColorDialog colorDialog = new ColorDialog())
+            {
+                if (colorDialog.ShowDialog() == DialogResult.OK)
+                {
+                    // Изменение цвета текста метки на выбранный цвет
+                    BackColor = colorDialog.Color;
+                    labelTime.BackColor = colorDialog.Color;
+                    settingsUser.ColorBackground = colorDialog.Color;
+                    SaveUserData(SETTINGS_FILE_PATH, settingsUser);
+                }
+            }
+        }
     }
     public class SettingsUser // event saving variables class
     {
         public bool Data { get; set; }
         public bool WeekDay { get; set; }
         public int Index { get; set; }
+        public Color ColorLabelFont {  get; set; }
+        public Color ColorBackground { get; set; }
     }
 
 }

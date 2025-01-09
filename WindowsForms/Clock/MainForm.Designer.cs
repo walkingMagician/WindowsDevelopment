@@ -82,7 +82,7 @@
             this.toolStripSeparator4,
             this.toolStripMenuItemExit});
             this.contextMenuStrip.Name = "contextMenuStrip";
-            this.contextMenuStrip.Size = new System.Drawing.Size(208, 204);
+            this.contextMenuStrip.Size = new System.Drawing.Size(208, 226);
             // 
             // toolStripMenuItemTopmost
             // 
@@ -143,17 +143,17 @@
             // 
             // toolStripMenuItemBackgroundColor
             // 
-            this.toolStripMenuItemBackgroundColor.CheckOnClick = true;
             this.toolStripMenuItemBackgroundColor.Name = "toolStripMenuItemBackgroundColor";
-            this.toolStripMenuItemBackgroundColor.Size = new System.Drawing.Size(168, 22);
+            this.toolStripMenuItemBackgroundColor.Size = new System.Drawing.Size(180, 22);
             this.toolStripMenuItemBackgroundColor.Text = "Background color";
+            this.toolStripMenuItemBackgroundColor.Click += new System.EventHandler(this.toolStripMenuItemBackgroundColor_Click);
             // 
             // toolStripMenuItemForegroundColor
             // 
-            this.toolStripMenuItemForegroundColor.CheckOnClick = true;
             this.toolStripMenuItemForegroundColor.Name = "toolStripMenuItemForegroundColor";
-            this.toolStripMenuItemForegroundColor.Size = new System.Drawing.Size(168, 22);
+            this.toolStripMenuItemForegroundColor.Size = new System.Drawing.Size(180, 22);
             this.toolStripMenuItemForegroundColor.Text = "Foreground color";
+            this.toolStripMenuItemForegroundColor.Click += new System.EventHandler(this.toolStripMenuItemForegroundColor_Click);
             // 
             // toolStripSeparator3
             // 
