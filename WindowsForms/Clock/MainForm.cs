@@ -23,15 +23,14 @@ namespace Clock
         string Directory; // path directory
 
         // -------- JSON ----------//
-        static string SETTINGS_FILE_PATH; // file path
-        private SettingsUser settingsUser;
+        static string Setting_File_Path; // file path
+        private SettingsUser settingsUser; // object from class
 
         //------- TopMost --------//
         private bool isTopMost = false; 
         // пусть ставить user быть выше всех или нет
 
         //-------- font -------//
-        int index = 0;
         string[] strFont = {
             "MOSCOW2024.otf",
             "Ebbe.ttf",
@@ -47,9 +46,9 @@ namespace Clock
         {
             //--------- directory and json -----------//
             Directory = AppDomain.CurrentDomain.BaseDirectory;
-            SETTINGS_FILE_PATH = Path.Combine(Directory, "settingsClock.json"); // путь к файлу
             // ---------- --------------- ---------- //
-
+            Setting_File_Path = Path.Combine(Directory, "settingsClock.json"); // путь к файлу
+            
 
             InitializeComponent();
 
@@ -65,23 +64,38 @@ namespace Clock
 
             // синхронизация на есть в автозагрузке или нету 
             toolStripMenuItemLoadOnWindowsStartup.Checked = IsApplicationInStartup(); 
-        
+            
         }
 
         // ----------------------- json -------------------------------//
         private void LoadSettings() // дисериализация
         {
-            settingsUser = LoadSettingsUser(SETTINGS_FILE_PATH);
+            settingsUser = LoadSettingsUser(Setting_File_Path);
         }
         private void LoadSaveUser() // Save
         {
-            SaveUserData(SETTINGS_FILE_PATH, settingsUser);
+            SaveUserData(Setting_File_Path, settingsUser);
+            
         }
 
         private void SaveUserData(string filePath, SettingsUser settingsUser) 
         { // метод создание и сохранение (сереализация)
-            string json = JsonConvert.SerializeObject(settingsUser, Formatting.Indented);
-            File.WriteAllText(filePath, json);
+            try
+            {
+                string json = JsonConvert.SerializeObject(settingsUser, Formatting.Indented);
+                File.WriteAllText(filePath, json);
+
+            }
+            catch (UnauthorizedAccessException ex)
+            {
+                MessageBox.Show("Access error: " + ex.Message);
+            }
+            catch (IOException ex)
+            {
+                MessageBox.Show("Input/Output error: " + ex.Message);
+            }
+            
+
         }
 
         private SettingsUser LoadSettingsUser(string filepath)
@@ -99,7 +113,7 @@ namespace Clock
                         ColorLabelFont = Color.Black,
                         ColorBackground = Color.White
                     };
-                    
+
                     LoadSaveUser(); // сохраняем данные по умолчанию
                     return DefaultUser;
                 }
@@ -303,7 +317,7 @@ namespace Clock
                     // Изменение цвета текста метки на выбранный цвет
                     labelTime.ForeColor = colorDialog.Color;
                     settingsUser.ColorLabelFont = colorDialog.Color;
-                    SaveUserData(SETTINGS_FILE_PATH, settingsUser);
+                    SaveUserData(Setting_File_Path, settingsUser);
                 }
             }
         }
@@ -318,7 +332,7 @@ namespace Clock
                     BackColor = colorDialog.Color;
                     labelTime.BackColor = colorDialog.Color;
                     settingsUser.ColorBackground = colorDialog.Color;
-                    SaveUserData(SETTINGS_FILE_PATH, settingsUser);
+                    SaveUserData(Setting_File_Path, settingsUser);
                 }
             }
         }
