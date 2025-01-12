@@ -17,6 +17,10 @@ namespace Clock
             InitializeComponent();
             labelTime.BackColor = Color.AliceBlue;
             this.Location = new Point(Screen.PrimaryScreen.Bounds.Width - this.Width, 50);
+            //toolStripMenuItemShowControls.Checked = false;
+            toolStripMenuItemShowControls.Checked = true;
+            
+        
         }
 
         void SetVisibility(bool visible)
@@ -43,6 +47,7 @@ namespace Clock
                 labelTime.Text += $"\n{DateTime.Now.ToString("yyyy.MM.dd")}";
             if (checkBoxShowWeekday.Checked)
                 labelTime.Text += $"\n{DateTime.Now.DayOfWeek}";
+            
             notifyIcon.Text = $"{DateTime.Now.ToString("HH:mm:ss")}\n" +
                 $"{DateTime.Now.ToString("yyyy.MM.dd")}\n" +
                 $"{DateTime.Now.DayOfWeek}";
@@ -50,13 +55,38 @@ namespace Clock
 
         private void buttonHideControls_Click(object sender, EventArgs e)
         {
-            SetVisibility(false);
+            //SetVisibility(false);
+            toolStripMenuItemShowControls.Checked = false;
         }
 
-        private void labelTime_DoubleClick(object sender, EventArgs e)
+        private void labelTime_DoubleClick(object sender, EventArgs e) 
         {
-            SetVisibility(true);
+            //SetVisibility(true); 
+            toolStripMenuItemShowControls.Checked = true;
         }
+        
+
+        private void toolStripMenuItemExit_Click(object sender, EventArgs e) =>
+            this.Close();
+
+        private void toolStripMenuItemTopmost_CheckedChanged(object sender, EventArgs e) =>
+            this.TopMost = toolStripMenuItemTopmost.Checked;
+
+        private void toolStripMenuItemShowControls_CheckedChanged(object sender, EventArgs e) =>
+            SetVisibility(toolStripMenuItemShowControls.Checked);
+        
+
+        private void toolStripMenuItemShowDate_CheckedChanged(object sender, EventArgs e) =>
+            checkBoxShowDate.Checked = toolStripMenuItemShowDate.Checked;
+        
+
+        private void checkBoxShowDate_CheckedChanged(object sender, EventArgs e) =>
+            toolStripMenuItemShowDate.Checked = checkBoxShowDate.Checked;
+
+        private void toolStripMenuItemShowWeekday_CheckedChanged(object sender, EventArgs e) =>
+            checkBoxShowWeekday.Checked = toolStripMenuItemShowWeekday.Checked;
+        private void checkBoxShowWeekday_CheckedChanged(object sender, EventArgs e) =>
+            toolStripMenuItemShowWeekday.Checked = checkBoxShowWeekday.Checked;
 
     }
 }
