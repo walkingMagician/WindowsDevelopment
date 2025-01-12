@@ -51,6 +51,7 @@
             this.checkBoxShowWeekday = new System.Windows.Forms.CheckBox();
             this.buttonHideControls = new System.Windows.Forms.Button();
             this.notifyIcon = new System.Windows.Forms.NotifyIcon(this.components);
+            this.colorDialog = new System.Windows.Forms.ColorDialog();
             this.contextMenuStrip.SuspendLayout();
             this.SuspendLayout();
             // 
@@ -144,14 +145,16 @@
             // toolStripMenuItemBackgroundColor
             // 
             this.toolStripMenuItemBackgroundColor.Name = "toolStripMenuItemBackgroundColor";
-            this.toolStripMenuItemBackgroundColor.Size = new System.Drawing.Size(168, 22);
+            this.toolStripMenuItemBackgroundColor.Size = new System.Drawing.Size(180, 22);
             this.toolStripMenuItemBackgroundColor.Text = "Background color";
+            this.toolStripMenuItemBackgroundColor.Click += new System.EventHandler(this.toolStripMenuItemBackgroundColor_Click);
             // 
             // toolStripMenuItemForegroundColor
             // 
             this.toolStripMenuItemForegroundColor.Name = "toolStripMenuItemForegroundColor";
-            this.toolStripMenuItemForegroundColor.Size = new System.Drawing.Size(168, 22);
+            this.toolStripMenuItemForegroundColor.Size = new System.Drawing.Size(180, 22);
             this.toolStripMenuItemForegroundColor.Text = "Foreground color";
+            this.toolStripMenuItemForegroundColor.Click += new System.EventHandler(this.toolStripMenuItemForegroundColor_Click);
             // 
             // toolStripSeparator3
             // 
@@ -266,6 +269,7 @@
         private System.Windows.Forms.ToolStripMenuItem toolStripMenuItemLoadOnWindowsStartup;
         private System.Windows.Forms.ToolStripSeparator toolStripSeparator4;
         private System.Windows.Forms.ToolStripMenuItem toolStripMenuItemExit;
+        private System.Windows.Forms.ColorDialog colorDialog;
     }
 }
 
