@@ -39,6 +39,7 @@ namespace Clock
             this.TransparencyKey = visible ? Color.Empty : this.BackColor;
         }
 
+
         void LoadSettings()
         {
             StreamReader sr =
