@@ -20,13 +20,16 @@ namespace Clock
             InitializeComponent();
             labelTime.BackColor = Color.AliceBlue;
             this.Location = new Point(Screen.PrimaryScreen.Bounds.Width - this.Width, 50);
-            //toolStripMenuItemShowControls.Checked = false;
+            //toolStripMenuItemShowControls.Checked = false;	//Works not correctly
             toolStripMenuItemShowControls.Checked = true;
             toolStripMenuItemShowConsole.Checked = true;
-            
-            fontDialog = new FontDialog();
 
 
+            //fontDialog = new FontDialog();
+            //Console.WriteLine(Directory.GetCurrentDirectory());
+            LoadSettings();
+            //SaveSettings();
+            if (fontDialog == null) fontDialog = new FontDialog();
         }
 
         void SetVisibility(bool visible)
@@ -42,19 +45,30 @@ namespace Clock
 
         void LoadSettings()
         {
-            StreamReader sr =
-                new StreamReader($"{Path.GetDirectoryName(Application.ExecutablePath)}\\..\\..\\Settings.ini");
-            toolStripMenuItemTopmost.Checked = Boolean.Parse( sr.ReadLine() );
-            toolStripMenuItemShowControls.Checked = Boolean.Parse( sr.ReadLine() );
-            toolStripMenuItemShowConsole.Checked = Boolean.Parse( sr.ReadLine() );
-            toolStripMenuItemShowDate.Checked = Boolean.Parse( sr.ReadLine());
-            toolStripMenuItemShowWeekday.Checked = Boolean.Parse( sr.ReadLine());
-            string fontName = sr.ReadLine();
-            double fontsize = Convert.ToDouble( sr.ReadLine() );
-            labelTime.BackColor = Color.FromArgb(Convert.ToInt32(sr.ReadLine()));
-            labelTime.ForeColor = Color.FromArgb(Convert.ToInt32(sr.ReadLine()));
+            StreamReader sr = null;
+            try
+            {
 
-            sr.Close();
+                sr = new StreamReader($"{Path.GetDirectoryName(Application.ExecutablePath)}\\..\\..\\Settings.ini");
+                toolStripMenuItemTopmost.Checked = Boolean.Parse(sr.ReadLine());
+                toolStripMenuItemShowControls.Checked = Boolean.Parse(sr.ReadLine()); 
+                toolStripMenuItemShowConsole.Checked = Boolean.Parse(sr.ReadLine());
+                toolStripMenuItemShowDate.Checked = Boolean.Parse(sr.ReadLine());
+                toolStripMenuItemShowDay.Checked = Boolean.Parse(sr.ReadLine());
+                string fontName = sr.ReadLine();
+                float fontsize = (float)Convert.ToDouble(sr.ReadLine());
+                labelTime.BackColor = Color.FromArgb(Convert.ToInt32(sr.ReadLine()));
+                labelTime.ForeColor = Color.FromArgb(Convert.ToInt32(sr.ReadLine()));
+
+                sr.Close();
+                fontDialog = new FontDialog(fontName, fontsize);
+                labelTime.Font = fontDialog.Font;
+            }
+            catch (Exception ex)
+            {
+                MessageBox.Show(this, ex.Message, "In loadSettings()", MessageBoxButtons.OK, MessageBoxIcon.Error);
+                MessageBox.Show(this, ex.ToString(), "In loadSettings()", MessageBoxButtons.OK, MessageBoxIcon.Error);
+            }
         }
 
         void SaveSettings()
@@ -65,8 +79,8 @@ namespace Clock
             sw.WriteLine($"{toolStripMenuItemShowControls.Checked}");
             sw.WriteLine($"{toolStripMenuItemShowConsole.Checked}");
             sw.WriteLine($"{toolStripMenuItemShowDate.Checked}");
-            sw.WriteLine($"{toolStripMenuItemShowWeekday.Checked}");
-            sw.WriteLine($"{labelTime.Font.Name}");
+            sw.WriteLine($"{toolStripMenuItemShowDay.Checked}");
+            sw.WriteLine($"{labelTime.Font.ToString()}");
             sw.WriteLine($"{labelTime.Font.Size}");
             sw.WriteLine($"{labelTime.BackColor.ToArgb()}");
             sw.WriteLine($"{labelTime.ForeColor.ToArgb()}");
@@ -110,22 +124,18 @@ namespace Clock
 
         private void toolStripMenuItemTopmost_CheckedChanged(object sender, EventArgs e) =>
             this.TopMost = toolStripMenuItemTopmost.Checked;
-
-        private void toolStripMenuItemShowControls_CheckedChanged(object sender, EventArgs e) =>
+        private void toolStripMenuItemShowControls_CheckStateChanged(object sender, EventArgs e) =>
             SetVisibility(toolStripMenuItemShowControls.Checked);
-        
-
         private void toolStripMenuItemShowDate_CheckedChanged(object sender, EventArgs e) =>
             checkBoxShowDate.Checked = toolStripMenuItemShowDate.Checked;
         
-
         private void checkBoxShowDate_CheckedChanged(object sender, EventArgs e) =>
             toolStripMenuItemShowDate.Checked = checkBoxShowDate.Checked;
 
         private void toolStripMenuItemShowWeekday_CheckedChanged(object sender, EventArgs e) =>
-            checkBoxShowWeekday.Checked = toolStripMenuItemShowWeekday.Checked;
+            checkBoxShowWeekday.Checked = toolStripMenuItemShowDay.Checked;
         private void checkBoxShowWeekday_CheckedChanged(object sender, EventArgs e) =>
-            toolStripMenuItemShowWeekday.Checked = checkBoxShowWeekday.Checked;
+            toolStripMenuItemShowDay.Checked = checkBoxShowWeekday.Checked;
 
         private void toolStripMenuItemBackgroundColor_Click(object sender, EventArgs e)
         {
@@ -144,11 +154,10 @@ namespace Clock
 
         private void toolStripMenuItemChooseFont_Click(object sender, EventArgs e)
         {
-           if (fontDialog.ShowDialog(this) == DialogResult.OK)
-           {
-                labelTime.Font = fontDialog.font; 
-           }
-            
+            if (fontDialog.ShowDialog(this) == DialogResult.OK)
+            {
+                labelTime.Font = fontDialog.Font;
+            }
         }
 
         private void notifyIcon_DoubleClick(object sender, EventArgs e)
@@ -169,7 +178,14 @@ namespace Clock
         static extern bool AllocConsole();
         [DllImport("kernel32.dll")]
         static extern bool FreeConsole();
+
+        private void MainForm_FormClosing(object sender, FormClosingEventArgs e)
+        {
+            SaveSettings();
+        }
+
         
+
 
 
 

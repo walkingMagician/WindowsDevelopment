@@ -37,7 +37,7 @@
             this.toolStripMenuItemShowConsole = new System.Windows.Forms.ToolStripMenuItem();
             this.toolStripSeparator1 = new System.Windows.Forms.ToolStripSeparator();
             this.toolStripMenuItemShowDate = new System.Windows.Forms.ToolStripMenuItem();
-            this.toolStripMenuItemShowWeekday = new System.Windows.Forms.ToolStripMenuItem();
+            this.toolStripMenuItemShowDay = new System.Windows.Forms.ToolStripMenuItem();
             this.toolStripSeparator2 = new System.Windows.Forms.ToolStripSeparator();
             this.toolStripMenuItemChooseFont = new System.Windows.Forms.ToolStripMenuItem();
             this.toolStripMenuItemColors = new System.Windows.Forms.ToolStripMenuItem();
@@ -76,7 +76,7 @@
             this.toolStripMenuItemShowConsole,
             this.toolStripSeparator1,
             this.toolStripMenuItemShowDate,
-            this.toolStripMenuItemShowWeekday,
+            this.toolStripMenuItemShowDay,
             this.toolStripSeparator2,
             this.toolStripMenuItemChooseFont,
             this.toolStripMenuItemColors,
@@ -101,7 +101,6 @@
             this.toolStripMenuItemShowControls.Name = "toolStripMenuItemShowControls";
             this.toolStripMenuItemShowControls.Size = new System.Drawing.Size(207, 22);
             this.toolStripMenuItemShowControls.Text = "Show controls";
-            this.toolStripMenuItemShowControls.CheckedChanged += new System.EventHandler(this.toolStripMenuItemShowControls_CheckedChanged);
             // 
             // toolStripMenuItemShowConsole
             // 
@@ -123,13 +122,12 @@
             this.toolStripMenuItemShowDate.Text = "Show date";
             this.toolStripMenuItemShowDate.CheckedChanged += new System.EventHandler(this.toolStripMenuItemShowDate_CheckedChanged);
             // 
-            // toolStripMenuItemShowWeekday
+            // toolStripMenuItemShowDay
             // 
-            this.toolStripMenuItemShowWeekday.CheckOnClick = true;
-            this.toolStripMenuItemShowWeekday.Name = "toolStripMenuItemShowWeekday";
-            this.toolStripMenuItemShowWeekday.Size = new System.Drawing.Size(207, 22);
-            this.toolStripMenuItemShowWeekday.Text = "Show weekday";
-            this.toolStripMenuItemShowWeekday.CheckedChanged += new System.EventHandler(this.toolStripMenuItemShowWeekday_CheckedChanged);
+            this.toolStripMenuItemShowDay.CheckOnClick = true;
+            this.toolStripMenuItemShowDay.Name = "toolStripMenuItemShowDay";
+            this.toolStripMenuItemShowDay.Size = new System.Drawing.Size(207, 22);
+            this.toolStripMenuItemShowDay.Text = "Show weekday";
             // 
             // toolStripSeparator2
             // 
@@ -270,7 +268,7 @@
         private System.Windows.Forms.ToolStripMenuItem toolStripMenuItemShowControls;
         private System.Windows.Forms.ToolStripSeparator toolStripSeparator1;
         private System.Windows.Forms.ToolStripMenuItem toolStripMenuItemShowDate;
-        private System.Windows.Forms.ToolStripMenuItem toolStripMenuItemShowWeekday;
+        private System.Windows.Forms.ToolStripMenuItem toolStripMenuItemShowDay;
         private System.Windows.Forms.ToolStripSeparator toolStripSeparator2;
         private System.Windows.Forms.ToolStripMenuItem toolStripMenuItemChooseFont;
         private System.Windows.Forms.ToolStripMenuItem toolStripMenuItemColors;
