@@ -49,7 +49,7 @@
             this.toolStripMenuItemExit = new System.Windows.Forms.ToolStripMenuItem();
             this.timer = new System.Windows.Forms.Timer(this.components);
             this.checkBoxShowDate = new System.Windows.Forms.CheckBox();
-            this.checkBoxShowWeekday = new System.Windows.Forms.CheckBox();
+            this.checkBoxShowDay = new System.Windows.Forms.CheckBox();
             this.buttonHideControls = new System.Windows.Forms.Button();
             this.notifyIcon = new System.Windows.Forms.NotifyIcon(this.components);
             this.colorDialog = new System.Windows.Forms.ColorDialog();
@@ -101,6 +101,7 @@
             this.toolStripMenuItemShowControls.Name = "toolStripMenuItemShowControls";
             this.toolStripMenuItemShowControls.Size = new System.Drawing.Size(207, 22);
             this.toolStripMenuItemShowControls.Text = "Show controls";
+            this.toolStripMenuItemShowControls.CheckStateChanged += new System.EventHandler(this.toolStripMenuItemShowControls_CheckStateChanged);
             // 
             // toolStripMenuItemShowConsole
             // 
@@ -128,6 +129,7 @@
             this.toolStripMenuItemShowDay.Name = "toolStripMenuItemShowDay";
             this.toolStripMenuItemShowDay.Size = new System.Drawing.Size(207, 22);
             this.toolStripMenuItemShowDay.Text = "Show weekday";
+            this.toolStripMenuItemShowDay.CheckedChanged += new System.EventHandler(this.toolStripMenuItemShowDay_CheckedChanged);
             // 
             // toolStripSeparator2
             // 
@@ -205,17 +207,17 @@
             this.checkBoxShowDate.UseVisualStyleBackColor = true;
             this.checkBoxShowDate.CheckedChanged += new System.EventHandler(this.checkBoxShowDate_CheckedChanged);
             // 
-            // checkBoxShowWeekday
+            // checkBoxShowDay
             // 
-            this.checkBoxShowWeekday.AutoSize = true;
-            this.checkBoxShowWeekday.Font = new System.Drawing.Font("Microsoft Sans Serif", 15.75F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(204)));
-            this.checkBoxShowWeekday.Location = new System.Drawing.Point(22, 226);
-            this.checkBoxShowWeekday.Name = "checkBoxShowWeekday";
-            this.checkBoxShowWeekday.Size = new System.Drawing.Size(180, 29);
-            this.checkBoxShowWeekday.TabIndex = 2;
-            this.checkBoxShowWeekday.Text = "Show Weekday";
-            this.checkBoxShowWeekday.UseVisualStyleBackColor = true;
-            this.checkBoxShowWeekday.CheckedChanged += new System.EventHandler(this.checkBoxShowWeekday_CheckedChanged);
+            this.checkBoxShowDay.AutoSize = true;
+            this.checkBoxShowDay.Font = new System.Drawing.Font("Microsoft Sans Serif", 15.75F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(204)));
+            this.checkBoxShowDay.Location = new System.Drawing.Point(22, 226);
+            this.checkBoxShowDay.Name = "checkBoxShowDay";
+            this.checkBoxShowDay.Size = new System.Drawing.Size(180, 29);
+            this.checkBoxShowDay.TabIndex = 2;
+            this.checkBoxShowDay.Text = "Show Weekday";
+            this.checkBoxShowDay.UseVisualStyleBackColor = true;
+            this.checkBoxShowDay.CheckedChanged += new System.EventHandler(this.checkBoxShowDay_CheckedChanged);
             // 
             // buttonHideControls
             // 
@@ -242,9 +244,10 @@
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
             this.ClientSize = new System.Drawing.Size(277, 315);
             this.Controls.Add(this.buttonHideControls);
-            this.Controls.Add(this.checkBoxShowWeekday);
+            this.Controls.Add(this.checkBoxShowDay);
             this.Controls.Add(this.checkBoxShowDate);
             this.Controls.Add(this.labelTime);
+            this.DoubleBuffered = true;
             this.Icon = ((System.Drawing.Icon)(resources.GetObject("$this.Icon")));
             this.Name = "MainForm";
             this.StartPosition = System.Windows.Forms.FormStartPosition.Manual;
@@ -260,7 +263,7 @@
         private System.Windows.Forms.Label labelTime;
         private System.Windows.Forms.Timer timer;
         private System.Windows.Forms.CheckBox checkBoxShowDate;
-        private System.Windows.Forms.CheckBox checkBoxShowWeekday;
+        private System.Windows.Forms.CheckBox checkBoxShowDay;
         private System.Windows.Forms.Button buttonHideControls;
         private System.Windows.Forms.NotifyIcon notifyIcon;
         private System.Windows.Forms.ContextMenuStrip contextMenuStrip;

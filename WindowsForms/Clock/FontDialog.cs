@@ -29,14 +29,17 @@ namespace Clock
             execute_Path = Path.GetDirectoryName(Application.ExecutablePath);
             fonts_Path = $"{execute_Path}\\..\\..\\Fonts";
             LoadFonts();
+            
         }
         public FontDialog(string fontName, float fontSize) : this()
         {
             numericUpDownFontSize.Value = (decimal)fontSize;
             comboBoxFonts.SelectedIndex = comboBoxFonts.Items.IndexOf(fontName);
+            SetFont();
             Font = labelExample.Font;
             FontFileName = fontName;
         }
+
 
 
         void LoadFonts()
@@ -82,5 +85,9 @@ namespace Clock
             SetFont();
         }
 
+        private void buttonCancel_Click(object sender, EventArgs e)
+        {
+            this.Close();
+        }
     }
 }
