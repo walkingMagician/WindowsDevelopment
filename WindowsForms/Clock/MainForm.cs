@@ -14,7 +14,7 @@ namespace Clock
 {
     public partial class MainForm : Form
     {
-
+        AlarmClock alarmClock;
         FontDialog fontDialog;
         public MainForm()
         {
@@ -26,12 +26,14 @@ namespace Clock
             toolStripMenuItemShowConsole.Checked = true;
 
 
-            fontDialog = new FontDialog();
+            //fontDialog = new FontDialog();
             //Console.WriteLine(Directory.GetCurrentDirectory());
-
-            LoadSettings();
+            //SaveSettings();
+            if(File.Exists($"{Path.GetDirectoryName(Application.ExecutablePath)}\\..\\..\\Settings.ini"))
+                LoadSettings();
             if (fontDialog == null) fontDialog = new FontDialog();
-        
+            if (alarmClock == null) alarmClock = new AlarmClock();
+
         }
 
         void SetVisibility(bool visible)
@@ -111,8 +113,8 @@ namespace Clock
                 $"{DateTime.Now.ToString("yyyy.MM.dd")}\n" +
                 $"{DateTime.Now.DayOfWeek}";            
 
-            labelTime.Font = fontDialog.Font;
             SaveSettings();
+            labelTime.Font = fontDialog.Font;
         }
 
         private void buttonHideControls_Click(object sender, EventArgs e)
@@ -172,8 +174,12 @@ namespace Clock
                 labelTime.Font = fontDialog.Font;
             }
         }
+        private void toolStripMenuItemaAlarmClock_Click(object sender, EventArgs e)
+        {
+            alarmClock.ShowDialog();
+        }
 
-        private void notifyIcon_DoubleClick(object sender, EventArgs e)
+        private void notifyIcon_DoubleClick(object sender, EventArgs e) // NotifyIcon
         {
             if (!this.TopMost)
             {
@@ -182,9 +188,12 @@ namespace Clock
             }
         }
 
+        
+        
+
         private void toolStripMenuItemShowConsole_CheckedChanged(object sender, EventArgs e)
         {
-            //AllocConsole();
+            AllocConsole();
             bool show = toolStripMenuItemShowConsole.Checked ? AllocConsole() : FreeConsole();
         }
         [DllImport("kernel32.dll")]
@@ -196,6 +205,14 @@ namespace Clock
         {
             SaveSettings();
         }
+
+       
+
+
+
+
+
+
 
 
         // ---- //

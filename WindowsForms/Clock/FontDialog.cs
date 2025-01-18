@@ -29,7 +29,7 @@ namespace Clock
             execute_Path = Path.GetDirectoryName(Application.ExecutablePath);
             fonts_Path = $"{execute_Path}\\..\\..\\Fonts";
             LoadFonts();
-            
+            Font = labelExample.Font;
         }
         public FontDialog(string fontName, float fontSize) : this()
         {
