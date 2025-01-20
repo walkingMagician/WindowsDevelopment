@@ -47,12 +47,19 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
-    <Compile Include="AlarmClock.cs">
+    <Compile Include="AddAlarmDialog.cs">
       <SubType>Form</SubType>
     </Compile>
-    <Compile Include="AlarmClock.Designer.cs">
-      <DependentUpon>AlarmClock.cs</DependentUpon>
+    <Compile Include="AddAlarmDialog.Designer.cs">
+      <DependentUpon>AddAlarmDialog.cs</DependentUpon>
     </Compile>
+    <Compile Include="AlarmForm.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="AlarmForm.Designer.cs">
+      <DependentUpon>AlarmForm.cs</DependentUpon>
+    </Compile>
+    <Compile Include="Alarm.cs" />
     <Compile Include="FontDialog.cs">
       <SubType>Form</SubType>
     </Compile>
@@ -67,8 +74,12 @@
     </Compile>
     <Compile Include="Program.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
-    <EmbeddedResource Include="AlarmClock.resx">
-      <DependentUpon>AlarmClock.cs</DependentUpon>
+    <Compile Include="Week.cs" />
+    <EmbeddedResource Include="AddAlarmDialog.resx">
+      <DependentUpon>AddAlarmDialog.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="AlarmForm.resx">
+      <DependentUpon>AlarmForm.cs</DependentUpon>
     </EmbeddedResource>
     <EmbeddedResource Include="FontDialog.resx">
       <DependentUpon>FontDialog.cs</DependentUpon>

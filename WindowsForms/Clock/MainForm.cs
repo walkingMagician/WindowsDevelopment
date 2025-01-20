@@ -15,7 +15,7 @@ namespace Clock
 {
     public partial class MainForm : Form
     {
-        AlarmClock alarmClock;
+        AlarmForm alarmClock;
         FontDialog fontDialog;
         public MainForm()
         {
@@ -33,7 +33,7 @@ namespace Clock
             if(File.Exists($"{Path.GetDirectoryName(Application.ExecutablePath)}\\..\\..\\Settings.ini"))
                 LoadSettings();
             if (fontDialog == null) fontDialog = new FontDialog();
-            if (alarmClock == null) alarmClock = new AlarmClock();
+            if (alarmClock == null) alarmClock = new AlarmForm();
 
         }
 
