@@ -32,11 +32,12 @@
             System.ComponentModel.ComponentResourceManager resources = new System.ComponentModel.ComponentResourceManager(typeof(MainForm));
             this.labelTime = new System.Windows.Forms.Label();
             this.contextMenuStrip = new System.Windows.Forms.ContextMenuStrip(this.components);
+            this.toolStripMenuItemaAlarmClock = new System.Windows.Forms.ToolStripMenuItem();
+            this.toolStripSeparator5 = new System.Windows.Forms.ToolStripSeparator();
             this.toolStripMenuItemTopmost = new System.Windows.Forms.ToolStripMenuItem();
             this.toolStripMenuItemShowControls = new System.Windows.Forms.ToolStripMenuItem();
             this.toolStripMenuItemShowConsole = new System.Windows.Forms.ToolStripMenuItem();
             this.toolStripSeparator1 = new System.Windows.Forms.ToolStripSeparator();
-            this.toolStripMenuItemaAlarmClock = new System.Windows.Forms.ToolStripMenuItem();
             this.toolStripMenuItemShowDate = new System.Windows.Forms.ToolStripMenuItem();
             this.toolStripMenuItemShowDay = new System.Windows.Forms.ToolStripMenuItem();
             this.toolStripSeparator2 = new System.Windows.Forms.ToolStripSeparator();
@@ -54,7 +55,6 @@
             this.buttonHideControls = new System.Windows.Forms.Button();
             this.notifyIcon = new System.Windows.Forms.NotifyIcon(this.components);
             this.colorDialog = new System.Windows.Forms.ColorDialog();
-            this.toolStripSeparator5 = new System.Windows.Forms.ToolStripSeparator();
             this.bindingSource1 = new System.Windows.Forms.BindingSource(this.components);
             this.contextMenuStrip.SuspendLayout();
             ((System.ComponentModel.ISupportInitialize)(this.bindingSource1)).BeginInit();
@@ -91,7 +91,19 @@
             this.toolStripSeparator4,
             this.toolStripMenuItemExit});
             this.contextMenuStrip.Name = "contextMenuStrip";
-            this.contextMenuStrip.Size = new System.Drawing.Size(208, 254);
+            this.contextMenuStrip.Size = new System.Drawing.Size(208, 276);
+            // 
+            // toolStripMenuItemaAlarmClock
+            // 
+            this.toolStripMenuItemaAlarmClock.Name = "toolStripMenuItemaAlarmClock";
+            this.toolStripMenuItemaAlarmClock.Size = new System.Drawing.Size(207, 22);
+            this.toolStripMenuItemaAlarmClock.Text = "Alarms";
+            this.toolStripMenuItemaAlarmClock.Click += new System.EventHandler(this.toolStripMenuItemaAlarmClock_Click);
+            // 
+            // toolStripSeparator5
+            // 
+            this.toolStripSeparator5.Name = "toolStripSeparator5";
+            this.toolStripSeparator5.Size = new System.Drawing.Size(204, 6);
             // 
             // toolStripMenuItemTopmost
             // 
@@ -120,13 +132,6 @@
             // 
             this.toolStripSeparator1.Name = "toolStripSeparator1";
             this.toolStripSeparator1.Size = new System.Drawing.Size(204, 6);
-            // 
-            // toolStripMenuItemaAlarmClock
-            // 
-            this.toolStripMenuItemaAlarmClock.Name = "toolStripMenuItemaAlarmClock";
-            this.toolStripMenuItemaAlarmClock.Size = new System.Drawing.Size(207, 22);
-            this.toolStripMenuItemaAlarmClock.Text = "Alarms";
-            this.toolStripMenuItemaAlarmClock.Click += new System.EventHandler(this.toolStripMenuItemaAlarmClock_Click);
             // 
             // toolStripMenuItemShowDate
             // 
@@ -190,6 +195,7 @@
             this.toolStripMenuItemLoadOnWindowsStartup.Name = "toolStripMenuItemLoadOnWindowsStartup";
             this.toolStripMenuItemLoadOnWindowsStartup.Size = new System.Drawing.Size(207, 22);
             this.toolStripMenuItemLoadOnWindowsStartup.Text = "Load on windows startup";
+            this.toolStripMenuItemLoadOnWindowsStartup.CheckedChanged += new System.EventHandler(this.toolStripMenuItemLoadOnWindowsStartup_CheckedChanged);
             // 
             // toolStripSeparator4
             // 
@@ -250,11 +256,6 @@
             this.notifyIcon.Text = "notifyIcon";
             this.notifyIcon.Visible = true;
             this.notifyIcon.DoubleClick += new System.EventHandler(this.notifyIcon_DoubleClick);
-            // 
-            // toolStripSeparator5
-            // 
-            this.toolStripSeparator5.Name = "toolStripSeparator5";
-            this.toolStripSeparator5.Size = new System.Drawing.Size(204, 6);
             // 
             // MainForm
             // 

@@ -13,7 +13,7 @@ namespace Clock
 {
     public partial class AlarmClock : Form
     {
-        private List<DateTime> DateList = new List<DateTime>();
+        private List<TimeSpan> timeSpans = new List<TimeSpan>();
         private Timer Timer;
 
         public AlarmClock()
@@ -24,21 +24,19 @@ namespace Clock
             timer.Interval = 1000;
             timer.Tick += timer_Tick;
             timer.Start();
-
+            
         }
 
         private void timer_Tick(object sender, EventArgs e)
         {
             DateTime now = DateTime.Now;
-            foreach (DateTime dt in DateList)
+            foreach (TimeSpan ts in timeSpans)
             {
-                if (now.Hour == dt.Hour &&
-                    now.Minute == dt.Minute &&
-                    now.Second == dt.Second)
+                if (now.TimeOfDay >= ts && now.TimeOfDay < ts.Add(new TimeSpan(0, 0, 1)))
                 {
                     System.Media.SystemSounds.Beep.Play();
                     MessageBox.Show("The alarm  went off", "Alarm clock", MessageBoxButtons.OK, MessageBoxIcon.Information);
-                    DateList.Remove(dt);
+                    timeSpans.Remove(ts);
                     UpdateAlarmList();
                     break;
                 }
@@ -54,22 +52,22 @@ namespace Clock
         {
             try
             {
-                //DateTime nowTime = DateTime.Now;
                 string inputTime = textBoxAlarmTime.Text.Trim();
                 /*DateTime dateTime = DateTime.ParseExact(inputTime, "H:mm",
                     CultureInfo.InvariantCulture);
                 dateTime = dateTime.Date.Add(dateTime.TimeOfDay);*/
                 TimeSpan timeSpan = TimeSpan.Parse(inputTime);
-                DateTime dateTime = dateTimePicker.Value.Date.Add(timeSpan);
+                //DateTime dateTime = dateTimePicker.Value.Date.Add(timeSpan);
 
-                if (dateTime < DateTime.Now)
+
+                /*if (dateTime < DateTime.Now)
                 {
                     MessageBox.Show("The alarm cannot be set in the past", "Error", MessageBoxButtons.OK, MessageBoxIcon.Warning);
                     return;
-                }
-                if (!DateList.Contains(dateTime))
+                }*/
+                if (!timeSpans.Contains(timeSpan))
                 {
-                    DateList.Add(dateTime);
+                    timeSpans.Add(timeSpan);
                     UpdateAlarmList();
                     textBoxAlarmTime.Clear();
                 }
@@ -90,21 +88,29 @@ namespace Clock
             {
                 if (listBoxAlarmClock.SelectedItems != null)
                 {
-                    DateTime selectedAlarm = (DateTime)listBoxAlarmClock.SelectedItem;
-                    DateList.Remove(selectedAlarm);
-                    DateTime newAlarmTime = dateTimePicker.Value;
-                    if (DateTime.TryParseExact(textBoxAlarmTime.Text.Trim(), "H:mm",
+                    //DateTime selectedAlarm = (DateTime)listBoxAlarmClock.SelectedItem;
+                    //DateTime.Remove(selectedAlarm);
+                    string selectedAlarm = listBoxAlarmClock.SelectedItem.ToString();
+                    TimeSpan alarmToChange = TimeSpan.Parse(selectedAlarm);
+                    string inputTime = textBoxAlarmTime.Text.Trim();
+                    TimeSpan timeSpan = TimeSpan.Parse(inputTime);
+                    timeSpans.Remove(alarmToChange);
+                    timeSpans.Add(timeSpan);
+                    textBoxAlarmTime.Clear();
+                    UpdateAlarmList();
+
+                    //DateTime newAlarmTime = dateTimePicker.Value;
+                    /*if (TimeSpan.Parse(textBoxAlarmTime.Text.Trim(), "H:mm",
                         CultureInfo.InvariantCulture, DateTimeStyles.None, out newAlarmTime))
                     {
                         newAlarmTime = newAlarmTime.Date.Add(newAlarmTime.TimeOfDay);
-                        DateList.Add(newAlarmTime);
-                        UpdateAlarmList();
+                        //timeSpans.Add(newAlarmTime);
                         textBoxAlarmTime.Clear();
-                    }
-                    else
-                    {
-                        MessageBox.Show("Некорректный формат времени. Пожалуйста, используйте формат ЧЧ:ММ", "Ошибка", MessageBoxButtons.OK, MessageBoxIcon.Warning);
-                    }
+                    }*/
+                   //else
+                    //{
+                        //MessageBox.Show("Некорректный формат времени. Пожалуйста, используйте формат ЧЧ:ММ", "Ошибка", MessageBoxButtons.OK, MessageBoxIcon.Warning);
+                    //}
                 }
             }
             catch (Exception)
@@ -119,8 +125,11 @@ namespace Clock
             {
                 if (listBoxAlarmClock.SelectedItems != null)
                 {
-                    DateList.Remove((DateTime)listBoxAlarmClock.SelectedItem);
-                    UpdateAlarmList();
+                    string selectedAlarm = listBoxAlarmClock.SelectedItem.ToString();
+                    TimeSpan alarmRemuve = TimeSpan.Parse(selectedAlarm);
+                    
+                    if(timeSpans.Remove(alarmRemuve))
+                        UpdateAlarmList();
                 }
             }
             catch (Exception)
@@ -129,12 +138,13 @@ namespace Clock
             }
         }
 
-        private void UpdateAlarmList()
+        private void UpdateAlarmList() // обновление листа
         {
             listBoxAlarmClock.Items.Clear();
-            foreach (DateTime dateTime in DateList)
+            foreach (TimeSpan dateTime in timeSpans)
             {
-                listBoxAlarmClock.Items.Add(dateTime);
+                //listBoxAlarmClock.Items.Add(dateTime);
+                listBoxAlarmClock.Items.Add(dateTime.ToString());
             }
         }
 

@@ -29,7 +29,7 @@
         private void InitializeComponent()
         {
             this.components = new System.ComponentModel.Container();
-            this.dateTimePicker = new System.Windows.Forms.DateTimePicker();
+            System.ComponentModel.ComponentResourceManager resources = new System.ComponentModel.ComponentResourceManager(typeof(AlarmClock));
             this.listBoxAlarmClock = new System.Windows.Forms.ListBox();
             this.buttonAdd = new System.Windows.Forms.Button();
             this.buttonToChange = new System.Windows.Forms.Button();
@@ -38,30 +38,25 @@
             this.timer = new System.Windows.Forms.Timer(this.components);
             this.textBoxAlarmTime = new System.Windows.Forms.TextBox();
             this.labelTimeFormat = new System.Windows.Forms.Label();
-            this.labelDate = new System.Windows.Forms.Label();
             this.SuspendLayout();
-            // 
-            // dateTimePicker
-            // 
-            this.dateTimePicker.Location = new System.Drawing.Point(16, 39);
-            this.dateTimePicker.Margin = new System.Windows.Forms.Padding(6);
-            this.dateTimePicker.Name = "dateTimePicker";
-            this.dateTimePicker.Size = new System.Drawing.Size(209, 29);
-            this.dateTimePicker.TabIndex = 0;
             // 
             // listBoxAlarmClock
             // 
+            this.listBoxAlarmClock.Anchor = ((System.Windows.Forms.AnchorStyles)((((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Bottom) 
+            | System.Windows.Forms.AnchorStyles.Left) 
+            | System.Windows.Forms.AnchorStyles.Right)));
             this.listBoxAlarmClock.FormattingEnabled = true;
             this.listBoxAlarmClock.ItemHeight = 24;
-            this.listBoxAlarmClock.Location = new System.Drawing.Point(16, 136);
+            this.listBoxAlarmClock.Location = new System.Drawing.Point(16, 74);
             this.listBoxAlarmClock.Name = "listBoxAlarmClock";
             this.listBoxAlarmClock.Size = new System.Drawing.Size(209, 124);
             this.listBoxAlarmClock.TabIndex = 1;
             // 
             // buttonAdd
             // 
+            this.buttonAdd.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Right)));
             this.buttonAdd.Font = new System.Drawing.Font("Microsoft Sans Serif", 9.75F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(204)));
-            this.buttonAdd.Location = new System.Drawing.Point(231, 136);
+            this.buttonAdd.Location = new System.Drawing.Point(231, 74);
             this.buttonAdd.Name = "buttonAdd";
             this.buttonAdd.Size = new System.Drawing.Size(89, 28);
             this.buttonAdd.TabIndex = 2;
@@ -71,8 +66,9 @@
             // 
             // buttonToChange
             // 
+            this.buttonToChange.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Right)));
             this.buttonToChange.Font = new System.Drawing.Font("Microsoft Sans Serif", 9.75F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(204)));
-            this.buttonToChange.Location = new System.Drawing.Point(231, 170);
+            this.buttonToChange.Location = new System.Drawing.Point(231, 108);
             this.buttonToChange.Name = "buttonToChange";
             this.buttonToChange.Size = new System.Drawing.Size(89, 28);
             this.buttonToChange.TabIndex = 3;
@@ -82,8 +78,9 @@
             // 
             // buttonDelete
             // 
+            this.buttonDelete.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Right)));
             this.buttonDelete.Font = new System.Drawing.Font("Microsoft Sans Serif", 9.75F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(204)));
-            this.buttonDelete.Location = new System.Drawing.Point(231, 204);
+            this.buttonDelete.Location = new System.Drawing.Point(231, 142);
             this.buttonDelete.Name = "buttonDelete";
             this.buttonDelete.Size = new System.Drawing.Size(89, 28);
             this.buttonDelete.TabIndex = 4;
@@ -93,6 +90,7 @@
             // 
             // buttonCancel
             // 
+            this.buttonCancel.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Right)));
             this.buttonCancel.Font = new System.Drawing.Font("Microsoft Sans Serif", 9.75F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(204)));
             this.buttonCancel.Location = new System.Drawing.Point(322, 297);
             this.buttonCancel.Name = "buttonCancel";
@@ -108,7 +106,7 @@
             // 
             // textBoxAlarmTime
             // 
-            this.textBoxAlarmTime.Location = new System.Drawing.Point(16, 101);
+            this.textBoxAlarmTime.Location = new System.Drawing.Point(16, 36);
             this.textBoxAlarmTime.MaxLength = 8;
             this.textBoxAlarmTime.Name = "textBoxAlarmTime";
             this.textBoxAlarmTime.RightToLeft = System.Windows.Forms.RightToLeft.No;
@@ -119,27 +117,17 @@
             // labelTimeFormat
             // 
             this.labelTimeFormat.AutoSize = true;
-            this.labelTimeFormat.Location = new System.Drawing.Point(12, 74);
+            this.labelTimeFormat.Location = new System.Drawing.Point(12, 9);
             this.labelTimeFormat.Name = "labelTimeFormat";
             this.labelTimeFormat.Size = new System.Drawing.Size(314, 24);
             this.labelTimeFormat.TabIndex = 7;
             this.labelTimeFormat.Text = "Введите время в формате ЧЧ:ММ";
-            // 
-            // labelDate
-            // 
-            this.labelDate.AutoSize = true;
-            this.labelDate.Location = new System.Drawing.Point(12, 9);
-            this.labelDate.Name = "labelDate";
-            this.labelDate.Size = new System.Drawing.Size(351, 24);
-            this.labelDate.TabIndex = 8;
-            this.labelDate.Text = "Выберите дату (формат) ДД ММ ГГГГ";
             // 
             // AlarmClock
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(11F, 24F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
             this.ClientSize = new System.Drawing.Size(409, 332);
-            this.Controls.Add(this.labelDate);
             this.Controls.Add(this.labelTimeFormat);
             this.Controls.Add(this.textBoxAlarmTime);
             this.Controls.Add(this.buttonCancel);
@@ -147,9 +135,9 @@
             this.Controls.Add(this.buttonToChange);
             this.Controls.Add(this.buttonAdd);
             this.Controls.Add(this.listBoxAlarmClock);
-            this.Controls.Add(this.dateTimePicker);
             this.Font = new System.Drawing.Font("Microsoft Sans Serif", 14.25F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(204)));
             this.FormBorderStyle = System.Windows.Forms.FormBorderStyle.FixedToolWindow;
+            this.Icon = ((System.Drawing.Icon)(resources.GetObject("$this.Icon")));
             this.Margin = new System.Windows.Forms.Padding(6);
             this.Name = "AlarmClock";
             this.Text = "Alarm clock";
@@ -159,8 +147,6 @@
         }
 
         #endregion
-
-        private System.Windows.Forms.DateTimePicker dateTimePicker;
         private System.Windows.Forms.ListBox listBoxAlarmClock;
         private System.Windows.Forms.Button buttonAdd;
         private System.Windows.Forms.Button buttonToChange;
@@ -169,6 +155,5 @@
         private System.Windows.Forms.Timer timer;
         private System.Windows.Forms.TextBox textBoxAlarmTime;
         private System.Windows.Forms.Label labelTimeFormat;
-        private System.Windows.Forms.Label labelDate;
     }
 }

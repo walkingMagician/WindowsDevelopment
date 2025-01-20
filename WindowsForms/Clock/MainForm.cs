@@ -9,6 +9,7 @@ using System.Threading.Tasks;
 using System.Windows.Forms;
 using System.Runtime.InteropServices; // Dll import
 using System.IO; // Directory
+using Microsoft.Win32;
 
 namespace Clock
 {
@@ -187,10 +188,18 @@ namespace Clock
                 this.TopMost = false;
             }
         }
-
+        private void toolStripMenuItemLoadOnWindowsStartup_CheckedChanged(object sender, EventArgs e)
+        {
+            string key_name = "Clock";
+            RegistryKey key = Registry.CurrentUser.OpenSubKey(
+                "SOFTWARE\\Microsoft\\Windows\\CurrentVersion\\Run", true); // true - writable
+            if (toolStripMenuItemLoadOnWindowsStartup.Checked) key.SetValue(key_name, Application.ExecutablePath);
+            else key.DeleteValue(key_name, false); // false - throwOnMissinggValue (бросить если удаляемое значение отсутствует)
+            key.Dispose();
+        }
         
-        
 
+        // -------------------- //
         private void toolStripMenuItemShowConsole_CheckedChanged(object sender, EventArgs e)
         {
             AllocConsole();
@@ -205,14 +214,6 @@ namespace Clock
         {
             SaveSettings();
         }
-
-       
-
-
-
-
-
-
 
 
         // ---- //
