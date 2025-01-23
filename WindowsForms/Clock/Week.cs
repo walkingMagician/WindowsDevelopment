@@ -8,6 +8,6 @@ namespace Clock
 {
     internal class Week
     {
-        byte days;
+       public byte days { get; set; }
     }
 }

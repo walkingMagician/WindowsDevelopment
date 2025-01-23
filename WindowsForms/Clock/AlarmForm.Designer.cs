@@ -28,11 +28,13 @@
         /// </summary>
         private void InitializeComponent()
         {
+            this.components = new System.ComponentModel.Container();
             System.ComponentModel.ComponentResourceManager resources = new System.ComponentModel.ComponentResourceManager(typeof(AlarmForm));
             this.listBoxAlarmClock = new System.Windows.Forms.ListBox();
             this.buttonAdd = new System.Windows.Forms.Button();
             this.buttonCancel = new System.Windows.Forms.Button();
             this.labelAlarmInfo = new System.Windows.Forms.Label();
+            this.timer = new System.Windows.Forms.Timer(this.components);
             this.SuspendLayout();
             // 
             // listBoxAlarmClock
@@ -45,7 +47,9 @@
             this.listBoxAlarmClock.Location = new System.Drawing.Point(12, 12);
             this.listBoxAlarmClock.Name = "listBoxAlarmClock";
             this.listBoxAlarmClock.Size = new System.Drawing.Size(385, 220);
+            this.listBoxAlarmClock.Sorted = true;
             this.listBoxAlarmClock.TabIndex = 1;
+            this.listBoxAlarmClock.DoubleClick += new System.EventHandler(this.listBoxAlarmClock_DoubleClick);
             // 
             // buttonAdd
             // 
@@ -108,5 +112,6 @@
         private System.Windows.Forms.Button buttonAdd;
         private System.Windows.Forms.Button buttonCancel;
         private System.Windows.Forms.Label labelAlarmInfo;
+        private System.Windows.Forms.Timer timer;
     }
 }

@@ -14,13 +14,15 @@ namespace Clock
     public partial class AlarmForm : Form
     {
         private AddAlarmDialog addAlarmDialog;
-        
+        private Week week = new Week();
+        private Alarm alarm = new Alarm();
+
         public AlarmForm()
         {
             InitializeComponent();
-            if(addAlarmDialog == null ) addAlarmDialog = new AddAlarmDialog();
+            if (addAlarmDialog == null) addAlarmDialog = new AddAlarmDialog();
         }
-        
+
 
         private void buttonCancel_Click(object sender, EventArgs e)
         {
@@ -29,12 +31,44 @@ namespace Clock
 
         private void buttonAdd_Click(object sender, EventArgs e)
         {
-            addAlarmDialog = new AddAlarmDialog();
             if (addAlarmDialog.ShowDialog() == DialogResult.OK)
             {
-                string selectTime = addAlarmDialog.DateTime.ToString("H:mm");
-                listBoxAlarmClock.Items.Add(selectTime);
+                
+                    
+
+                alarm.Date = addAlarmDialog.dateTime;
+                bool useDate = addAlarmDialog.useDate;
+
+                string listText;
+                if (useDate)
+                {
+                    listText = alarm.Date.ToString("yyyy.MM.dd\tH:mm");
+                }
+                else
+                {
+                    listText = alarm.Date.ToString("H:mm");
+                }
+
+                listBoxAlarmClock.Items.Add(listText);
+                //string selectTime = addAlarmDialog.dateTime.ToString("H:mm");
+                //listBoxAlarmClock.Items.Add(selectTime);
             }
         }
+
+        private void listBoxAlarmClock_DoubleClick(object sender, EventArgs e)
+        {
+            var selectedItem = listBoxAlarmClock.SelectedItem;
+            if (selectedItem != null)
+            {
+                var result = MessageBox.Show($"Remove? {selectedItem}", "Remove", MessageBoxButtons.YesNo, MessageBoxIcon.Question);
+                if (result == DialogResult.Yes)
+                {
+                    // Удаляем выбранный элемент
+                    listBoxAlarmClock.Items.Remove(selectedItem);
+                }
+            }
+        }
+
+        
     }
 }
