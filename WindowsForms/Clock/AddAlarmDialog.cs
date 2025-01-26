@@ -30,7 +30,6 @@ namespace Clock
             useDate = checkBoxUseDate.Checked;
             dateTimePickerDate.Enabled = useDate;
         }
-
         private void buttonOk_Click(object sender, EventArgs e)
         {
             
@@ -39,8 +38,8 @@ namespace Clock
             TimeSpan timeSpan = dateTimePickerTime.Value.TimeOfDay;
             dateTime = dateTime.Add(timeSpan);
   
-            this.DialogResult = DialogResult.OK;
-            this.Close();
+            //this.DialogResult = DialogResult.OK;
+            //this.Close();
         }
 
         private void ShowIndexes()

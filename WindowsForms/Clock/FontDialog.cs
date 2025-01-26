@@ -20,8 +20,9 @@ namespace Clock
         public string FontsPath { get => fonts_Path; }
         public string FontFileName { get; set; }
         public Font Font {  get; set; }
-        
+
         // -------------------- //
+
         public FontDialog()
         {
             InitializeComponent();

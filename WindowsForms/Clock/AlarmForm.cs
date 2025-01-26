@@ -16,13 +16,24 @@ namespace Clock
         private AddAlarmDialog addAlarmDialog;
         private Week week = new Week();
         private Alarm alarm = new Alarm();
-
+        private Timer timer;
         public AlarmForm()
         {
             InitializeComponent();
+
             if (addAlarmDialog == null) addAlarmDialog = new AddAlarmDialog();
+
+            // Инициализация таймера
+            /*timer = new Timer();
+            timer.Interval = 1000;
+            timer.Tick += Timer_Tick;
+            timer.Start();*/
         }
 
+        private void Timer_Tick(object sender, EventArgs e)
+        {
+            
+        }
 
         private void buttonCancel_Click(object sender, EventArgs e)
         {
@@ -33,23 +44,21 @@ namespace Clock
         {
             if (addAlarmDialog.ShowDialog() == DialogResult.OK)
             {
-                
-                    
-
                 alarm.Date = addAlarmDialog.dateTime;
                 bool useDate = addAlarmDialog.useDate;
 
-                string listText;
                 if (useDate)
                 {
-                    listText = alarm.Date.ToString("yyyy.MM.dd\tH:mm");
+                    //listText = alarm.Date.ToString("yyyy.MM.dd\tH:mm");
+                    listBoxAlarmClock.Items.Add(alarm.Date.ToString("yyyy.MM.dd\tH:mm"));
+                    
                 }
                 else
                 {
-                    listText = alarm.Date.ToString("H:mm");
+                    listBoxAlarmClock.Items.Add(alarm.Date.ToString("H:mm"));
                 }
 
-                listBoxAlarmClock.Items.Add(listText);
+                //listBoxAlarmClock.Items.Add(listText);
                 //string selectTime = addAlarmDialog.dateTime.ToString("H:mm");
                 //listBoxAlarmClock.Items.Add(selectTime);
             }
@@ -60,8 +69,26 @@ namespace Clock
             var selectedItem = listBoxAlarmClock.SelectedItem;
             if (selectedItem != null)
             {
-                var result = MessageBox.Show($"Remove? {selectedItem}", "Remove", MessageBoxButtons.YesNo, MessageBoxIcon.Question);
+                DialogResult result = MessageBox.Show($"Изменить - Удалить - Отмена? {selectedItem}", "Изменение", MessageBoxButtons.YesNoCancel, MessageBoxIcon.Question);
                 if (result == DialogResult.Yes)
+                {
+                    addAlarmDialog.ShowDialog();
+                    listBoxAlarmClock.Items.Remove(selectedItem);
+                    alarm.Date = addAlarmDialog.dateTime;
+                    bool useDate = addAlarmDialog.useDate;
+
+                    if (useDate)
+                    {
+                        //listText = alarm.Date.ToString("yyyy.MM.dd\tH:mm");
+                        listBoxAlarmClock.Items.Add(alarm.Date.ToString("yyyy.MM.dd\tH:mm"));
+
+                    }
+                    else
+                    {
+                        listBoxAlarmClock.Items.Add(alarm.Date.ToString("H:mm"));
+                    }
+                }
+                if(result == DialogResult.No) 
                 {
                     // Удаляем выбранный элемент
                     listBoxAlarmClock.Items.Remove(selectedItem);
@@ -69,6 +96,38 @@ namespace Clock
             }
         }
 
-        
+        private void timer_Tick(object sender, EventArgs e)
+        {
+            foreach (DateTime dateTime in listBoxAlarmClock.Items)
+            {
+                if (dateTime <= DateTime.Now)
+                {
+                    // Звенит, если текущее время совпадает или превышает установленное
+                    System.Media.SystemSounds.Beep.Play();
+                    MessageBox.Show("The alarm  went off", "Alarm clock", MessageBoxButtons.OK, MessageBoxIcon.Information);
+                    listBoxAlarmClock.Items.Remove(dateTime);
+
+                    // Удалить событие, чтобы не звенеть повторно
+                    listBoxAlarmClock.Items.Remove(dateTime);
+                    break; // Остановить цикл после первой найденной даты
+                }
+            }
+        }
+
+
+        /* private void ButtonDelete_Click(object sender, EventArgs e)
+         {
+             var selectedItem = listBoxAlarmClock.SelectedItem;
+             if (selectedItem != null)
+             {
+                 DialogResult result = MessageBox.Show($"Remove? {selectedItem}", "Remove", MessageBoxButtons.YesNo, MessageBoxIcon.Question);
+                 if (result == DialogResult.Yes)
+                 {
+                     // Удаляем выбранный элемент
+                     listBoxAlarmClock.Items.Remove(selectedItem);
+                 }
+             }
+         }*/
+
     }
 }
