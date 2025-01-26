@@ -89,7 +89,19 @@ namespace Clock
 
         private void listBoxAlarmClock_DoubleClick(object sender, EventArgs e)
         {
-            var selectedItem = listBoxAlarmClock.SelectedItem;
+            if (listBoxAlarmClock.SelectedItem == null) return;
+            addAlarmDialog.Alarm = listBoxAlarmClock.SelectedItem as Alarm;
+            if (addAlarmDialog.ShowDialog() == DialogResult.OK)
+            {
+                listBoxAlarmClock.Items[listBoxAlarmClock.SelectedIndex] = addAlarmDialog.Alarm;
+
+            }
+            
+
+
+
+
+            /*var selectedItem = listBoxAlarmClock.SelectedItem;
             if (selectedItem != null)
             {
                 DialogResult result = MessageBox.Show($"Изменить - Удалить - Отмена? {selectedItem}", "Изменение", MessageBoxButtons.YesNoCancel, MessageBoxIcon.Question);
@@ -116,7 +128,7 @@ namespace Clock
                     // Удаляем выбранный элемент
                     listBoxAlarmClock.Items.Remove(selectedItem);
                 }
-            }
+            }*/
         }
 
         private void timer_Tick(object sender, EventArgs e)
