@@ -91,7 +91,7 @@
             this.toolStripSeparator4,
             this.toolStripMenuItemExit});
             this.contextMenuStrip.Name = "contextMenuStrip";
-            this.contextMenuStrip.Size = new System.Drawing.Size(208, 276);
+            this.contextMenuStrip.Size = new System.Drawing.Size(208, 254);
             // 
             // toolStripMenuItemaAlarmClock
             // 

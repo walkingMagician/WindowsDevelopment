@@ -30,6 +30,17 @@ namespace Clock
             timer.Start();*/
         }
 
+
+        public AlarmForm(System.Windows.Forms.Form parent) : this()
+        {
+            this.StartPosition = FormStartPosition.Manual;
+            this.Location = new Point
+                (
+                parent.Location.X-this.Width,
+                parent.Location.Y
+                );
+        }
+
         private void Timer_Tick(object sender, EventArgs e)
         {
             
@@ -42,7 +53,19 @@ namespace Clock
 
         private void buttonAdd_Click(object sender, EventArgs e)
         {
-            if (addAlarmDialog.ShowDialog() == DialogResult.OK)
+            addAlarmDialog.Location = new Point
+                (
+                this.Location.X + (this.Width - addAlarmDialog.Width) / 2,
+                this.Location.Y + (this.Height - addAlarmDialog.Height) / 2
+                );
+            DialogResult result = addAlarmDialog.ShowDialog();
+            if (result == DialogResult.OK)
+            {
+                listBoxAlarmClock.Items.Add(new Alarm(addAlarmDialog.Alarm));
+            }
+            
+            
+            /*if (addAlarmDialog.ShowDialog() == DialogResult.OK)
             {
                 alarm.Date = addAlarmDialog.dateTime;
                 bool useDate = addAlarmDialog.useDate;
@@ -61,7 +84,7 @@ namespace Clock
                 //listBoxAlarmClock.Items.Add(listText);
                 //string selectTime = addAlarmDialog.dateTime.ToString("H:mm");
                 //listBoxAlarmClock.Items.Add(selectTime);
-            }
+            }*/
         }
 
         private void listBoxAlarmClock_DoubleClick(object sender, EventArgs e)

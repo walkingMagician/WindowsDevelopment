@@ -33,7 +33,7 @@ namespace Clock
             if(File.Exists($"{Path.GetDirectoryName(Application.ExecutablePath)}\\..\\..\\Settings.ini"))
                 LoadSettings();
             if (fontDialog == null) fontDialog = new FontDialog();
-            if (alarmClock == null) alarmClock = new AlarmForm();
+            if (alarmClock == null) alarmClock = new AlarmForm(this);
 
         }
 

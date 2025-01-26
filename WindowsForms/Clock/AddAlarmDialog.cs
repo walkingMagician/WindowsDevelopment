@@ -13,31 +13,66 @@ namespace Clock
 {
     public partial class AddAlarmDialog : Form
     {
-        private Week week = new Week();
-        private Alarm alarm = new Alarm();
+
+        public Alarm Alarm;
+        OpenFileDialog openFile;
+
         private AlarmForm alarmForm;
         public DateTime dateTime { get; private set; }
         public bool useDate { get; private set; }
         public byte selectedDays { get; private set; }
+
+
         public AddAlarmDialog()
         {
             InitializeComponent();
-
+            this.StartPosition = FormStartPosition.Manual;
+            Alarm = new Alarm();
+            SetWeekDays();
+            openFile = new OpenFileDialog();
         }
 
+        void SetWeekDays()
+        {
+            bool[] days = Alarm.Week.ToArray();
+            for (int i = 0; i < checkedListBoxWeekDay.Items.Count; i++)
+            {
+                checkedListBoxWeekDay.SetItemChecked(i, days[i]);
+            }
+        }
         private void checkBoxUseDate_CheckedChanged(object sender, EventArgs e)
         {
-            useDate = checkBoxUseDate.Checked;
-            dateTimePickerDate.Enabled = useDate;
+            dateTimePickerDate.Enabled = checkBoxUseDate.Checked;
+            checkedListBoxWeekDay.Enabled = !checkBoxUseDate.Checked;
         }
         private void buttonOk_Click(object sender, EventArgs e)
         {
-            
+            this.DialogResult = DialogResult.OK;
+            Alarm.Date = dateTimePickerDate.Enabled ? dateTimePickerTime.Value : DateTime.MinValue;
+            Alarm.Time = dateTimePickerTime.Value.TimeOfDay;
+            Alarm.Week = new Week
+                (
+                checkedListBoxWeekDay.
+                Items.
+                Cast<object>().
+                Select((item, index) => checkedListBoxWeekDay.GetItemChecked(index)).ToArray()
+                );
 
-            dateTime = dateTimePickerDate.Value.Date;
+            if (labelFileName.Text != "Filename" && labelFileName.Text != "")
+            {
+                Alarm.Filename = openFile.FileName;
+            }
+            else
+            {
+                MessageBox.Show(this, "Выберите звуковой файл", "Info", MessageBoxButtons.OK, MessageBoxIcon.Information);
+                this.DialogResult = DialogResult.None;
+            }
+            Alarm.Message = richTextBoxMessage.Text;
+            
+            /*dateTime = dateTimePickerDate.Value.Date;
             TimeSpan timeSpan = dateTimePickerTime.Value.TimeOfDay;
-            dateTime = dateTime.Add(timeSpan);
-  
+            dateTime = dateTime.Add(timeSpan);*/
+
             //this.DialogResult = DialogResult.OK;
             //this.Close();
         }
@@ -52,6 +87,15 @@ namespace Clock
             }
             Console.WriteLine();
         }
+
+        private void buttonChooseFile_Click(object sender, EventArgs e)
+        {
+            if (openFile.ShowDialog() == DialogResult.OK)
+            { 
+                labelFileName.Text = $"Filename: {openFile.FileName}";
+            }
+        }
+
 
     }
 }
