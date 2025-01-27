@@ -14,20 +14,14 @@ namespace Clock
     public partial class AlarmForm : Form
     {
         private AddAlarmDialog addAlarmDialog;
-        private Week week = new Week();
-        private Alarm alarm = new Alarm();
-        private Timer timer;
+        public ListBox Alarms { get => listBoxAlarmClock; }
         public AlarmForm()
         {
             InitializeComponent();
 
             if (addAlarmDialog == null) addAlarmDialog = new AddAlarmDialog();
 
-            // Инициализация таймера
-            /*timer = new Timer();
-            timer.Interval = 1000;
-            timer.Tick += Timer_Tick;
-            timer.Start();*/
+          
         }
 
 
@@ -96,9 +90,6 @@ namespace Clock
                 listBoxAlarmClock.Items[listBoxAlarmClock.SelectedIndex] = addAlarmDialog.Alarm;
 
             }
-            
-
-
 
 
             /*var selectedItem = listBoxAlarmClock.SelectedItem;
@@ -131,22 +122,10 @@ namespace Clock
             }*/
         }
 
-        private void timer_Tick(object sender, EventArgs e)
+        private void listBoxAlarmClock_SelectedIndexChanged(object sender, EventArgs e)
         {
-            foreach (DateTime dateTime in listBoxAlarmClock.Items)
-            {
-                if (dateTime <= DateTime.Now)
-                {
-                    // Звенит, если текущее время совпадает или превышает установленное
-                    System.Media.SystemSounds.Beep.Play();
-                    MessageBox.Show("The alarm  went off", "Alarm clock", MessageBoxButtons.OK, MessageBoxIcon.Information);
-                    listBoxAlarmClock.Items.Remove(dateTime);
-
-                    // Удалить событие, чтобы не звенеть повторно
-                    listBoxAlarmClock.Items.Remove(dateTime);
-                    break; // Остановить цикл после первой найденной даты
-                }
-            }
+            if(listBoxAlarmClock.SelectedItems != null)
+                labelAlarmInfo.Text = listBoxAlarmClock.SelectedItems.ToString();
         }
 
 

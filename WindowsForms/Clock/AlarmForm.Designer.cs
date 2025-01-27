@@ -47,6 +47,7 @@
             this.listBoxAlarmClock.Size = new System.Drawing.Size(385, 220);
             this.listBoxAlarmClock.Sorted = true;
             this.listBoxAlarmClock.TabIndex = 1;
+            this.listBoxAlarmClock.SelectedIndexChanged += new System.EventHandler(this.listBoxAlarmClock_SelectedIndexChanged);
             this.listBoxAlarmClock.DoubleClick += new System.EventHandler(this.listBoxAlarmClock_DoubleClick);
             // 
             // buttonAdd

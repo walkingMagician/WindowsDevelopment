@@ -17,11 +17,6 @@ namespace Clock
         public Alarm Alarm;
         OpenFileDialog openFile;
 
-        private AlarmForm alarmForm;
-        public DateTime dateTime { get; private set; }
-        public bool useDate { get; private set; }
-        public byte selectedDays { get; private set; }
-
 
         public AddAlarmDialog()
         {

@@ -6,7 +6,7 @@ using System.Threading.Tasks;
 
 namespace Clock
 {
-    public class Alarm
+    public class Alarm:IComparable<Alarm>
     {
         public DateTime Date { get; set; }
         public TimeSpan Time { get; set; }
@@ -27,6 +27,19 @@ namespace Clock
             this.Message = other.Message;
         }
 
+        public static bool operator >(Alarm left, Alarm right)
+        { 
+            return left.Time > right.Time;
+        }
+        public static bool operator <(Alarm left, Alarm right)
+        { 
+            return left.Time < right.Time;
+        }
+
+        public int CompareTo(Alarm other)
+        {
+            return this.Time.CompareTo(other.Time);
+        }
         public override string ToString()
         {
             string info = "";

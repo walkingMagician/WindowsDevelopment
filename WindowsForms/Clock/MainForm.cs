@@ -17,6 +17,7 @@ namespace Clock
     {
         AlarmForm alarmClock;
         FontDialog fontDialog;
+        Alarm nextAlarm;
         public MainForm()
         {
             InitializeComponent();
@@ -25,15 +26,16 @@ namespace Clock
             //toolStripMenuItemShowControls.Checked = false;	//Works not correctly
             toolStripMenuItemShowControls.Checked = true;
             toolStripMenuItemShowConsole.Checked = true;
-
+            
 
             //fontDialog = new FontDialog();
             //Console.WriteLine(Directory.GetCurrentDirectory());
             //SaveSettings();
-            if(File.Exists($"{Path.GetDirectoryName(Application.ExecutablePath)}\\..\\..\\Settings.ini"))
+            if (File.Exists($"{Path.GetDirectoryName(Application.ExecutablePath)}\\..\\..\\Settings.ini"))
                 LoadSettings();
             if (fontDialog == null) fontDialog = new FontDialog();
             if (alarmClock == null) alarmClock = new AlarmForm(this);
+            
 
         }
 
@@ -45,6 +47,7 @@ namespace Clock
             this.FormBorderStyle = visible ? FormBorderStyle.FixedDialog : FormBorderStyle.None;
             this.ShowInTaskbar = visible;
             this.TransparencyKey = visible ? Color.Empty : this.BackColor;
+            this.axWindowsMediaPlayer.Visible = visible;
         }
 
         void SaveSettings()
@@ -96,6 +99,12 @@ namespace Clock
             }
         }
 
+        Alarm FindNextAlarm()
+        { 
+            nextAlarm = alarmClock.Alarms.Items.Cast<Alarm>().ToArray().Min();
+            return nextAlarm;
+        }
+
         private void timer_Tick(object sender, EventArgs e)
         {
             // оброботчик события - эта самая обычная функция, которая неявно вызывается
@@ -116,6 +125,26 @@ namespace Clock
 
             SaveSettings();
             labelTime.Font = fontDialog.Font;
+
+          
+            nextAlarm = FindNextAlarm();
+            if (nextAlarm != null) Console.WriteLine(nextAlarm);
+
+            if (
+               nextAlarm != null &&
+               nextAlarm.Time.Hours == DateTime.Now.Hour &&
+               nextAlarm.Time.Minutes == DateTime.Now.Minute &&
+               DateTime.Now.Second == 00
+               )
+            {
+                System.Threading.Thread.Sleep(1000);
+                axWindowsMediaPlayer.URL = nextAlarm.Filename;
+                axWindowsMediaPlayer.settings.volume = 100;
+                axWindowsMediaPlayer.Ctlcontrols.play();
+                if(nextAlarm.Message != "")
+                    MessageBox.Show(this, nextAlarm.ToString(), "Alarm", MessageBoxButtons.OK, MessageBoxIcon.Information);
+            }
+
         }
 
         private void buttonHideControls_Click(object sender, EventArgs e)
