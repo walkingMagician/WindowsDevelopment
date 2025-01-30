@@ -49,7 +49,6 @@ namespace Clock
             info += this.Week;
             info += this.Filename;*/
 
-            
             return info; 
         }
     }

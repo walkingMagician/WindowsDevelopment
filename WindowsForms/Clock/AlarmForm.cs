@@ -1,9 +1,11 @@
-﻿using System;
+﻿using AxWMPLib;
+using System;
 using System.Collections.Generic;
 using System.ComponentModel;
 using System.Data;
 using System.Drawing;
 using System.Globalization;
+using System.IO;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
@@ -20,8 +22,8 @@ namespace Clock
             InitializeComponent();
 
             if (addAlarmDialog == null) addAlarmDialog = new AddAlarmDialog();
+            
 
-          
         }
 
 
@@ -35,10 +37,46 @@ namespace Clock
                 );
         }
 
-        private void Timer_Tick(object sender, EventArgs e)
+        public void SaveSettingsData()
         {
-            
+            try
+            {
+                StreamWriter sw =
+                    new StreamWriter($"{Path.GetDirectoryName(Application.ExecutablePath)}\\..\\..\\SettingData.txt");
+                foreach (var item in listBoxAlarmClock.Items)
+                {
+                    sw.WriteLine(item.ToString());
+                }
+                sw.Close();
+            }
+            catch (Exception ex)
+            {
+                MessageBox.Show(this, ex.Message, "In SaveSettingsData()", MessageBoxButtons.OK, MessageBoxIcon.Error);
+                MessageBox.Show(this, ex.ToString(), "In SaveSettingsData()", MessageBoxButtons.OK, MessageBoxIcon.Error);
+            }
         }
+
+        public void LoadSettingsData()
+        {
+            StreamReader sr = null;
+            string line;
+            Alarm alarm = new Alarm();
+            try
+            {
+                sr = new StreamReader($"{Path.GetDirectoryName(Application.ExecutablePath)}\\..\\..\\SettingData.txt");
+                while ((line = sr.ReadLine()) != null)
+                {
+                    listBoxAlarmClock.Items.Add(line);
+                }
+                sr.Close();
+            }
+            catch (Exception ex)
+            {
+                MessageBox.Show(this, ex.Message, "In LoadSettingsData()", MessageBoxButtons.OK, MessageBoxIcon.Error);
+                MessageBox.Show(this, ex.ToString(), "In LoadSettingsData()", MessageBoxButtons.OK, MessageBoxIcon.Error);
+            }
+        }
+
 
         private void buttonCancel_Click(object sender, EventArgs e)
         {
@@ -57,8 +95,7 @@ namespace Clock
             {
                 listBoxAlarmClock.Items.Add(new Alarm(addAlarmDialog.Alarm));
             }
-            
-            
+
             /*if (addAlarmDialog.ShowDialog() == DialogResult.OK)
             {
                 alarm.Date = addAlarmDialog.dateTime;
@@ -88,9 +125,8 @@ namespace Clock
             if (addAlarmDialog.ShowDialog() == DialogResult.OK)
             {
                 listBoxAlarmClock.Items[listBoxAlarmClock.SelectedIndex] = addAlarmDialog.Alarm;
-
+                
             }
-
 
             /*var selectedItem = listBoxAlarmClock.SelectedItem;
             if (selectedItem != null)

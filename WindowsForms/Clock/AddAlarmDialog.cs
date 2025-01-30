@@ -43,7 +43,7 @@ namespace Clock
         private void buttonOk_Click(object sender, EventArgs e)
         {
             this.DialogResult = DialogResult.OK;
-            Alarm.Date = dateTimePickerDate.Enabled ? dateTimePickerTime.Value : DateTime.MinValue;
+            Alarm.Date = dateTimePickerDate.Enabled ? dateTimePickerDate.Value : DateTime.MinValue;
             Alarm.Time = dateTimePickerTime.Value.TimeOfDay;
             Alarm.Week = new Week
                 (
@@ -70,17 +70,6 @@ namespace Clock
 
             //this.DialogResult = DialogResult.OK;
             //this.Close();
-        }
-
-        private void ShowIndexes()
-        {
-            for (int i = 0; i < checkedListBoxWeekDay.Items.Count; i++)
-            {
-                string item = checkedListBoxWeekDay.Items[i].ToString();
-                Console.Write($"Элемент: {item}, Индекс: {i}\t");
-                //Console.Write(checkedListBoxWeekDay.GetItemChecked(i) + "\t");
-            }
-            Console.WriteLine();
         }
 
         private void buttonChooseFile_Click(object sender, EventArgs e)

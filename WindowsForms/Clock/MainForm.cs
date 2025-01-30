@@ -15,7 +15,7 @@ namespace Clock
 {
     public partial class MainForm : Form
     {
-        AlarmForm alarmClock;
+        AlarmForm alarmForm;
         FontDialog fontDialog;
         Alarm nextAlarm;
         public MainForm()
@@ -26,7 +26,7 @@ namespace Clock
             //toolStripMenuItemShowControls.Checked = false;	//Works not correctly
             toolStripMenuItemShowControls.Checked = true;
             toolStripMenuItemShowConsole.Checked = true;
-            
+            this.axWindowsMediaPlayer.Visible = false;
 
             //fontDialog = new FontDialog();
             //Console.WriteLine(Directory.GetCurrentDirectory());
@@ -34,8 +34,10 @@ namespace Clock
             if (File.Exists($"{Path.GetDirectoryName(Application.ExecutablePath)}\\..\\..\\Settings.ini"))
                 LoadSettings();
             if (fontDialog == null) fontDialog = new FontDialog();
-            if (alarmClock == null) alarmClock = new AlarmForm(this);
-            
+            if (alarmForm == null) alarmForm = new AlarmForm(this);
+
+            if (File.Exists($"{Path.GetDirectoryName(Application.ExecutablePath)}\\..\\..\\SettingData.txt"))
+               alarmForm.LoadSettingsData();
 
         }
 
@@ -47,7 +49,9 @@ namespace Clock
             this.FormBorderStyle = visible ? FormBorderStyle.FixedDialog : FormBorderStyle.None;
             this.ShowInTaskbar = visible;
             this.TransparencyKey = visible ? Color.Empty : this.BackColor;
-            this.axWindowsMediaPlayer.Visible = visible;
+            this.axWindowsMediaPlayer.Visible = false;
+            this.axWindowsMediaPlayer.Ctlcontrols.stop();
+
         }
 
         void SaveSettings()
@@ -99,9 +103,10 @@ namespace Clock
             }
         }
 
+
         Alarm FindNextAlarm()
         { 
-            nextAlarm = alarmClock.Alarms.Items.Cast<Alarm>().ToArray().Min();
+            nextAlarm = alarmForm.Alarms.Items.Cast<Alarm>().ToArray().Min();
             return nextAlarm;
         }
 
@@ -124,27 +129,51 @@ namespace Clock
                 $"{DateTime.Now.DayOfWeek}";            
 
             SaveSettings();
+            alarmForm.SaveSettingsData();
+
             labelTime.Font = fontDialog.Font;
 
           
             nextAlarm = FindNextAlarm();
-            if (nextAlarm != null) Console.WriteLine(nextAlarm);
+            //if (nextAlarm != null) Console.WriteLine(nextAlarm);
+           /* if (nextAlarm != null && nextAlarm.Date.Date == DateTime.MinValue) 
+            { 
+                nextAlarm.Date = DateTime.Now.Date;
+            }*/
 
             if (
                nextAlarm != null &&
                nextAlarm.Time.Hours == DateTime.Now.Hour &&
                nextAlarm.Time.Minutes == DateTime.Now.Minute &&
-               DateTime.Now.Second == 00
+               DateTime.Now.Second == 00 &&
+               ( nextAlarm.Date.Date == DateTime.Now.Date || 
+               nextAlarm.Date.Date == DateTime.MinValue )
+               
                )
             {
                 System.Threading.Thread.Sleep(1000);
+                //alarmForm.Alarms.Items.Remove(nextAlarm); // удаление будильника 
                 axWindowsMediaPlayer.URL = nextAlarm.Filename;
                 axWindowsMediaPlayer.settings.volume = 100;
+                this.axWindowsMediaPlayer.Visible = true;
                 axWindowsMediaPlayer.Ctlcontrols.play();
-                if(nextAlarm.Message != "")
+                if (nextAlarm.Message != "")
                     MessageBox.Show(this, nextAlarm.ToString(), "Alarm", MessageBoxButtons.OK, MessageBoxIcon.Information);
             }
 
+            
+
+
+            if (this.axWindowsMediaPlayer.playState == WMPLib.WMPPlayState.wmppsStopped) // Stop 
+            {
+                this.axWindowsMediaPlayer.Visible = false;
+            }
+
+            if (this.axWindowsMediaPlayer.playState == WMPLib.WMPPlayState.wmppsMediaEnded) // End music
+            {
+                this.axWindowsMediaPlayer.Visible = false;
+            } 
+            
         }
 
         private void buttonHideControls_Click(object sender, EventArgs e)
@@ -206,7 +235,8 @@ namespace Clock
         }
         private void toolStripMenuItemaAlarmClock_Click(object sender, EventArgs e)
         {
-            alarmClock.ShowDialog();
+            alarmForm.ShowDialog();
+            
         }
 
         private void notifyIcon_DoubleClick(object sender, EventArgs e) // NotifyIcon
@@ -231,9 +261,10 @@ namespace Clock
         // -------------------- //
         private void toolStripMenuItemShowConsole_CheckedChanged(object sender, EventArgs e)
         {
-            AllocConsole();
+            //AllocConsole();
             bool show = toolStripMenuItemShowConsole.Checked ? AllocConsole() : FreeConsole();
         }
+
         [DllImport("kernel32.dll")]
         static extern bool AllocConsole();
         [DllImport("kernel32.dll")]
@@ -242,6 +273,7 @@ namespace Clock
         private void MainForm_FormClosing(object sender, FormClosingEventArgs e)
         {
             SaveSettings();
+            alarmForm.ShowDialog();
         }
 
 
