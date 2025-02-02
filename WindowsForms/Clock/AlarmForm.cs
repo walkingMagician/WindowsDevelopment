@@ -17,13 +17,15 @@ namespace Clock
     {
         private AddAlarmDialog addAlarmDialog;
         public ListBox Alarms { get => listBoxAlarmClock; }
+        Alarm alarm;
         public AlarmForm()
         {
             InitializeComponent();
+            this.FormClosing += AlarmForm_FormClosing;
 
             if (addAlarmDialog == null) addAlarmDialog = new AddAlarmDialog();
-            
 
+            LoadSettingsData();
         }
 
 
@@ -37,17 +39,22 @@ namespace Clock
                 );
         }
 
+        /*public void AddDataTime(string[] dataTime)
+        {
+            listBoxAlarmClock.Items.Add(dataTime);
+        }*/
+
         public void SaveSettingsData()
         {
+            string path = $"{Path.GetDirectoryName(Application.ExecutablePath)}\\..\\..\\SettingData.ini";
             try
             {
-                StreamWriter sw =
-                    new StreamWriter($"{Path.GetDirectoryName(Application.ExecutablePath)}\\..\\..\\SettingData.txt");
+                List<string> items = new List<string>();
                 foreach (var item in listBoxAlarmClock.Items)
-                {
-                    sw.WriteLine(item.ToString());
+                { 
+                    items.Add(item.ToString());
                 }
-                sw.Close();
+                File.WriteAllLines(path, items);
             }
             catch (Exception ex)
             {
@@ -55,20 +62,22 @@ namespace Clock
                 MessageBox.Show(this, ex.ToString(), "In SaveSettingsData()", MessageBoxButtons.OK, MessageBoxIcon.Error);
             }
         }
+        
 
         public void LoadSettingsData()
         {
-            StreamReader sr = null;
-            string line;
-            Alarm alarm = new Alarm();
+            string path = $"{Path.GetDirectoryName(Application.ExecutablePath)}\\..\\..\\SettingData.ini";
             try
             {
-                sr = new StreamReader($"{Path.GetDirectoryName(Application.ExecutablePath)}\\..\\..\\SettingData.txt");
-                while ((line = sr.ReadLine()) != null)
+                
+                if (File.Exists(path))
                 {
-                    listBoxAlarmClock.Items.Add(line);
+                    
+                    string[] lines = File.ReadAllLines(path);
+                    //listBoxAlarmClock.Items.AddRange(lines);
+                    //alarm = lines.Cast<Alarm>().ToArray().Min();
+                    //listBoxAlarmClock.Items.Add(alarm);
                 }
-                sr.Close();
             }
             catch (Exception ex)
             {
@@ -164,20 +173,24 @@ namespace Clock
                 labelAlarmInfo.Text = listBoxAlarmClock.SelectedItems.ToString();
         }
 
+        private void AlarmForm_FormClosing(object sender, FormClosingEventArgs e)
+        { 
+            SaveSettingsData();
+        }
 
-        /* private void ButtonDelete_Click(object sender, EventArgs e)
-         {
-             var selectedItem = listBoxAlarmClock.SelectedItem;
-             if (selectedItem != null)
+            /* private void ButtonDelete_Click(object sender, EventArgs e)
              {
-                 DialogResult result = MessageBox.Show($"Remove? {selectedItem}", "Remove", MessageBoxButtons.YesNo, MessageBoxIcon.Question);
-                 if (result == DialogResult.Yes)
+                 var selectedItem = listBoxAlarmClock.SelectedItem;
+                 if (selectedItem != null)
                  {
-                     // Удаляем выбранный элемент
-                     listBoxAlarmClock.Items.Remove(selectedItem);
+                     DialogResult result = MessageBox.Show($"Remove? {selectedItem}", "Remove", MessageBoxButtons.YesNo, MessageBoxIcon.Question);
+                     if (result == DialogResult.Yes)
+                     {
+                         // Удаляем выбранный элемент
+                         listBoxAlarmClock.Items.Remove(selectedItem);
+                     }
                  }
-             }
-         }*/
+             }*/
 
-    }
+        }
 }

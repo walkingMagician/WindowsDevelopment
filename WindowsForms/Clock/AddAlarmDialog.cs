@@ -22,9 +22,12 @@ namespace Clock
         {
             InitializeComponent();
             this.StartPosition = FormStartPosition.Manual;
+            this.FormClosing += AddAlarmDialog_FormClosing;
+
             Alarm = new Alarm();
             SetWeekDays();
             openFile = new OpenFileDialog();
+
         }
 
         void SetWeekDays()
@@ -80,6 +83,10 @@ namespace Clock
             }
         }
 
-
+        private void AddAlarmDialog_FormClosing(object sender, FormClosingEventArgs e)
+        {
+            AlarmForm alarmForm = new AlarmForm();
+            alarmForm.SaveSettingsData();
+        }
     }
 }

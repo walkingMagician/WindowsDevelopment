@@ -36,8 +36,8 @@ namespace Clock
             if (fontDialog == null) fontDialog = new FontDialog();
             if (alarmForm == null) alarmForm = new AlarmForm(this);
 
-            if (File.Exists($"{Path.GetDirectoryName(Application.ExecutablePath)}\\..\\..\\SettingData.txt"))
-               alarmForm.LoadSettingsData();
+            /*if (File.Exists($"{Path.GetDirectoryName(Application.ExecutablePath)}\\..\\..\\SettingData.ini"))
+                alarmForm.LoadSettingsData();*/
 
         }
 
@@ -129,7 +129,7 @@ namespace Clock
                 $"{DateTime.Now.DayOfWeek}";            
 
             SaveSettings();
-            alarmForm.SaveSettingsData();
+            
 
             labelTime.Font = fontDialog.Font;
 
